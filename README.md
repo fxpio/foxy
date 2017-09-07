@@ -37,3 +37,8 @@ Reporting an issue or a feature request
 ---------------------------------------
 
 Issues and feature requests are tracked in the [Github issue tracker](https://github.com/foxypkg/foxy/issues).
+
+Acknowledgments
+---------------
+
+Thanks to [Tobias Munk](https://github.com/schmunk42) to have suggesting this name
