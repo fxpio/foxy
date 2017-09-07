@@ -18,6 +18,13 @@
     "require-dev": {
         "composer/composer": "^1.5.0"
     },
+    "config": {
+        "preferred-install": {
+            "*": "dist"
+        },
+        "sort-packages": true
+    },
+    "prefer-stable": true,
     "autoload": {
         "psr-4": {
             "Foxy\\": ""
