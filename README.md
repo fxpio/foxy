@@ -65,6 +65,8 @@ The bulk of the documentation is located in `Resources/doc/index.md`:
 
 [Read the Documentation](Resources/doc/index.md)
 
+[Read the FAQs](Resources/doc/faqs.md)
+
 [Read the Release Notes](https://github.com/foxypkg/foxy/releases)
 
 Installation

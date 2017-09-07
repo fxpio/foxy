@@ -1,7 +1,8 @@
 Basic Usage
 ===========
 
-1. [Installation](index.md)
+1. [Installation](index.md#installation)
+2. [FAQs](faqs.md)
 
 ## Installation
 
