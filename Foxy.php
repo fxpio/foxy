@@ -14,8 +14,6 @@ namespace Foxy;
 use Composer\Composer;
 use Composer\EventDispatcher\EventSubscriberInterface;
 use Composer\IO\IOInterface;
-use Composer\Json\JsonFile;
-use Composer\Package\PackageInterface;
 use Composer\Plugin\PluginInterface;
 use Composer\Script\Event;
 use Composer\Script\ScriptEvents;
@@ -25,7 +23,8 @@ use Foxy\AssetManager\AssetManagerInterface;
 use Foxy\Config\Config;
 use Foxy\Config\ConfigBuilder;
 use Foxy\Exception\RuntimeException;
-use Foxy\Util\AssetUtil;
+use Foxy\Solver\Solver;
+use Foxy\Solver\SolverInterface;
 
 /**
  * Composer plugin.
@@ -59,29 +58,9 @@ class Foxy implements PluginInterface, EventSubscriberInterface
     );
 
     /**
-     * @var Config
+     * @var SolverInterface
      */
-    protected $config;
-
-    /**
-     * @var ProcessExecutor
-     */
-    protected $executor;
-
-    /**
-     * @var Filesystem
-     */
-    protected $fs;
-
-    /**
-     * @var AssetManagerInterface[]
-     */
-    protected $assetManagers = array();
-
-    /**
-     * @var AssetManagerInterface
-     */
-    protected $assetManager;
+    protected $solver;
 
     /**
      * {@inheritdoc}
@@ -103,21 +82,12 @@ class Foxy implements PluginInterface, EventSubscriberInterface
      */
     public function activate(Composer $composer, IOInterface $io)
     {
-        $this->config = ConfigBuilder::build($composer, $io);
-        $this->executor = new ProcessExecutor($io);
-        $this->fs = new Filesystem($this->executor);
-        $manager = $this->config->get('manager', static::DEFAULT_CONFIG['manager']);
-
-        foreach (static::ASSET_MANAGERS as $class) {
-            $this->addAssetManager(new $class($this->config, $this->executor, $this->fs));
-        }
-
-        if (!isset($this->assetManagers[$manager])) {
-            throw new RuntimeException(sprintf('The asset manager "%s" doesn\'t exist', $manager));
-        }
-
-        $this->assetManager = $this->assetManagers[$manager];
-        $this->assetManager->validate();
+        $config = ConfigBuilder::build($composer, $io);
+        $executor = new ProcessExecutor($io);
+        $fs = new Filesystem($executor);
+        $assetManager = $this->getAssetManager($config, $executor, $fs);
+        $assetManager->validate();
+        $this->solver = new Solver($assetManager, $config, $fs);
     }
 
     /**
@@ -127,118 +97,32 @@ class Foxy implements PluginInterface, EventSubscriberInterface
      */
     public function solveAssets(Event $event)
     {
-        if (!$this->config->get('enabled', static::DEFAULT_CONFIG['enabled'])) {
-            return;
-        }
-
-        $io = $event->getIO();
-        $composer = $event->getComposer();
-        $info = sprintf('<info>%s %s dependencies</info>', $this->assetManager->hasLockFile() ? 'Updating' : 'Installing', $this->assetManager->getName());
-        $io->write($info);
-
-        $packages = $composer->getRepositoryManager()->getLocalRepository()->getCanonicalPackages();
-        $vendorDir = $composer->getConfig()->get('vendor-dir');
-        $assetDir = $this->config->get('composer-asset-dir', $vendorDir.'/foxy/composer-asset/');
-        $this->fs->remove($assetDir);
-
-        $assets = $this->getAssets($composer, $assetDir, $packages);
-        $res = $this->assetManager->addDependencies($assets);
-
-        if ($res && $this->config->get('fallback-composer', static::DEFAULT_CONFIG['fallback-composer'])) {
-            $this->fallbackComposerLockFile($composer, $io);
-        }
+        $this->solver->solve($event->getComposer(), $event->getIO());
     }
 
     /**
-     * Get the package of asset dependencies.
+     * Get the asset manager.
      *
-     * @param Composer           $composer The composer
-     * @param string             $assetDir The asset directory
-     * @param PackageInterface[] $packages The package dependencies
+     * @param Config          $config   The config
+     * @param ProcessExecutor $executor The process executor
+     * @param Filesystem      $fs       The composer filesystem
      *
-     * @return array[]
+     * @return AssetManagerInterface
+     *
+     * @throws RuntimeException When the asset manager is not found
      */
-    protected function getAssets(Composer $composer, $assetDir, array $packages)
+    protected function getAssetManager(Config $config, ProcessExecutor $executor, Filesystem $fs)
     {
-        $installationManager = $composer->getInstallationManager();
-        $assets = array();
+        $manager = $config->get('manager', static::DEFAULT_CONFIG['manager']);
 
-        foreach ($packages as $package) {
-            $filename = AssetUtil::getPath($installationManager, $this->assetManager, $package);
+        foreach (static::ASSET_MANAGERS as $class) {
+            $am = new $class($config, $executor, $fs);
 
-            if (null !== $filename) {
-                $packageName = AssetUtil::getName($package);
-                $packagePath = $assetDir.$package->getName();
-                $newFilename = $packagePath.'/'.basename($filename);
-                mkdir($packagePath, 0777, true);
-                copy($filename, $newFilename);
-
-                $jsonFile = new JsonFile($newFilename);
-                $packageValue = $this->formatPackage($package, $packageName, (array) $jsonFile->read());
-                $jsonFile->write($packageValue);
-                $assets[$packageName] = $this->fs->findShortestPath(getcwd(), $newFilename);
+            if ($am instanceof AssetManagerInterface && $manager === $am->getName()) {
+                return $am;
             }
         }
 
-        return $assets;
-    }
-
-    /**
-     * Add the asset manager.
-     *
-     * @param AssetManagerInterface $assetManager The asset manager
-     *
-     * @return $this
-     */
-    protected function addAssetManager(AssetManagerInterface $assetManager)
-    {
-        $this->assetManagers[$assetManager->getName()] = $assetManager;
-
-        return $this;
-    }
-
-    /**
-     * Format the asset package.
-     *
-     * @param PackageInterface $package      The composer package
-     * @param string           $packageName  The package name
-     * @param array            $packageValue The package value
-     *
-     * @return array
-     */
-    protected function formatPackage(PackageInterface $package, $packageName, array $packageValue)
-    {
-        $packageValue['name'] = $packageName;
-
-        if (!isset($packageValue['version'])) {
-            $extra = $package->getExtra();
-            $version = $package->getPrettyVersion();
-
-            if (0 === strpos($version, 'dev-') && isset($extra['branch-alias'][$version])) {
-                $version = str_replace('-dev', '', $extra['branch-alias'][$version]);
-                $exp = explode('.', $version);
-
-                if (count($exp) < 3) {
-                    $exp[] = '0';
-                }
-
-                $version = implode('.', $exp);
-            }
-
-            $packageValue['version'] = $version;
-        }
-
-        return $packageValue;
-    }
-
-    /**
-     * Fallback the composer lock file and dependencies.
-     *
-     * @param Composer    $composer The composer
-     * @param IOInterface $io       The io of composer
-     */
-    protected function fallbackComposerLockFile(Composer $composer, IOInterface $io)
-    {
-        throw new RuntimeException('The fallback for the Composer lock file and its dependencies is not implemented currently');
+        throw new RuntimeException(sprintf('The asset manager "%s" doesn\'t exist', $manager));
     }
 }

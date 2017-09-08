@@ -73,4 +73,38 @@ class AssetUtil
 
         return $assets;
     }
+
+    /**
+     * Format the asset package.
+     *
+     * @param PackageInterface $package      The composer package
+     * @param string           $packageName  The package name
+     * @param array            $packageValue The package value
+     *
+     * @return array
+     */
+    public static function formatPackage(PackageInterface $package, $packageName, array $packageValue)
+    {
+        $packageValue['name'] = $packageName;
+
+        if (!isset($packageValue['version'])) {
+            $extra = $package->getExtra();
+            $version = $package->getPrettyVersion();
+
+            if (0 === strpos($version, 'dev-') && isset($extra['branch-alias'][$version])) {
+                $version = str_replace('-dev', '', $extra['branch-alias'][$version]);
+                $exp = explode('.', $version);
+
+                if (count($exp) < 3) {
+                    $exp[] = '0';
+                }
+
+                $version = implode('.', $exp);
+            }
+
+            $packageValue['version'] = $version;
+        }
+
+        return $packageValue;
+    }
 }
