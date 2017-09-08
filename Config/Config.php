@@ -59,7 +59,7 @@ final class Config
     {
         $value = $this->get($key, null);
 
-        return null !== $value ? $value : $default;
+        return null !== $value ? (array) $value : (array) $default;
     }
 
     /**
