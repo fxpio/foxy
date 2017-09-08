@@ -83,6 +83,14 @@ abstract class AbstractAssetManager implements AssetManagerInterface
     /**
      * {@inheritdoc}
      */
+    public function isInstalled()
+    {
+        return is_dir('./node_modules');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function validate()
     {
         $this->executor->execute($this->getVersionCommand(), $version);
@@ -271,7 +279,7 @@ abstract class AbstractAssetManager implements AssetManagerInterface
     {
         $timeout = ProcessExecutor::getTimeout();
         ProcessExecutor::setTimeout(null);
-        $cmd = $this->hasLockFile() ? $this->getUpdateCommand() : $this->getInstallCommand();
+        $cmd = $this->isInstalled() ? $this->getUpdateCommand() : $this->getInstallCommand();
         $res = $this->executor->execute($cmd);
         ProcessExecutor::setTimeout($timeout);
 

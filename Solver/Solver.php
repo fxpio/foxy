@@ -67,7 +67,7 @@ class Solver implements SolverInterface
             return;
         }
 
-        $info = sprintf('<info>%s %s dependencies</info>', $this->assetManager->hasLockFile() ? 'Updating' : 'Installing', $this->assetManager->getName());
+        $info = sprintf('<info>%s %s dependencies</info>', $this->assetManager->isInstalled() ? 'Updating' : 'Installing', $this->assetManager->getName());
         $io->write($info);
 
         $packages = $composer->getRepositoryManager()->getLocalRepository()->getCanonicalPackages();

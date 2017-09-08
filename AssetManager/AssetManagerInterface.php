@@ -49,6 +49,13 @@ interface AssetManagerInterface
     public function hasLockFile();
 
     /**
+     * Check if the asset dependencies are installed or not.
+     *
+     * @return bool
+     */
+    public function isInstalled();
+
+    /**
      * Get the filename of the lock file.
      *
      * @return string
