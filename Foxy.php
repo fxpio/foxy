@@ -90,10 +90,10 @@ class Foxy implements PluginInterface, EventSubscriberInterface
     {
         return array(
             ScriptEvents::POST_INSTALL_CMD => array(
-                array('solveAssets', 0),
+                array('solveAssets', 100),
             ),
             ScriptEvents::POST_UPDATE_CMD => array(
-                array('solveAssets', 0),
+                array('solveAssets', 100),
             ),
         );
     }
