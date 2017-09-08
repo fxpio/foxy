@@ -273,7 +273,7 @@ abstract class AbstractAssetManager implements AssetManagerInterface
     /**
      * Run the asset manager to install/update the asset dependencies.
      *
-     * @param string|null The backup content of package file
+     * @param string|null $packageContent The backup content of package file
      *
      * @return int
      */
