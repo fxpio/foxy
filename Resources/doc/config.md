@@ -69,3 +69,179 @@ The config values are retrieved in priority in:
 2. the project `composer.json` file
 3. the global `<COMPOSER_HOME>/config.json` file
 4. the global `<COMPOSER_HOME>/composer.json` file
+
+## Use the config options
+
+### Enable/disable the plugin
+
+You can enable or disable the plugin with the option `config.foxy.enabled` [`boolean`].
+
+**Example:**
+```json
+{
+    "config": {
+        "foxy": {
+            "enabled": false
+        }
+    }
+}
+```
+
+### Choose the asset manager
+
+You can choose the asset manager with the option `config.foxy.manager` [`string`].
+
+**Available values:**
+
+- `npm` (by default)
+- `yarn`
+
+**Example:**
+```json
+{
+    "config": {
+        "foxy": {
+            "manager": "yarn"
+        }
+    }
+}
+```
+
+### Lock the version of the asset manager with the Composer version range
+
+You can validate the version of the asset manager with the option `config.foxy.manager-version` [`string`].
+
+**Example:**
+```json
+{
+    "config": {
+        "foxy": {
+            "manager-version": "^5.3.0"
+        }
+    }
+}
+```
+
+### Define the custom path of binary of the asset manager
+
+You can define the custom path of the binary of the asset manager with the option
+`config.foxy.manager-bin` [`string`].
+
+**Example:**
+```json
+{
+    "config": {
+        "foxy": {
+            "manager-bin": "/custom/path/of/asset/manager/binary"
+        }
+    }
+}
+```
+
+### Override the install command options for the asset manager
+
+You can add custom options for the asset manager binary for the install command with the
+option `config.foxy.manager-install-options` [`string`].
+
+**Example:**
+```json
+{
+    "config": {
+        "foxy": {
+            "manager": "npm",
+            "manager-install-options": "--dry-run"
+        }
+    }
+}
+```
+
+> **Note:**
+>
+> For this example, the option allow you to keep only the manipulation of the asset package file,
+> and validate the dependencies without the installation of the dependencies
+
+### Override the update command options for the asset manager
+
+You can add custom options for the asset manager binary for the update command with the
+option `config.foxy.manager-update-options` [`string`].
+
+**Example:**
+```json
+{
+    "config": {
+        "foxy": {
+            "manager": "yarn",
+            "manager-update-options": "--flat"
+        }
+    }
+}
+```
+
+### Enable/disable the fallback for the asset package file of the project
+
+You can enable or disable the fallback of the asset package file with the option
+`config.foxy.fallback-asset` [`boolean`].
+
+**Example:**
+```json
+{
+    "config": {
+        "foxy": {
+            "fallback-asset": false
+        }
+    }
+}
+```
+
+### Enable/disable the fallback for the Composer lock file and its dependencies
+
+You can enable or disable the fallback of the Composer lock file and its dependencies with the option
+`config.foxy.fallback-composer` [`boolean`].
+
+**Example:**
+```json
+{
+    "config": {
+        "foxy": {
+            "fallback-composer": false
+        }
+    }
+}
+```
+
+### Enable/disable the running of asset manager
+
+You can enable or disable the running of the asset manager with the option
+`config.foxy.run-asset-manager` [`boolean`].
+
+**Example:**
+```json
+{
+    "config": {
+        "foxy": {
+            "run-asset-manager": false
+        }
+    }
+}
+```
+
+> **Note:**
+>
+> This option allow you to keep only the manipulation of the asset package file,
+> without the execution of the asset manager
+
+### Define the custom path of the mock package of PHP library
+
+You can define the custom path of the mock package of PHP library with the option
+`config.foxy.composer-asset-dir` [`string`].
+
+**Example:**
+```json
+{
+    "config": {
+        "foxy": {
+            "manager-bin": "./my/mock/asset/path/of/project"
+        }
+    }
+}
+```

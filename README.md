@@ -41,11 +41,13 @@ Features
   - Enable/disable the plugin
   - Choose the asset manager: NPM or Yarn (`npm` by default)
   - Lock the version of the asset manager with the Composer version range
+  - Define the custom path of binary of the asset manager
   - Enable/disable the fallback for the asset package file of the project
   - Enable/disable the fallback for the Composer lock file and its dependencies
   - Enable/disable the running of asset manager to keep only the manipulation of the asset package file
   - Override the install command options for the asset manager
   - Override the update command options for the asset manager
+  - Define the custom path of the mock package of PHP library
 - Works with the Composer commands:
   - `install`
   - `update`
