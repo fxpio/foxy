@@ -2,8 +2,9 @@ Get starting
 ============
 
 1. [Installation](index.md#installation)
-2. [Configuration](config.md)
-3. [FAQs](faqs.md)
+2. [Usage](usage.md)
+3. [Configuration](config.md)
+4. [FAQs](faqs.md)
 
 ## Installation
 
@@ -20,4 +21,5 @@ Composer will install the plugin to your project's vendor/foxy directory.
 
 You can read how to:
 
+- [Use this plugin](usage.md)
 - [Configure this plugin](config.md)
