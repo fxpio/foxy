@@ -149,9 +149,27 @@ abstract class AbstractAssetManager implements AssetManagerInterface
     protected function injectDependencies(array $dependencies)
     {
         $jsonFile = new JsonFile($this->getPackageName());
-        $section = $this->getSectionDependencies();
-        $installedAssets = array();
+        $package = $this->getAssetPackage($jsonFile);
+        $installedAssets = $this->getInstalledDependencies($package);
+        $package = $this->removeUnusedDependencies($package, $dependencies, $installedAssets);
+        $package = $this->addNewDependencies($package, $dependencies);
 
+        $content = isset($package['_content']) && is_string($package['_content']) ? $package['_content'] : null;
+        unset($package['_content']);
+        $jsonFile->write($package);
+
+        return $content;
+    }
+
+    /**
+     * Get the asset package with the content of json file in '_content' section.
+     *
+     * @param JsonFile $jsonFile The json file
+     *
+     * @return array
+     */
+    protected function getAssetPackage(JsonFile $jsonFile)
+    {
         if ($jsonFile->exists()) {
             $content = file_get_contents($this->getPackageName());
             $package = (array) $jsonFile->read();
@@ -159,6 +177,23 @@ abstract class AbstractAssetManager implements AssetManagerInterface
             $content = null;
             $package = array();
         }
+
+        $package['_content'] = $content;
+
+        return $package;
+    }
+
+    /**
+     * Get the installed asset dependencies.
+     *
+     * @param array $package The asset package
+     *
+     * @return array The installed asset dependencies
+     */
+    protected function getInstalledDependencies(array $package)
+    {
+        $section = $this->getSectionDependencies();
+        $installedAssets = array();
 
         if (isset($package[$section]) && is_array($package[$section])) {
             foreach ($package[$section] as $dependency => $version) {
@@ -168,10 +203,41 @@ abstract class AbstractAssetManager implements AssetManagerInterface
             }
         }
 
+        return $installedAssets;
+    }
+
+    /**
+     * Remove the unused asset dependencies.
+     *
+     * @param array $package         The asset package
+     * @param array $dependencies    The asset dependencies
+     * @param array $installedAssets The installed asset dependencies
+     *
+     * @return array The asset package
+     */
+    protected function removeUnusedDependencies(array $package, array $dependencies, array $installedAssets)
+    {
+        $section = $this->getSectionDependencies();
         $removeDependencies = array_diff_key($installedAssets, $dependencies);
+
         foreach ($removeDependencies as $dependency => $version) {
             unset($package[$section][$dependency]);
         }
+
+        return $package;
+    }
+
+    /**
+     * Add the new asset dependencies.
+     *
+     * @param array $package      The asset package
+     * @param array $dependencies The asset dependencies
+     *
+     * @return array The asset package
+     */
+    protected function addNewDependencies(array $package, array $dependencies)
+    {
+        $section = $this->getSectionDependencies();
 
         foreach ($dependencies as $name => $path) {
             if (!isset($installedAssets[$name])) {
@@ -181,9 +247,7 @@ abstract class AbstractAssetManager implements AssetManagerInterface
             }
         }
 
-        $jsonFile->write($package);
-
-        return $content;
+        return $package;
     }
 
     /**
