@@ -282,10 +282,10 @@ abstract class AbstractAssetManager implements AssetManagerInterface
         $timeout = ProcessExecutor::getTimeout();
         ProcessExecutor::setTimeout(null);
         $cmd = $this->isInstalled() ? $this->getUpdateCommand() : $this->getInstallCommand();
-        $res = $this->executor->execute($cmd);
+        $res = (int) $this->executor->execute($cmd);
         ProcessExecutor::setTimeout($timeout);
 
-        if ($res && $this->config->get('fallback-asset')) {
+        if ($res > 0 && $this->config->get('fallback-asset')) {
             $this->fs->remove($this->getPackageName());
 
             if (null !== $packageContent) {

@@ -77,7 +77,7 @@ class Solver implements SolverInterface
         $assets = $this->getAssets($composer, $assetDir, $packages);
         $res = $this->assetManager->addDependencies($composer->getPackage(), $assets);
 
-        if ($res && $this->config->get('fallback-composer')) {
+        if ($res > 0 && $this->config->get('fallback-composer')) {
             $this->fallbackComposerLockFile($composer, $io);
         }
     }
