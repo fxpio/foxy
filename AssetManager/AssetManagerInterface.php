@@ -11,6 +11,7 @@
 
 namespace Foxy\AssetManager;
 
+use Composer\Package\RootPackageInterface;
 use Foxy\Exception\RuntimeException;
 
 /**
@@ -73,9 +74,10 @@ interface AssetManagerInterface
     /**
      * Add the asset dependencies in asset package file.
      *
-     * @param array $dependencies The asset local dependencies
+     * @param RootPackageInterface $rootPackage  The composer root package
+     * @param array                $dependencies The asset local dependencies
      *
      * @return int
      */
-    public function addDependencies(array $dependencies);
+    public function addDependencies(RootPackageInterface $rootPackage, array $dependencies);
 }

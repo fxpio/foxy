@@ -12,6 +12,7 @@
 namespace Foxy\AssetManager;
 
 use Composer\Json\JsonFile;
+use Composer\Package\RootPackageInterface;
 use Composer\Semver\Constraint\Constraint;
 use Composer\Semver\VersionParser;
 use Composer\Util\Filesystem;
@@ -113,9 +114,9 @@ abstract class AbstractAssetManager implements AssetManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function addDependencies(array $dependencies)
+    public function addDependencies(RootPackageInterface $rootPackage, array $dependencies)
     {
-        $packageContent = $this->injectDependencies($dependencies);
+        $packageContent = $this->injectDependencies($rootPackage, $dependencies);
         $res = 0;
 
         if ($this->config->get('run-asset-manager')) {
@@ -149,14 +150,15 @@ abstract class AbstractAssetManager implements AssetManagerInterface
     /**
      * Add the asset dependencies in asset package file and retrieve the backup content of package file.
      *
-     * @param array $dependencies The asset local dependencies
+     * @param RootPackageInterface $rootPackage  The composer root package
+     * @param array                $dependencies The asset local dependencies
      *
      * @return string|null
      */
-    protected function injectDependencies(array $dependencies)
+    protected function injectDependencies(RootPackageInterface $rootPackage, array $dependencies)
     {
         $jsonFile = new JsonFile($this->getPackageName());
-        $package = $this->getAssetPackage($jsonFile);
+        $package = $this->getAssetPackage($jsonFile, $rootPackage);
         $installedAssets = $this->getInstalledDependencies($package);
         $package = $this->removeUnusedDependencies($package, $dependencies, $installedAssets);
         $package = $this->addNewDependencies($package, $dependencies);
@@ -171,11 +173,12 @@ abstract class AbstractAssetManager implements AssetManagerInterface
     /**
      * Get the asset package with the content of json file in '_content' section.
      *
-     * @param JsonFile $jsonFile The json file
+     * @param JsonFile             $jsonFile    The json file
+     * @param RootPackageInterface $rootPackage The composer root package
      *
      * @return array
      */
-    protected function getAssetPackage(JsonFile $jsonFile)
+    protected function getAssetPackage(JsonFile $jsonFile, RootPackageInterface $rootPackage)
     {
         if ($jsonFile->exists()) {
             $content = file_get_contents($this->getPackageName());
@@ -187,7 +190,7 @@ abstract class AbstractAssetManager implements AssetManagerInterface
 
         $package['_content'] = $content;
 
-        return $package;
+        return $this->injectRequiredKeys($rootPackage, $package);
     }
 
     /**
@@ -308,5 +311,28 @@ abstract class AbstractAssetManager implements AssetManagerInterface
         $options = trim($this->config->get('manager-'.$action.'-options', ''));
 
         return $bin.' '.$command.(empty($options) ? '' : ' '.$options);
+    }
+
+    /**
+     * Inject the required keys for asset package defined in root composer package.
+     *
+     * @param RootPackageInterface $rootPackage The composer root package
+     * @param array                $package     The asset package
+     *
+     * @return array The asset package
+     */
+    protected function injectRequiredKeys(RootPackageInterface $rootPackage, array $package)
+    {
+        if (!isset($package['license']) && count($rootPackage->getLicense()) > 0 && !isset($package['private'])) {
+            $license = current($rootPackage->getLicense());
+
+            if ('proprietary' === $license) {
+                $package['private'] = true;
+            } else {
+                $package['license'] = $license;
+            }
+        }
+
+        return $package;
     }
 }
