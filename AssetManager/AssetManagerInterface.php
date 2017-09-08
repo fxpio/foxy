@@ -58,6 +58,7 @@ interface AssetManagerInterface
     /**
      * Validate the version of asset manager.
      *
+     * @throws RuntimeException When the binary isn't installed
      * @throws RuntimeException When the version doesn't match
      */
     public function validate();
