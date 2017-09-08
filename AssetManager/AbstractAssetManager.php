@@ -18,7 +18,6 @@ use Composer\Util\Filesystem;
 use Composer\Util\ProcessExecutor;
 use Foxy\Config\Config;
 use Foxy\Exception\RuntimeException;
-use Foxy\Foxy;
 
 /**
  * Abstract Manager.
@@ -95,7 +94,7 @@ abstract class AbstractAssetManager implements AssetManagerInterface
     {
         $this->executor->execute($this->getVersionCommand(), $version);
         $version = trim($version);
-        $constraintVersion = $this->config->get('manager-version', Foxy::DEFAULT_CONFIG['manager-version']);
+        $constraintVersion = $this->config->get('manager-version');
 
         if ('' === $version) {
             throw new \RuntimeException(sprintf('The binary of "%s" must be installed', $this->getName()));
@@ -119,7 +118,7 @@ abstract class AbstractAssetManager implements AssetManagerInterface
         $packageContent = $this->injectDependencies($dependencies);
         $res = 0;
 
-        if ($this->config->get('run-asset-manager', Foxy::DEFAULT_CONFIG['run-asset-manager'])) {
+        if ($this->config->get('run-asset-manager')) {
             $res = $this->runAssetManager($packageContent);
         }
 
@@ -283,7 +282,7 @@ abstract class AbstractAssetManager implements AssetManagerInterface
         $res = $this->executor->execute($cmd);
         ProcessExecutor::setTimeout($timeout);
 
-        if ($res && $this->config->get('fallback-asset', Foxy::DEFAULT_CONFIG['fallback-asset'])) {
+        if ($res && $this->config->get('fallback-asset')) {
             $this->fs->remove($this->getPackageName());
 
             if (null !== $packageContent) {

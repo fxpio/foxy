@@ -19,7 +19,6 @@ use Composer\Util\Filesystem;
 use Foxy\AssetManager\AssetManagerInterface;
 use Foxy\Config\Config;
 use Foxy\Exception\RuntimeException;
-use Foxy\Foxy;
 use Foxy\Util\AssetUtil;
 
 /**
@@ -63,7 +62,7 @@ class Solver implements SolverInterface
      */
     public function solve(Composer $composer, IOInterface $io)
     {
-        if (!$this->config->get('enabled', Foxy::DEFAULT_CONFIG['enabled'])) {
+        if (!$this->config->get('enabled')) {
             return;
         }
 
@@ -78,7 +77,7 @@ class Solver implements SolverInterface
         $assets = $this->getAssets($composer, $assetDir, $packages);
         $res = $this->assetManager->addDependencies($assets);
 
-        if ($res && $this->config->get('fallback-composer', Foxy::DEFAULT_CONFIG['fallback-composer'])) {
+        if ($res && $this->config->get('fallback-composer')) {
             $this->fallbackComposerLockFile($composer, $io);
         }
     }

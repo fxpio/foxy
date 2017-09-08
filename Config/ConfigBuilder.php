@@ -26,15 +26,16 @@ abstract class ConfigBuilder
      * Build the config of plugin.
      *
      * @param Composer         $composer The composer
+     * @param array            $defaults The default values
      * @param IOInterface|null $io       The composer input/output
      *
      * @return Config
      */
-    public static function build(Composer $composer, $io = null)
+    public static function build(Composer $composer, array $defaults = array(), $io = null)
     {
         $config = self::getConfigBase($composer, $io);
 
-        return new Config($config);
+        return new Config($config, $defaults);
     }
 
     /**

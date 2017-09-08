@@ -28,16 +28,23 @@ final class Config
     /**
      * @var array
      */
+    private $defaults;
+
+    /**
+     * @var array
+     */
     private $cacheEnv = array();
 
     /**
      * Constructor.
      *
-     * @param array $config The config
+     * @param array $config   The config
+     * @param array $defaults The default values
      */
-    public function __construct(array $config)
+    public function __construct(array $config, array $defaults = array())
     {
         $this->config = $config;
+        $this->defaults = $defaults;
     }
 
     /**
@@ -50,7 +57,9 @@ final class Config
      */
     public function getArray($key, array $default = array())
     {
-        return $this->get($key, $default);
+        $value = $this->get($key, null);
+
+        return null !== $value ? $value : $default;
     }
 
     /**
@@ -76,7 +85,7 @@ final class Config
 
         return array_key_exists($key, $this->config)
             ? $this->config[$key]
-            : $default;
+            : $this->getDefaultValue($key, $default);
     }
 
     /**
@@ -193,5 +202,20 @@ final class Config
         }
 
         return $value;
+    }
+
+    /**
+     * Get the configured default value or custom default value.
+     *
+     * @param string     $key     The config key
+     * @param mixed|null $default The default value
+     *
+     * @return mixed|null
+     */
+    private function getDefaultValue($key, $default = null)
+    {
+        return null === $default && array_key_exists($key, $this->defaults)
+            ? $this->defaults[$key]
+            : $default;
     }
 }

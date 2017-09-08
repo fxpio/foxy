@@ -82,7 +82,7 @@ class Foxy implements PluginInterface, EventSubscriberInterface
      */
     public function activate(Composer $composer, IOInterface $io)
     {
-        $config = ConfigBuilder::build($composer, $io);
+        $config = ConfigBuilder::build($composer, self::DEFAULT_CONFIG, $io);
         $executor = new ProcessExecutor($io);
         $fs = new Filesystem($executor);
         $assetManager = $this->getAssetManager($config, $executor, $fs);
@@ -113,7 +113,7 @@ class Foxy implements PluginInterface, EventSubscriberInterface
      */
     protected function getAssetManager(Config $config, ProcessExecutor $executor, Filesystem $fs)
     {
-        $manager = $config->get('manager', static::DEFAULT_CONFIG['manager']);
+        $manager = $config->get('manager');
 
         foreach (static::ASSET_MANAGERS as $class) {
             $am = new $class($config, $executor, $fs);
