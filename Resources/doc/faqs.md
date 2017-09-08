@@ -6,6 +6,19 @@ What version required of Composer?
 
 See the documentation: [Installation](index.md#installation).
 
+Why this plugin?
+----------------
+
+It is certain that each language has its own dependency management system, and that it is highly recommended to use
+each package manager. NPM or Yarn works very well when the asset dependencies are managed only in the project,
+but when you create PHP libraries using assets, there is no way to automatically add asset dependencies,
+and most importantly, no verification of the versions can be done automatically. You must tell the developers
+that the library uses this or that asset, and you must ask him to add manually the asset dependencies to its
+asset manager of his project.
+
+Foxy automates the addition, update and deletion of the asset dependencies in NPM or Yarn, while restoring
+the project state, as well as PHP dependencies if NPM or Yarn terminates with an error.
+
 What is the difference between Foxy and Fxp Composer Asset Plugin?
 ------------------------------------------------------------------
 
