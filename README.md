@@ -2,6 +2,7 @@ Foxy
 ====
 
 [![Latest Version](https://img.shields.io/packagist/v/foxy/foxy.svg)](https://packagist.org/packages/foxy/foxy)
+[![Scrutinizer Code Quality](https://img.shields.io/scrutinizer/g/foxypkg/foxy.svg)](https://scrutinizer-ci.com/g/foxypkg/foxy?branch=master)
 
 Foxy allows you to validate and manage the assets (javascript, stylesheet, etc.) of PHP libraries
 during the installation of Composer dependencies with all permitted features
