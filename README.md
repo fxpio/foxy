@@ -21,11 +21,16 @@ of each package manager.
 
 #### Reliable
 
-Foxy uses the lock file of Composer, as well as NPM or Yarn lock files.
+Foxy creates mock packages of the PHP libraries containing only the asset dependencies definition file
+in a local folder, and simply associates these packages in the asset dependencies definition file of the
+project. Given that Foxy does not manipulate any asset dependencies, and let alone the version constraints,
+this allows NPM or Yarn to solve the asset dependencies without any intermediary. Moreover, the entire
+validation with the lock file and installation process is left to NPM or Yarn.
 
 #### Secure
 
-Foxy restores the Composer lock file as well as any PHP dependencies if NPM or Yarn ends with an error.
+Foxy restores the Composer lock file with all its PHP dependencies, as well as the asset dependencies
+definition file in the previous state, if NPM or Yarn ends with an error.
 
 Features
 --------
@@ -73,7 +78,7 @@ All the installation instructions are located in [documentation](Resources/doc/i
 License
 -------
 
-This composer plugin is under the MIT license. See the complete license in:
+Foxy is under the MIT license. See the complete license in:
 
 [LICENSE](LICENSE)
 
