@@ -127,27 +127,6 @@ abstract class AbstractAssetManager implements AssetManagerInterface
     }
 
     /**
-     * Get the command to retrieve the version.
-     *
-     * @return string
-     */
-    abstract public function getVersionCommand();
-
-    /**
-     * Get the command to install the asset dependencies.
-     *
-     * @return string
-     */
-    abstract public function getInstallCommand();
-
-    /**
-     * Get the command to update the asset dependencies.
-     *
-     * @return string
-     */
-    abstract public function getUpdateCommand();
-
-    /**
      * Add the asset dependencies in asset package file and retrieve the backup content of package file.
      *
      * @param RootPackageInterface $rootPackage  The composer root package
@@ -335,4 +314,25 @@ abstract class AbstractAssetManager implements AssetManagerInterface
 
         return $package;
     }
+
+    /**
+     * Get the command to retrieve the version.
+     *
+     * @return string
+     */
+    abstract protected function getVersionCommand();
+
+    /**
+     * Get the command to install the asset dependencies.
+     *
+     * @return string
+     */
+    abstract protected function getInstallCommand();
+
+    /**
+     * Get the command to update the asset dependencies.
+     *
+     * @return string
+     */
+    abstract protected function getUpdateCommand();
 }

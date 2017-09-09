@@ -37,7 +37,7 @@ class NpmManager extends AbstractAssetManager
     /**
      * {@inheritdoc}
      */
-    public function getVersionCommand()
+    protected function getVersionCommand()
     {
         return $this->buildCommand('npm', 'version', '--version');
     }
@@ -45,7 +45,7 @@ class NpmManager extends AbstractAssetManager
     /**
      * {@inheritdoc}
      */
-    public function getInstallCommand()
+    protected function getInstallCommand()
     {
         return $this->buildCommand('npm', 'install', 'install');
     }
@@ -53,7 +53,7 @@ class NpmManager extends AbstractAssetManager
     /**
      * {@inheritdoc}
      */
-    public function getUpdateCommand()
+    protected function getUpdateCommand()
     {
         return $this->buildCommand('npm', 'update', 'update');
     }
