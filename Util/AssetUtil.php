@@ -15,6 +15,7 @@ use Composer\Installer\InstallationManager;
 use Composer\Package\Link;
 use Composer\Package\PackageInterface;
 use Foxy\AssetManager\AssetManagerInterface;
+use Foxy\AssetPackage\AssetPackage;
 
 /**
  * Helper for Foxy.
@@ -32,7 +33,7 @@ class AssetUtil
      */
     public static function getName(PackageInterface $package)
     {
-        return '@composer-asset/'.str_replace(array('/'), '--', $package->getName());
+        return AssetPackage::COMPOSER_PREFIX.str_replace(array('/'), '--', $package->getName());
     }
 
     /**

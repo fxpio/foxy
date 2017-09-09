@@ -17,6 +17,8 @@ use Composer\Semver\Constraint\Constraint;
 use Composer\Semver\VersionParser;
 use Composer\Util\Filesystem;
 use Composer\Util\ProcessExecutor;
+use Foxy\AssetPackage\AssetPackage;
+use Foxy\AssetPackage\AssetPackageInterface;
 use Foxy\Config\Config;
 use Foxy\Exception\RuntimeException;
 
@@ -27,6 +29,8 @@ use Foxy\Exception\RuntimeException;
  */
 abstract class AbstractAssetManager implements AssetManagerInterface
 {
+    const NODE_MODULES_PATH = './node_modules';
+
     /**
      * @var Config
      */
@@ -67,14 +71,6 @@ abstract class AbstractAssetManager implements AssetManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function getSectionDependencies()
-    {
-        return 'dependencies';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function hasLockFile()
     {
         return file_exists($this->getLockPackageName());
@@ -85,7 +81,7 @@ abstract class AbstractAssetManager implements AssetManagerInterface
      */
     public function isInstalled()
     {
-        return is_dir('./node_modules');
+        return is_dir(self::NODE_MODULES_PATH);
     }
 
     /**
@@ -116,11 +112,11 @@ abstract class AbstractAssetManager implements AssetManagerInterface
      */
     public function addDependencies(RootPackageInterface $rootPackage, array $dependencies)
     {
-        $packageContent = $this->injectDependencies($rootPackage, $dependencies);
+        $assetPackage = $this->injectDependencies($rootPackage, $dependencies);
         $res = 0;
 
         if ($this->config->get('run-asset-manager')) {
-            $res = $this->runAssetManager($packageContent);
+            $res = $this->runAssetManager($assetPackage);
         }
 
         return $res;
@@ -132,119 +128,25 @@ abstract class AbstractAssetManager implements AssetManagerInterface
      * @param RootPackageInterface $rootPackage  The composer root package
      * @param array                $dependencies The asset local dependencies
      *
-     * @return string|null
+     * @return AssetPackageInterface
      */
     protected function injectDependencies(RootPackageInterface $rootPackage, array $dependencies)
     {
-        $jsonFile = new JsonFile($this->getPackageName());
-        $package = $this->getAssetPackage($jsonFile, $rootPackage);
-        $installedAssets = $this->getInstalledDependencies($package);
-        $package = $this->removeUnusedDependencies($package, $dependencies, $installedAssets);
-        $package = $this->addNewDependencies($package, $dependencies);
+        $assetPackage = new AssetPackage($rootPackage, new JsonFile($this->getPackageName()), $this->fs);
+        $assetPackage->removeUnusedDependencies($dependencies);
+        $alreadyInstalledDependencies = $assetPackage->addNewDependencies($dependencies);
 
-        $content = isset($package['_content']) && is_string($package['_content']) ? $package['_content'] : null;
-        unset($package['_content']);
-        $jsonFile->write($package);
+        $this->actionWhenComposerDependenciesAreAlreadyInstalled($alreadyInstalledDependencies);
 
-        return $content;
+        return $assetPackage->write();
     }
 
     /**
-     * Get the asset package with the content of json file in '_content' section.
+     * Action when the composer dependencies are already installed.
      *
-     * @param JsonFile             $jsonFile    The json file
-     * @param RootPackageInterface $rootPackage The composer root package
-     *
-     * @return array
+     * @param string[] $names the asset package name of composer dependencies
      */
-    protected function getAssetPackage(JsonFile $jsonFile, RootPackageInterface $rootPackage)
-    {
-        if ($jsonFile->exists()) {
-            $content = file_get_contents($this->getPackageName());
-            $package = (array) $jsonFile->read();
-        } else {
-            $content = null;
-            $package = array();
-        }
-
-        $package['_content'] = $content;
-
-        return $this->injectRequiredKeys($rootPackage, $package);
-    }
-
-    /**
-     * Get the installed asset dependencies.
-     *
-     * @param array $package The asset package
-     *
-     * @return array The installed asset dependencies
-     */
-    protected function getInstalledDependencies(array $package)
-    {
-        $section = $this->getSectionDependencies();
-        $installedAssets = array();
-
-        if (isset($package[$section]) && is_array($package[$section])) {
-            foreach ($package[$section] as $dependency => $version) {
-                if (0 === strpos($dependency, '@composer-asset/')) {
-                    $installedAssets[$dependency] = $version;
-                }
-            }
-        }
-
-        return $installedAssets;
-    }
-
-    /**
-     * Remove the unused asset dependencies.
-     *
-     * @param array $package         The asset package
-     * @param array $dependencies    The asset dependencies
-     * @param array $installedAssets The installed asset dependencies
-     *
-     * @return array The asset package
-     */
-    protected function removeUnusedDependencies(array $package, array $dependencies, array $installedAssets)
-    {
-        $section = $this->getSectionDependencies();
-        $removeDependencies = array_diff_key($installedAssets, $dependencies);
-
-        foreach ($removeDependencies as $dependency => $version) {
-            unset($package[$section][$dependency]);
-        }
-
-        return $package;
-    }
-
-    /**
-     * Add the new asset dependencies.
-     *
-     * @param array $package      The asset package
-     * @param array $dependencies The asset dependencies
-     *
-     * @return array The asset package
-     */
-    protected function addNewDependencies(array $package, array $dependencies)
-    {
-        $section = $this->getSectionDependencies();
-
-        foreach ($dependencies as $name => $path) {
-            if (!isset($installedAssets[$name])) {
-                $package[$section][$name] = 'file:./'.dirname($path);
-            } else {
-                $this->actionWhenComposerDependencyIsAlreadyInstalled($name);
-            }
-        }
-
-        return $package;
-    }
-
-    /**
-     * Action when the composer dependency is already installed.
-     *
-     * @param string $name the asset package name of composer dependency
-     */
-    protected function actionWhenComposerDependencyIsAlreadyInstalled($name)
+    protected function actionWhenComposerDependenciesAreAlreadyInstalled($names)
     {
         // do nothing by default
     }
@@ -252,11 +154,11 @@ abstract class AbstractAssetManager implements AssetManagerInterface
     /**
      * Run the asset manager to install/update the asset dependencies.
      *
-     * @param string|null $packageContent The backup content of package file
+     * @param AssetPackageInterface $assetPackage The asset package
      *
      * @return int
      */
-    protected function runAssetManager($packageContent)
+    protected function runAssetManager(AssetPackageInterface $assetPackage)
     {
         $timeout = ProcessExecutor::getTimeout();
         ProcessExecutor::setTimeout(null);
@@ -265,11 +167,7 @@ abstract class AbstractAssetManager implements AssetManagerInterface
         ProcessExecutor::setTimeout($timeout);
 
         if ($res > 0 && $this->config->get('fallback-asset')) {
-            $this->fs->remove($this->getPackageName());
-
-            if (null !== $packageContent) {
-                file_put_contents($this->getPackageName(), $packageContent);
-            }
+            $assetPackage->restore();
         }
 
         return $res;
@@ -290,29 +188,6 @@ abstract class AbstractAssetManager implements AssetManagerInterface
         $options = trim($this->config->get('manager-'.$action.'-options', ''));
 
         return $bin.' '.$command.(empty($options) ? '' : ' '.$options);
-    }
-
-    /**
-     * Inject the required keys for asset package defined in root composer package.
-     *
-     * @param RootPackageInterface $rootPackage The composer root package
-     * @param array                $package     The asset package
-     *
-     * @return array The asset package
-     */
-    protected function injectRequiredKeys(RootPackageInterface $rootPackage, array $package)
-    {
-        if (!isset($package['license']) && count($rootPackage->getLicense()) > 0 && !isset($package['private'])) {
-            $license = current($rootPackage->getLicense());
-
-            if ('proprietary' === $license) {
-                $package['private'] = true;
-            } else {
-                $package['license'] = $license;
-            }
-        }
-
-        return $package;
     }
 
     /**

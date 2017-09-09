@@ -61,8 +61,10 @@ class NpmManager extends AbstractAssetManager
     /**
      * {@inheritdoc}
      */
-    protected function actionWhenComposerDependencyIsAlreadyInstalled($name)
+    protected function actionWhenComposerDependenciesAreAlreadyInstalled($names)
     {
-        $this->fs->remove('./node_modules/'.$name);
+        foreach ($names as $name) {
+            $this->fs->remove(self::NODE_MODULES_PATH.'/'.$name);
+        }
     }
 }

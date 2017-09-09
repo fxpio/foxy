@@ -36,13 +36,6 @@ interface AssetManagerInterface
     public function getPackageName();
 
     /**
-     * Get the section name of dependencies.
-     *
-     * @return string
-     */
-    public function getSectionDependencies();
-
-    /**
      * Check if the lock file is present or not.
      *
      * @return bool
