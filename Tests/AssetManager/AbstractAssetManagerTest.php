@@ -19,7 +19,6 @@ use Foxy\AssetManager\AbstractAssetManager;
 use Foxy\AssetManager\AssetManagerInterface;
 use Foxy\AssetPackage\AssetPackageInterface;
 use Foxy\Config\Config;
-use Foxy\Tests\Fixtures\IO\IOMock;
 use Foxy\Tests\Fixtures\Util\ProcessExecutorMock;
 
 /**
@@ -74,7 +73,7 @@ abstract class AbstractAssetManagerTest extends \PHPUnit_Framework_TestCase
         parent::setUp();
 
         $this->config = new Config(array());
-        $this->io = new IOMock(false);
+        $this->io = $this->getMockBuilder(IOInterface::class)->getMock();
         $this->executor = new ProcessExecutorMock($this->io);
         $this->fs = $this->getMockBuilder('Composer\Util\Filesystem')->disableOriginalConstructor()->getMock();
         $this->sfs = new \Symfony\Component\Filesystem\Filesystem();
