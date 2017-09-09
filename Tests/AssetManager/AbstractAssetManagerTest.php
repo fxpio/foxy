@@ -157,7 +157,7 @@ abstract class AbstractAssetManagerTest extends \PHPUnit_Framework_TestCase
     abstract protected function getValidUpdateCommand();
 
     /**
-     * @expectedException \RuntimeException
+     * @expectedException \Foxy\Exception\RuntimeException
      * @expectedExceptionMessageRegExp /The binary of "(\w+)" must be installed/
      */
     public function testValidateWithoutInstalledManager()
@@ -166,7 +166,7 @@ abstract class AbstractAssetManagerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \RuntimeException
+     * @expectedException \Foxy\Exception\RuntimeException
      * @expectedExceptionMessageRegExp /The installed (\w+) version "42.0.0" doesn't match with the constraint version ">=50.0"/
      */
     public function testValidateWithInstalledManagerAndWithoutValidVersion()

@@ -94,7 +94,7 @@ abstract class AbstractAssetManager implements AssetManagerInterface
         $constraintVersion = $this->config->get('manager-version');
 
         if ('' === $version) {
-            throw new \RuntimeException(sprintf('The binary of "%s" must be installed', $this->getName()));
+            throw new RuntimeException(sprintf('The binary of "%s" must be installed', $this->getName()));
         }
 
         if ($constraintVersion) {
