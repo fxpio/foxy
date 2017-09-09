@@ -245,11 +245,12 @@ abstract class AbstractAssetManagerTest extends \PHPUnit_Framework_TestCase
         $jsonFile = new JsonFile($this->cwd.'/package.json');
         /* @var RootPackageInterface|\PHPUnit_Framework_MockObject_MockObject $rootPackage */
         $rootPackage = $this->getMockBuilder('Composer\Package\RootPackageInterface')->getMock();
+        $nodeModulePath = $this->cwd.ltrim(AbstractAssetManager::NODE_MODULES_PATH, '.');
 
         $jsonFile->write($package);
         $this->assertFileExists($jsonFile->getPath());
-        $this->sfs->mkdir(AbstractAssetManager::NODE_MODULES_PATH);
-        $this->assertFileExists($this->cwd.AbstractAssetManager::NODE_MODULES_PATH);
+        $this->sfs->mkdir($nodeModulePath);
+        $this->assertFileExists($nodeModulePath);
         $this->assertTrue($this->manager->isInstalled());
 
         $assetPackage = $this->manager->addDependencies($rootPackage, $allDependencies);
@@ -299,8 +300,9 @@ abstract class AbstractAssetManagerTest extends \PHPUnit_Framework_TestCase
         } else {
             $expectedCommand = $this->getValidUpdateCommand();
             file_put_contents($this->cwd.DIRECTORY_SEPARATOR.$this->manager->getPackageName(), '{}');
-            $this->sfs->mkdir(AbstractAssetManager::NODE_MODULES_PATH);
-            $this->assertFileExists($this->cwd.AbstractAssetManager::NODE_MODULES_PATH);
+            $nodeModulePath = $this->cwd.ltrim(AbstractAssetManager::NODE_MODULES_PATH, '.');
+            $this->sfs->mkdir($nodeModulePath);
+            $this->assertFileExists($nodeModulePath);
             $this->assertTrue($this->manager->isInstalled());
         }
 
