@@ -99,18 +99,33 @@ class AssetUtil
 
             if (0 === strpos($version, 'dev-') && isset($extra['branch-alias'][$version])) {
                 $version = str_replace('-dev', '', $extra['branch-alias'][$version]);
-                $exp = explode('.', $version);
-
-                if (count($exp) < 3) {
-                    $exp[] = '0';
-                }
-
-                $version = implode('.', $exp);
+                $version = self::formatVersion($version);
             }
 
             $packageValue['version'] = $version;
         }
 
         return $packageValue;
+    }
+
+    /**
+     * Format the version for the asset package.
+     *
+     * @param string $version The branch alias version
+     *
+     * @return string
+     */
+    private static function formatVersion($version)
+    {
+        $version = str_replace(array('x', 'X', '*'), '0', $version);
+        $exp = explode('.', $version);
+
+        if (($size = count($exp)) < 3) {
+            for ($i = $size; $i < 3; ++$i) {
+                $exp[] = '0';
+            }
+        }
+
+        return implode('.', $exp);
     }
 }
