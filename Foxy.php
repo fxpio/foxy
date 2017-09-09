@@ -87,7 +87,20 @@ class Foxy implements PluginInterface, EventSubscriberInterface
         $fs = new Filesystem($executor);
         $assetManager = $this->getAssetManager($config, $executor, $fs);
         $assetManager->validate();
-        $this->solver = new Solver($assetManager, $config, $fs);
+
+        if (null === $this->solver) {
+            $this->setSolver(new Solver($assetManager, $config, $fs));
+        }
+    }
+
+    /**
+     * Set the solver.
+     *
+     * @param SolverInterface $solver The solver
+     */
+    public function setSolver(SolverInterface $solver)
+    {
+        $this->solver = $solver;
     }
 
     /**
