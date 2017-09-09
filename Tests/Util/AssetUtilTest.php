@@ -56,7 +56,7 @@ class AssetUtilTest extends \PHPUnit_Framework_TestCase
     public function testGetName()
     {
         /* @var PackageInterface|\PHPUnit_Framework_MockObject_MockObject $package */
-        $package = $this->getMockBuilder(PackageInterface::class)->getMock();
+        $package = $this->getMockBuilder('Composer\Package\PackageInterface')->getMock();
         $package->expects($this->once())
             ->method('getName')
             ->willReturn('foo/bar');

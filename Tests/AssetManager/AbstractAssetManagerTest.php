@@ -73,7 +73,7 @@ abstract class AbstractAssetManagerTest extends \PHPUnit_Framework_TestCase
         parent::setUp();
 
         $this->config = new Config(array());
-        $this->io = $this->getMockBuilder(IOInterface::class)->getMock();
+        $this->io = $this->getMockBuilder('Composer\IO\IOInterface')->getMock();
         $this->executor = new ProcessExecutorMock($this->io);
         $this->fs = $this->getMockBuilder('Composer\Util\Filesystem')->disableOriginalConstructor()->getMock();
         $this->sfs = new \Symfony\Component\Filesystem\Filesystem();

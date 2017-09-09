@@ -46,10 +46,10 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->composer = $this->getMockBuilder(Composer::class)->disableOriginalConstructor()->getMock();
-        $this->composerConfig = $this->getMockBuilder(Config::class)->disableOriginalConstructor()->getMock();
-        $this->io = $this->getMockBuilder(IOInterface::class)->getMock();
-        $this->package = $this->getMockBuilder(RootPackageInterface::class)->getMock();
+        $this->composer = $this->getMockBuilder('Composer\Composer')->disableOriginalConstructor()->getMock();
+        $this->composerConfig = $this->getMockBuilder('Composer\Config')->disableOriginalConstructor()->getMock();
+        $this->io = $this->getMockBuilder('Composer\IO\IOInterface')->getMock();
+        $this->package = $this->getMockBuilder('Composer\Package\RootPackageInterface')->getMock();
 
         $this->composer->expects($this->any())
             ->method('getPackage')
