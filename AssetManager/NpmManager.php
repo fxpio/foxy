@@ -39,7 +39,7 @@ class NpmManager extends AbstractAssetManager
      */
     public function getVersionCommand()
     {
-        return 'npm --version';
+        return $this->buildCommand('npm', 'version', '--version');
     }
 
     /**

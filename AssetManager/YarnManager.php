@@ -39,7 +39,7 @@ class YarnManager extends AbstractAssetManager
      */
     public function getVersionCommand()
     {
-        return 'yarn --version';
+        return $this->buildCommand('yarn', 'version', '--version');
     }
 
     /**
