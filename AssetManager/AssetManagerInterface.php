@@ -12,6 +12,7 @@
 namespace Foxy\AssetManager;
 
 use Composer\Package\RootPackageInterface;
+use Foxy\AssetPackage\AssetPackageInterface;
 use Foxy\Exception\RuntimeException;
 
 /**
@@ -70,7 +71,16 @@ interface AssetManagerInterface
      * @param RootPackageInterface $rootPackage  The composer root package
      * @param array                $dependencies The asset local dependencies
      *
-     * @return int
+     * @return AssetPackageInterface
      */
     public function addDependencies(RootPackageInterface $rootPackage, array $dependencies);
+
+    /**
+     * Run the asset manager to install/update the asset dependencies.
+     *
+     * @param AssetPackageInterface|null $assetPackage The asset package
+     *
+     * @return int
+     */
+    public function run(AssetPackageInterface $assetPackage = null);
 }

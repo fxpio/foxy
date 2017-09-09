@@ -81,7 +81,7 @@ abstract class AbstractAssetManager implements AssetManagerInterface
      */
     public function isInstalled()
     {
-        return is_dir(self::NODE_MODULES_PATH);
+        return is_dir(self::NODE_MODULES_PATH) && file_exists($this->getPackageName());
     }
 
     /**
@@ -112,33 +112,35 @@ abstract class AbstractAssetManager implements AssetManagerInterface
      */
     public function addDependencies(RootPackageInterface $rootPackage, array $dependencies)
     {
-        $assetPackage = $this->injectDependencies($rootPackage, $dependencies);
-        $res = 0;
-
-        if ($this->config->get('run-asset-manager')) {
-            $res = $this->runAssetManager($assetPackage);
-        }
-
-        return $res;
-    }
-
-    /**
-     * Add the asset dependencies in asset package file and retrieve the backup content of package file.
-     *
-     * @param RootPackageInterface $rootPackage  The composer root package
-     * @param array                $dependencies The asset local dependencies
-     *
-     * @return AssetPackageInterface
-     */
-    protected function injectDependencies(RootPackageInterface $rootPackage, array $dependencies)
-    {
-        $assetPackage = new AssetPackage($rootPackage, new JsonFile($this->getPackageName()), $this->fs);
+        $assetPackage = new AssetPackage($rootPackage, new JsonFile($this->getPackageName()));
         $assetPackage->removeUnusedDependencies($dependencies);
         $alreadyInstalledDependencies = $assetPackage->addNewDependencies($dependencies);
 
         $this->actionWhenComposerDependenciesAreAlreadyInstalled($alreadyInstalledDependencies);
 
         return $assetPackage->write();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function run(AssetPackageInterface $assetPackage = null)
+    {
+        if (true !== $this->config->get('run-asset-manager')) {
+            return 0;
+        }
+
+        $timeout = ProcessExecutor::getTimeout();
+        ProcessExecutor::setTimeout(null);
+        $cmd = $this->isInstalled() ? $this->getUpdateCommand() : $this->getInstallCommand();
+        $res = (int) $this->executor->execute($cmd);
+        ProcessExecutor::setTimeout($timeout);
+
+        if ($res > 0 && $this->config->get('fallback-asset') && null !== $assetPackage) {
+            $assetPackage->restore();
+        }
+
+        return $res;
     }
 
     /**
@@ -149,28 +151,6 @@ abstract class AbstractAssetManager implements AssetManagerInterface
     protected function actionWhenComposerDependenciesAreAlreadyInstalled($names)
     {
         // do nothing by default
-    }
-
-    /**
-     * Run the asset manager to install/update the asset dependencies.
-     *
-     * @param AssetPackageInterface $assetPackage The asset package
-     *
-     * @return int
-     */
-    protected function runAssetManager(AssetPackageInterface $assetPackage)
-    {
-        $timeout = ProcessExecutor::getTimeout();
-        ProcessExecutor::setTimeout(null);
-        $cmd = $this->isInstalled() ? $this->getUpdateCommand() : $this->getInstallCommand();
-        $res = (int) $this->executor->execute($cmd);
-        ProcessExecutor::setTimeout($timeout);
-
-        if ($res > 0 && $this->config->get('fallback-asset')) {
-            $assetPackage->restore();
-        }
-
-        return $res;
     }
 
     /**
