@@ -47,6 +47,11 @@ abstract class AbstractAssetManager implements AssetManagerInterface
     protected $fs;
 
     /**
+     * @var bool
+     */
+    protected $updatable = true;
+
+    /**
      * Constructor.
      *
      * @param Config          $config   The config
@@ -82,6 +87,24 @@ abstract class AbstractAssetManager implements AssetManagerInterface
     public function isInstalled()
     {
         return is_dir(self::NODE_MODULES_PATH) && file_exists($this->getPackageName());
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setUpdatable($updatable)
+    {
+        $this->updatable = $updatable;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isUpdatable()
+    {
+        return $this->updatable && $this->isInstalled();
     }
 
     /**
@@ -132,7 +155,7 @@ abstract class AbstractAssetManager implements AssetManagerInterface
 
         $timeout = ProcessExecutor::getTimeout();
         ProcessExecutor::setTimeout($this->config->get('manager-timeout'));
-        $cmd = $this->isInstalled() ? $this->getUpdateCommand() : $this->getInstallCommand();
+        $cmd = $this->isUpdatable() ? $this->getUpdateCommand() : $this->getInstallCommand();
         $res = (int) $this->executor->execute($cmd);
         ProcessExecutor::setTimeout($timeout);
 

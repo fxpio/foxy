@@ -69,13 +69,23 @@ class Solver implements SolverInterface
     /**
      * {@inheritdoc}
      */
+    public function setUpdatable($updatable)
+    {
+        $this->assetManager->setUpdatable($updatable);
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function solve(Composer $composer, IOInterface $io)
     {
         if (!$this->config->get('enabled')) {
             return;
         }
 
-        $info = sprintf('<info>%s %s dependencies</info>', $this->assetManager->isInstalled() ? 'Updating' : 'Installing', $this->assetManager->getName());
+        $info = sprintf('<info>%s %s dependencies</info>', $this->assetManager->isUpdatable() ? 'Updating' : 'Installing', $this->assetManager->getName());
         $io->write($info);
 
         $packages = $composer->getRepositoryManager()->getLocalRepository()->getCanonicalPackages();

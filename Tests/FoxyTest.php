@@ -92,11 +92,28 @@ class FoxyTest extends \PHPUnit_Framework_TestCase
         $foxy->activate($this->composer, $this->io);
     }
 
-    public function testSolveAssets()
+    public function getSolveAssetsData()
     {
-        $event = new Event('solve_event', $this->composer, $this->io);
+        return array(
+            array('solve_event_install', false),
+            array('solve_event_update', true),
+        );
+    }
+
+    /**
+     * @dataProvider getSolveAssetsData
+     *
+     * @param string $eventName
+     * @param bool   $expectedUpdatable
+     */
+    public function testSolveAssets($eventName, $expectedUpdatable)
+    {
+        $event = new Event($eventName, $this->composer, $this->io);
         /* @var SolverInterface|\PHPUnit_Framework_MockObject_MockObject $solver */
         $solver = $this->getMockBuilder('Foxy\Solver\SolverInterface')->getMock();
+        $solver->expects($this->once())
+            ->method('setUpdatable')
+            ->with($expectedUpdatable);
         $solver->expects($this->once())
             ->method('solve')
             ->with($this->composer, $this->io);

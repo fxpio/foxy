@@ -22,6 +22,15 @@ use Composer\IO\IOInterface;
 interface SolverInterface
 {
     /**
+     * Define if the update action can be used.
+     *
+     * @param bool $updatable The value
+     *
+     * @return self
+     */
+    public function setUpdatable($updatable);
+
+    /**
      * Solve the asset dependencies.
      *
      * @param Composer    $composer The composer

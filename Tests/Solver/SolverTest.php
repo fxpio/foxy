@@ -178,6 +178,15 @@ class SolverTest extends \PHPUnit_Framework_TestCase
         $this->cwd = null;
     }
 
+    public function testSetUpdatable()
+    {
+        $this->manager->expects($this->once())
+            ->method('setUpdatable')
+            ->with(false);
+
+        $this->solver->setUpdatable(false);
+    }
+
     public function testSolveWithDisableOption()
     {
         $config = new Config(array(

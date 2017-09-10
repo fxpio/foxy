@@ -140,6 +140,17 @@ abstract class AbstractAssetManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($this->manager->isInstalled());
     }
 
+    public function testIsUpdatable()
+    {
+        $this->assertFalse($this->manager->isUpdatable());
+    }
+
+    public function testSetUpdatable()
+    {
+        $res = $this->manager->setUpdatable(false);
+        $this->assertInstanceOf('Foxy\AssetManager\AssetManagerInterface', $res);
+    }
+
     /**
      * @return string
      */
@@ -217,6 +228,7 @@ abstract class AbstractAssetManagerTest extends \PHPUnit_Framework_TestCase
         $rootPackage = $this->getMockBuilder('Composer\Package\RootPackageInterface')->getMock();
 
         $this->assertFalse($this->manager->isInstalled());
+        $this->assertFalse($this->manager->isUpdatable());
 
         $assetPackage = $this->manager->addDependencies($rootPackage, $allDependencies);
         $this->assertInstanceOf('Foxy\AssetPackage\AssetPackageInterface', $assetPackage);
@@ -255,6 +267,7 @@ abstract class AbstractAssetManagerTest extends \PHPUnit_Framework_TestCase
         file_put_contents($lockFilePath, '{}');
         $this->assertFileExists($lockFilePath);
         $this->assertTrue($this->manager->isInstalled());
+        $this->assertTrue($this->manager->isUpdatable());
 
         $assetPackage = $this->manager->addDependencies($rootPackage, $allDependencies);
         $this->assertInstanceOf('Foxy\AssetPackage\AssetPackageInterface', $assetPackage);
@@ -310,6 +323,7 @@ abstract class AbstractAssetManagerTest extends \PHPUnit_Framework_TestCase
             file_put_contents($lockFilePath, '{}');
             $this->assertFileExists($lockFilePath);
             $this->assertTrue($this->manager->isInstalled());
+            $this->assertTrue($this->manager->isUpdatable());
         }
 
         if (0 === $expectedRes) {

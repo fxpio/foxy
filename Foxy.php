@@ -112,6 +112,7 @@ class Foxy implements PluginInterface, EventSubscriberInterface
      */
     public function solveAssets(Event $event)
     {
+        $this->solver->setUpdatable(false !== strpos($event->getName(), 'update'));
         $this->solver->solve($event->getComposer(), $event->getIO());
     }
 

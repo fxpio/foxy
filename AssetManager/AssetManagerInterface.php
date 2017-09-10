@@ -51,6 +51,22 @@ interface AssetManagerInterface
     public function isInstalled();
 
     /**
+     * Define if the asset manager can be use the update command.
+     *
+     * @param bool $updatable The value
+     *
+     * @return self
+     */
+    public function setUpdatable($updatable);
+
+    /**
+     * Check if the asset manager can be use the update command or not.
+     *
+     * @return bool
+     */
+    public function isUpdatable();
+
+    /**
      * Get the filename of the lock file.
      *
      * @return string
