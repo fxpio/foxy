@@ -74,7 +74,7 @@ The config values are retrieved in priority in:
 
 ### Enable/disable the plugin
 
-You can enable or disable the plugin with the option `config.foxy.enabled` [`boolean`].
+You can enable or disable the plugin with the option `config.foxy.enabled` [`boolean`, default: `true`].
 
 **Example:**
 ```json
@@ -89,11 +89,11 @@ You can enable or disable the plugin with the option `config.foxy.enabled` [`boo
 
 ### Choose the asset manager
 
-You can choose the asset manager with the option `config.foxy.manager` [`string`].
+You can choose the asset manager with the option `config.foxy.manager` [`string`, default: `npm`].
 
 **Available values:**
 
-- `npm` (by default)
+- `npm`
 - `yarn`
 
 **Example:**
@@ -109,7 +109,8 @@ You can choose the asset manager with the option `config.foxy.manager` [`string`
 
 ### Lock the version of the asset manager with the Composer version range
 
-You can validate the version of the asset manager with the option `config.foxy.manager-version` [`string`].
+You can validate the version of the asset manager with the option
+`config.foxy.manager-version` [`string`, default: `null`].
 
 **Example:**
 ```json
@@ -125,7 +126,7 @@ You can validate the version of the asset manager with the option `config.foxy.m
 ### Define the custom path of binary of the asset manager
 
 You can define the custom path of the binary of the asset manager with the option
-`config.foxy.manager-bin` [`string`].
+`config.foxy.manager-bin` [`string`, default: `null`].
 
 **Example:**
 ```json
@@ -141,7 +142,7 @@ You can define the custom path of the binary of the asset manager with the optio
 ### Override the install command options for the asset manager
 
 You can add custom options for the asset manager binary for the install command with the
-option `config.foxy.manager-install-options` [`string`].
+option `config.foxy.manager-install-options` [`string`, default: `null`].
 
 **Example:**
 ```json
@@ -163,7 +164,7 @@ option `config.foxy.manager-install-options` [`string`].
 ### Override the update command options for the asset manager
 
 You can add custom options for the asset manager binary for the update command with the
-option `config.foxy.manager-update-options` [`string`].
+option `config.foxy.manager-update-options` [`string`, default: `null`].
 
 **Example:**
 ```json
@@ -180,7 +181,7 @@ option `config.foxy.manager-update-options` [`string`].
 ### Define the execution timeout of the asset manager
 
 You can define the execution timeout of the asset manager with the
-option `config.foxy.manager-timeout` [`int|null`].
+option `config.foxy.manager-timeout` [`int`, default: `null`].
 
 **Example:**
 ```json
@@ -196,7 +197,7 @@ option `config.foxy.manager-timeout` [`int|null`].
 ### Enable/disable the fallback for the asset package file of the project
 
 You can enable or disable the fallback of the asset package file with the option
-`config.foxy.fallback-asset` [`boolean`].
+`config.foxy.fallback-asset` [`boolean`, default: `true`].
 
 **Example:**
 ```json
@@ -212,7 +213,7 @@ You can enable or disable the fallback of the asset package file with the option
 ### Enable/disable the fallback for the Composer lock file and its dependencies
 
 You can enable or disable the fallback of the Composer lock file and its dependencies with the option
-`config.foxy.fallback-composer` [`boolean`].
+`config.foxy.fallback-composer` [`boolean`, default: `true`].
 
 **Example:**
 ```json
@@ -228,7 +229,7 @@ You can enable or disable the fallback of the Composer lock file and its depende
 ### Enable/disable the running of asset manager
 
 You can enable or disable the running of the asset manager with the option
-`config.foxy.run-asset-manager` [`boolean`].
+`config.foxy.run-asset-manager` [`boolean`, default: `true`].
 
 **Example:**
 ```json
@@ -249,7 +250,7 @@ You can enable or disable the running of the asset manager with the option
 ### Define the custom path of the mock package of PHP library
 
 You can define the custom path of the mock package of PHP library with the option
-`config.foxy.composer-asset-dir` [`string`].
+`config.foxy.composer-asset-dir` [`string`, default: `null`].
 
 **Example:**
 ```json
