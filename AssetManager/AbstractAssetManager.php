@@ -131,7 +131,7 @@ abstract class AbstractAssetManager implements AssetManagerInterface
         }
 
         $timeout = ProcessExecutor::getTimeout();
-        ProcessExecutor::setTimeout(null);
+        ProcessExecutor::setTimeout($this->config->get('manager-timeout'));
         $cmd = $this->isInstalled() ? $this->getUpdateCommand() : $this->getInstallCommand();
         $res = (int) $this->executor->execute($cmd);
         ProcessExecutor::setTimeout($timeout);

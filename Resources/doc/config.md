@@ -177,6 +177,22 @@ option `config.foxy.manager-update-options` [`string`].
 }
 ```
 
+### Define the execution timeout of the asset manager
+
+You can define the execution timeout of the asset manager with the
+option `config.foxy.manager-timeout` [`int|null`].
+
+**Example:**
+```json
+{
+    "config": {
+        "foxy": {
+            "manager-timeout": 420
+        }
+    }
+}
+```
+
 ### Enable/disable the fallback for the asset package file of the project
 
 You can enable or disable the fallback of the asset package file with the option

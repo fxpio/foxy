@@ -52,6 +52,7 @@ class Foxy implements PluginInterface, EventSubscriberInterface
         'manager-bin' => null,
         'manager-install-options' => null,
         'manager-update-options' => null,
+        'manager-timeout' => null,
         'composer-asset-dir' => null,
         'run-asset-manager' => true,
         'fallback-asset' => true,
