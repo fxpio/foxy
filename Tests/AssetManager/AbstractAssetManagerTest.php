@@ -251,6 +251,9 @@ abstract class AbstractAssetManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertFileExists($jsonFile->getPath());
         $this->sfs->mkdir($nodeModulePath);
         $this->assertFileExists($nodeModulePath);
+        $lockFilePath = $this->cwd.DIRECTORY_SEPARATOR.$this->manager->getLockPackageName();
+        file_put_contents($lockFilePath, '{}');
+        $this->assertFileExists($lockFilePath);
         $this->assertTrue($this->manager->isInstalled());
 
         $assetPackage = $this->manager->addDependencies($rootPackage, $allDependencies);
@@ -303,6 +306,9 @@ abstract class AbstractAssetManagerTest extends \PHPUnit_Framework_TestCase
             $nodeModulePath = $this->cwd.ltrim(AbstractAssetManager::NODE_MODULES_PATH, '.');
             $this->sfs->mkdir($nodeModulePath);
             $this->assertFileExists($nodeModulePath);
+            $lockFilePath = $this->cwd.DIRECTORY_SEPARATOR.$this->manager->getLockPackageName();
+            file_put_contents($lockFilePath, '{}');
+            $this->assertFileExists($lockFilePath);
             $this->assertTrue($this->manager->isInstalled());
         }
 
