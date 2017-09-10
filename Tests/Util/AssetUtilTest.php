@@ -110,7 +110,7 @@ class AssetUtilTest extends \PHPUnit_Framework_TestCase
      * @param Link[] $devRequires
      * @param bool   $fileExists
      */
-    public function testGetPathWithRequiredFoxyAndNoFile(array $requires, array $devRequires, $fileExists = false)
+    public function testGetPathWithRequiredFoxy(array $requires, array $devRequires, $fileExists = false)
     {
         /* @var InstallationManager|\PHPUnit_Framework_MockObject_MockObject $installationManager */
         $installationManager = $this->getMockBuilder('Composer\Installer\InstallationManager')
