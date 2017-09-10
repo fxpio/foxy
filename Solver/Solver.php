@@ -18,7 +18,6 @@ use Composer\Package\PackageInterface;
 use Composer\Util\Filesystem;
 use Foxy\AssetManager\AssetManagerInterface;
 use Foxy\Config\Config;
-use Foxy\Exception\RuntimeException;
 use Foxy\Util\AssetUtil;
 
 /**
@@ -44,17 +43,27 @@ class Solver implements SolverInterface
     protected $assetManager;
 
     /**
+     * @var ComposerFallbackInterface|null
+     */
+    protected $composerFallback;
+
+    /**
      * Constructor.
      *
-     * @param AssetManagerInterface $assetManager The asset manager
-     * @param Config                $config       The config
-     * @param Filesystem            $filesystem   The composer filesystem
+     * @param AssetManagerInterface          $assetManager     The asset manager
+     * @param Config                         $config           The config
+     * @param Filesystem                     $filesystem       The composer filesystem
+     * @param ComposerFallbackInterface|null $composerFallback The composer fallback
      */
-    public function __construct(AssetManagerInterface $assetManager, Config $config, Filesystem $filesystem)
+    public function __construct(AssetManagerInterface $assetManager,
+                                Config $config,
+                                Filesystem $filesystem,
+                                ComposerFallbackInterface $composerFallback = null)
     {
         $this->config = $config;
         $this->fs = $filesystem;
         $this->assetManager = $assetManager;
+        $this->composerFallback = $composerFallback;
     }
 
     /**
@@ -78,8 +87,8 @@ class Solver implements SolverInterface
         $assetPackage = $this->assetManager->addDependencies($composer->getPackage(), $assets);
         $res = $this->assetManager->run($assetPackage);
 
-        if ($res > 0 && $this->config->get('fallback-composer')) {
-            $this->fallbackComposerLockFile($composer, $io);
+        if ($res > 0 && $this->composerFallback) {
+            $this->composerFallback->run($composer, $io);
         }
     }
 
@@ -121,7 +130,7 @@ class Solver implements SolverInterface
     protected function getMockPackagePath(PackageInterface $package, $assetDir, $filename)
     {
         $packageName = AssetUtil::getName($package);
-        $packagePath = $assetDir.$package->getName();
+        $packagePath = rtrim($assetDir, '/').'/'.$package->getName();
         $newFilename = $packagePath.'/'.basename($filename);
         mkdir($packagePath, 0777, true);
         copy($filename, $newFilename);
@@ -132,16 +141,5 @@ class Solver implements SolverInterface
         $jsonFile->write($packageValue);
 
         return array($packageName, $this->fs->findShortestPath(getcwd(), $newFilename));
-    }
-
-    /**
-     * Fallback the composer lock file and dependencies.
-     *
-     * @param Composer    $composer The composer
-     * @param IOInterface $io       The io of composer
-     */
-    protected function fallbackComposerLockFile(Composer $composer, IOInterface $io)
-    {
-        throw new RuntimeException('The fallback for the Composer lock file and its dependencies is not implemented currently');
     }
 }

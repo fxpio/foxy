@@ -23,6 +23,7 @@ use Foxy\AssetManager\AssetManagerInterface;
 use Foxy\Config\Config;
 use Foxy\Config\ConfigBuilder;
 use Foxy\Exception\RuntimeException;
+use Foxy\Solver\ComposerFallback;
 use Foxy\Solver\Solver;
 use Foxy\Solver\SolverInterface;
 
@@ -89,7 +90,7 @@ class Foxy implements PluginInterface, EventSubscriberInterface
         $assetManager->validate();
 
         if (null === $this->solver) {
-            $this->setSolver(new Solver($assetManager, $config, $fs));
+            $this->setSolver(new Solver($assetManager, $config, $fs, new ComposerFallback($config)));
         }
     }
 
