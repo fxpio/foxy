@@ -12,10 +12,14 @@
 namespace Foxy\Tests\Fallback;
 
 use Composer\Composer;
+use Composer\Installer;
 use Composer\IO\IOInterface;
+use Composer\Json\JsonFile;
+use Composer\Package\Locker;
+use Composer\Util\Filesystem;
 use Foxy\Config\Config;
 use Foxy\Fallback\ComposerFallback;
-use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Console\Input\InputInterface;
 
 /**
  * Tests for composer fallback.
@@ -40,7 +44,22 @@ class ComposerFallbackTest extends \PHPUnit_Framework_TestCase
     protected $io;
 
     /**
-     * @var Filesystem
+     * @var InputInterface|\PHPUnit_Framework_MockObject_MockObject
+     */
+    protected $input;
+
+    /**
+     * @var Filesystem|\PHPUnit_Framework_MockObject_MockObject
+     */
+    protected $fs;
+
+    /**
+     * @var Installer|\PHPUnit_Framework_MockObject_MockObject
+     */
+    protected $installer;
+
+    /**
+     * @var \Symfony\Component\Filesystem\Filesystem
      */
     protected $sfs;
 
@@ -70,11 +89,14 @@ class ComposerFallbackTest extends \PHPUnit_Framework_TestCase
         ));
         $this->composer = $this->getMockBuilder('Composer\Composer')->disableOriginalConstructor()->getMock();
         $this->io = $this->getMockBuilder('Composer\IO\IOInterface')->getMock();
-        $this->sfs = new Filesystem();
+        $this->input = $this->getMockBuilder('Symfony\Component\Console\Input\InputInterface')->getMock();
+        $this->fs = $this->getMockBuilder('Composer\Util\Filesystem')->disableOriginalConstructor()->setMethods(array('remove'))->getMock();
+        $this->installer = $this->getMockBuilder('Composer\Installer')->disableOriginalConstructor()->setMethods(array('run'))->getMock();
+        $this->sfs = new \Symfony\Component\Filesystem\Filesystem();
         $this->sfs->mkdir($this->cwd);
         chdir($this->cwd);
 
-        $this->composerFallback = new ComposerFallback($this->composer, $this->io, $this->config);
+        $this->composerFallback = new ComposerFallback($this->composer, $this->io, $this->config, $this->input, $this->fs, $this->installer);
     }
 
     protected function tearDown()
@@ -86,18 +108,55 @@ class ComposerFallbackTest extends \PHPUnit_Framework_TestCase
         $this->config = null;
         $this->composer = null;
         $this->io = null;
+        $this->input = null;
+        $this->fs = null;
+        $this->installer = null;
         $this->sfs = null;
         $this->composerFallback = null;
         $this->oldCwd = null;
         $this->cwd = null;
     }
 
-    public function testRunWithDisableOption()
+    public function getSaveData()
+    {
+        return array(
+            array(true),
+            array(false),
+        );
+    }
+
+    /**
+     * @dataProvider getSaveData
+     *
+     * @param bool $withLockFile
+     */
+    public function testSave($withLockFile)
+    {
+        $rm = $this->getMockBuilder('Composer\Repository\RepositoryManager')->disableOriginalConstructor()->getMock();
+        $this->composer->expects($this->any())
+            ->method('getRepositoryManager')
+            ->willReturn($rm);
+
+        $im = $this->getMockBuilder('Composer\Installer\InstallationManager')->disableOriginalConstructor()->getMock();
+        $this->composer->expects($this->any())
+            ->method('getInstallationManager')
+            ->willReturn($im);
+
+        file_put_contents($this->cwd.'/composer.json', '{}');
+
+        if ($withLockFile) {
+            file_put_contents($this->cwd.'/composer.lock', json_encode(array('content-hash' => 'HASH_VALUE')));
+        }
+
+        $this->assertInstanceOf('Foxy\Fallback\ComposerFallback', $this->composerFallback->save());
+    }
+
+    public function testRestoreWithDisableOption()
     {
         $config = new Config(array(
             'fallback-composer' => false,
         ));
-        $composerFallback = new ComposerFallback($this->composer, $this->io, $config);
+        $composerFallback = new ComposerFallback($this->composer, $this->io, $config, $this->input);
 
         $this->io->expects($this->never())
             ->method('write');
@@ -105,12 +164,81 @@ class ComposerFallbackTest extends \PHPUnit_Framework_TestCase
         $composerFallback->restore();
     }
 
-    /**
-     * @expectedException \Foxy\Exception\RuntimeException
-     * @expectedExceptionMessage The fallback for the Composer lock file and its dependencies is not implemented currently
-     */
-    public function testRun()
+    public function getRestoreData()
     {
+        return array(
+            array(array()),
+            array(array(
+                array(
+                    'name' => 'foo/bar',
+                    'version' => '1.0.0.0',
+                ),
+            )),
+        );
+    }
+
+    /**
+     * @dataProvider getRestoreData
+     *
+     * @param array $packages
+     */
+    public function testRestore(array $packages)
+    {
+        $composerFile = 'composer.json';
+        $composerContent = '{}';
+        $lockFile = 'composer.lock';
+        $vendorDir = $this->cwd.'/vendor/';
+
+        file_put_contents($this->cwd.'/'.$composerFile, $composerContent);
+        file_put_contents($this->cwd.'/'.$lockFile, json_encode(array(
+            'content-hash' => 'HASH_VALUE',
+            'packages' => $packages,
+            'packages-dev' => array(),
+            'prefer-stable' => true,
+        )));
+
+        $rm = $this->getMockBuilder('Composer\Repository\RepositoryManager')->disableOriginalConstructor()->getMock();
+        $this->composer->expects($this->any())
+            ->method('getRepositoryManager')
+            ->willReturn($rm);
+
+        $im = $this->getMockBuilder('Composer\Installer\InstallationManager')->disableOriginalConstructor()->getMock();
+        $this->composer->expects($this->any())
+            ->method('getInstallationManager')
+            ->willReturn($im);
+
+        $this->io->expects($this->once())
+            ->method('write');
+
+        $locker = new Locker($this->io, new JsonFile($lockFile, null, $this->io), $rm, $im, file_get_contents($composerFile));
+        $this->composer->expects($this->atLeastOnce())
+            ->method('getLocker')
+            ->willReturn($locker);
+
+        $config = $this->getMockBuilder('Composer\Config')->disableOriginalConstructor()->setMethods(array('get'))->getMock();
+        $this->composer->expects($this->atLeastOnce())
+            ->method('getConfig')
+            ->willReturn($config);
+
+        $config->expects($this->atLeastOnce())
+            ->method('get')
+            ->willReturnCallback(function ($key, $default = null) use ($vendorDir) {
+                return 'vendor-dir' === $key ? $vendorDir : $default;
+            });
+
+        if (0 === count($packages)) {
+            $this->fs->expects($this->once())
+                ->method('remove')
+                ->with($vendorDir);
+        } else {
+            $this->fs->expects($this->never())
+                ->method('remove');
+
+            $this->installer->expects($this->once())
+                ->method('run');
+        }
+
+        $this->composerFallback->save();
         $this->composerFallback->restore();
     }
 }
