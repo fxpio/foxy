@@ -50,6 +50,11 @@ class ComposerFallback implements FallbackInterface
     protected $fs;
 
     /**
+     * @var Installer|null
+     */
+    protected $installer;
+
+    /**
      * @var array
      */
     protected $lock = array();
@@ -57,17 +62,23 @@ class ComposerFallback implements FallbackInterface
     /**
      * Constructor.
      *
-     * @param Composer        $composer The composer
-     * @param IOInterface     $io       The IO
-     * @param Config          $config   The config
-     * @param Filesystem|null $fs       The composer filesystem
+     * @param Composer        $composer  The composer
+     * @param IOInterface     $io        The IO
+     * @param Config          $config    The config
+     * @param Filesystem|null $fs        The composer filesystem
+     * @param Installer|null  $installer The installer
      */
-    public function __construct(Composer $composer, IOInterface $io, Config $config, Filesystem $fs = null)
+    public function __construct(Composer $composer,
+                                IOInterface $io,
+                                Config $config,
+                                Filesystem $fs = null,
+                                Installer $installer = null)
     {
         $this->composer = $composer;
         $this->io = $io;
         $this->config = $config;
         $this->fs = $fs ?: new Filesystem();
+        $this->installer = $installer;
     }
 
     /**
@@ -145,7 +156,7 @@ class ComposerFallback implements FallbackInterface
         $authoritative = $input->getOption('classmap-authoritative') || $config->get('classmap-authoritative');
         $apcu = $input->getOption('apcu-autoloader') || $config->get('apcu-autoloader');
 
-        Installer::create($this->io, $this->composer)
+        $this->getInstaller()
             ->setVerbose($input->getOption('verbose'))
             ->setPreferSource($preferSource)
             ->setPreferDist($preferDist)
@@ -172,5 +183,15 @@ class ComposerFallback implements FallbackInterface
     private function getLockValue($key, $default = null)
     {
         return isset($this->lock[$key]) ? $this->lock[$key] : $default;
+    }
+
+    /**
+     * Get the installer.
+     *
+     * @return Installer
+     */
+    private function getInstaller()
+    {
+        return null !== $this->installer ? $this->installer : Installer::create($this->io, $this->composer);
     }
 }
