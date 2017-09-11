@@ -21,6 +21,7 @@ use Composer\Util\Filesystem;
 use Foxy\Config\Config;
 use Foxy\Util\ConsoleUtil;
 use Foxy\Util\PackageUtil;
+use Symfony\Component\Console\Input\InputInterface;
 
 /**
  * Composer fallback.
@@ -45,6 +46,11 @@ class ComposerFallback implements FallbackInterface
     protected $config;
 
     /**
+     * @var InputInterface
+     */
+    protected $input;
+
+    /**
      * @var Filesystem
      */
     protected $fs;
@@ -65,18 +71,21 @@ class ComposerFallback implements FallbackInterface
      * @param Composer        $composer  The composer
      * @param IOInterface     $io        The IO
      * @param Config          $config    The config
+     * @param InputInterface  $input     The input
      * @param Filesystem|null $fs        The composer filesystem
      * @param Installer|null  $installer The installer
      */
     public function __construct(Composer $composer,
                                 IOInterface $io,
                                 Config $config,
+                                InputInterface $input,
                                 Filesystem $fs = null,
                                 Installer $installer = null)
     {
         $this->composer = $composer;
         $this->io = $io;
         $this->config = $config;
+        $this->input = $input;
         $this->fs = $fs ?: new Filesystem();
         $this->installer = $installer;
     }
@@ -149,25 +158,24 @@ class ComposerFallback implements FallbackInterface
      */
     protected function restorePreviousLockFile()
     {
-        $input = ConsoleUtil::getInput($this->io);
         $config = $this->composer->getConfig();
-        list($preferSource, $preferDist) = ConsoleUtil::getPreferredInstallOptions($config, $input);
-        $optimize = $input->getOption('optimize-autoloader') || $config->get('optimize-autoloader');
-        $authoritative = $input->getOption('classmap-authoritative') || $config->get('classmap-authoritative');
-        $apcu = $input->getOption('apcu-autoloader') || $config->get('apcu-autoloader');
+        list($preferSource, $preferDist) = ConsoleUtil::getPreferredInstallOptions($config, $this->input);
+        $optimize = $this->input->getOption('optimize-autoloader') || $config->get('optimize-autoloader');
+        $authoritative = $this->input->getOption('classmap-authoritative') || $config->get('classmap-authoritative');
+        $apcu = $this->input->getOption('apcu-autoloader') || $config->get('apcu-autoloader');
 
         $this->getInstaller()
-            ->setVerbose($input->getOption('verbose'))
+            ->setVerbose($this->input->getOption('verbose'))
             ->setPreferSource($preferSource)
             ->setPreferDist($preferDist)
-            ->setDevMode(!$input->getOption('no-dev'))
-            ->setDumpAutoloader(!$input->getOption('no-autoloader'))
+            ->setDevMode(!$this->input->getOption('no-dev'))
+            ->setDumpAutoloader(!$this->input->getOption('no-autoloader'))
             ->setRunScripts(false)
             ->setSkipSuggest(true)
             ->setOptimizeAutoloader($optimize)
             ->setClassMapAuthoritative($authoritative)
             ->setApcuAutoloader($apcu)
-            ->setIgnorePlatformRequirements($input->getOption('ignore-platform-reqs'))
+            ->setIgnorePlatformRequirements($this->input->getOption('ignore-platform-reqs'))
             ->run()
         ;
     }

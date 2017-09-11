@@ -26,6 +26,7 @@ use Foxy\Exception\RuntimeException;
 use Foxy\Fallback\ComposerFallback;
 use Foxy\Solver\Solver;
 use Foxy\Solver\SolverInterface;
+use Foxy\Util\ConsoleUtil;
 
 /**
  * Composer plugin.
@@ -84,12 +85,13 @@ class Foxy implements PluginInterface, EventSubscriberInterface
      */
     public function activate(Composer $composer, IOInterface $io)
     {
+        $input = ConsoleUtil::getInput($io);
         $config = ConfigBuilder::build($composer, self::DEFAULT_CONFIG, $io);
         $executor = new ProcessExecutor($io);
         $fs = new Filesystem($executor);
         $assetManager = $this->getAssetManager($config, $executor, $fs);
         $assetManager->validate();
-        $composerFallback = new ComposerFallback($composer, $io, $config, $fs);
+        $composerFallback = new ComposerFallback($composer, $io, $config, $input, $fs);
         $composerFallback->save();
         $this->solver = new Solver($assetManager, $config, $fs, $composerFallback);
     }
