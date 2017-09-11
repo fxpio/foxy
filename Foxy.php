@@ -89,10 +89,9 @@ class Foxy implements PluginInterface, EventSubscriberInterface
         $fs = new Filesystem($executor);
         $assetManager = $this->getAssetManager($config, $executor, $fs);
         $assetManager->validate();
-
-        if (null === $this->solver) {
-            $this->setSolver(new Solver($assetManager, $config, $fs, new ComposerFallback($config)));
-        }
+        $composerFallback = new ComposerFallback($config, $fs);
+        $composerFallback->saveLockFile($composer, $io);
+        $this->solver = new Solver($assetManager, $config, $fs, $composerFallback);
     }
 
     /**

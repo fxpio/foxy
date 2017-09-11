@@ -22,6 +22,16 @@ use Composer\IO\IOInterface;
 interface ComposerFallbackInterface
 {
     /**
+     * Save the content of the composer lock file.
+     *
+     * @param Composer    $composer The composer
+     * @param IOInterface $io       The IO
+     *
+     * @return self
+     */
+    public function saveLockFile(Composer $composer, IOInterface $io);
+
+    /**
      * Fallback the composer lock file and dependencies.
      *
      * @param Composer    $composer The composer
