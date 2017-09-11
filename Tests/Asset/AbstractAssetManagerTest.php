@@ -17,8 +17,8 @@ use Composer\Package\RootPackageInterface;
 use Composer\Util\Filesystem;
 use Foxy\Asset\AbstractAssetManager;
 use Foxy\Asset\AssetManagerInterface;
-use Foxy\Asset\AssetPackageInterface;
 use Foxy\Config\Config;
+use Foxy\Fallback\FallbackInterface;
 use Foxy\Tests\Fixtures\Util\ProcessExecutorMock;
 
 /**
@@ -54,6 +54,11 @@ abstract class AbstractAssetManagerTest extends \PHPUnit_Framework_TestCase
     protected $sfs;
 
     /**
+     * @var FallbackInterface|\PHPUnit_Framework_MockObject_MockObject
+     */
+    protected $fallback;
+
+    /**
      * @var AssetManagerInterface
      */
     protected $manager;
@@ -77,6 +82,7 @@ abstract class AbstractAssetManagerTest extends \PHPUnit_Framework_TestCase
         $this->executor = new ProcessExecutorMock($this->io);
         $this->fs = $this->getMockBuilder('Composer\Util\Filesystem')->disableOriginalConstructor()->getMock();
         $this->sfs = new \Symfony\Component\Filesystem\Filesystem();
+        $this->fallback = $this->getMockBuilder('Foxy\Fallback\FallbackInterface')->getMock();
         $this->manager = $this->getManager();
         $this->oldCwd = getcwd();
         $this->cwd = sys_get_temp_dir().DIRECTORY_SEPARATOR.'foxy_asset_manager_test_'.uniqid();
@@ -95,6 +101,7 @@ abstract class AbstractAssetManagerTest extends \PHPUnit_Framework_TestCase
         $this->executor = null;
         $this->fs = null;
         $this->sfs = null;
+        $this->fallback = null;
         $this->manager = null;
         $this->oldCwd = null;
         $this->cwd = null;
@@ -280,7 +287,6 @@ abstract class AbstractAssetManagerTest extends \PHPUnit_Framework_TestCase
         $this->config = new Config(array(), array(
             'run-asset-manager' => false,
         ));
-        $this->manager = $this->getManager();
 
         $this->assertSame(0, $this->getManager()->run());
     }
@@ -308,8 +314,6 @@ abstract class AbstractAssetManagerTest extends \PHPUnit_Framework_TestCase
             'fallback-asset' => true,
         ));
         $this->manager = $this->getManager();
-        /* @var AssetPackageInterface|\PHPUnit_Framework_MockObject_MockObject $assetPackage */
-        $assetPackage = $this->getMockBuilder('Foxy\Asset\AssetPackageInterface')->getMock();
 
         if ('install' === $action) {
             $expectedCommand = $this->getValidInstallCommand();
@@ -327,17 +331,17 @@ abstract class AbstractAssetManagerTest extends \PHPUnit_Framework_TestCase
         }
 
         if (0 === $expectedRes) {
-            $assetPackage->expects($this->never())
+            $this->fallback->expects($this->never())
                 ->method('restore');
         } else {
-            $assetPackage->expects($this->once())
+            $this->fallback->expects($this->once())
                 ->method('restore');
         }
 
         $this->executor->mockExecuteReturnValue = $expectedRes;
         $this->executor->mockExecuteOutputValue = 'ASSET MANAGER OUTPUT';
 
-        $this->assertSame($expectedRes, $this->getManager()->run($assetPackage));
+        $this->assertSame($expectedRes, $this->getManager()->run());
         $this->assertSame($expectedCommand, $this->executor->getLastCommand());
         $this->assertSame('ASSET MANAGER OUTPUT', $this->executor->getLastOutput());
     }

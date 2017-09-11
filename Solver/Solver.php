@@ -95,8 +95,8 @@ class Solver implements SolverInterface
         $this->fs->remove($assetDir);
 
         $assets = $this->getAssets($composer, $assetDir, $packages);
-        $assetPackage = $this->assetManager->addDependencies($composer->getPackage(), $assets);
-        $res = $this->assetManager->run($assetPackage);
+        $this->assetManager->addDependencies($composer->getPackage(), $assets);
+        $res = $this->assetManager->run();
 
         if ($res > 0 && $this->composerFallback) {
             $this->composerFallback->restore();

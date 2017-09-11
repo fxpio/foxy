@@ -79,7 +79,6 @@ class AssetPackageTest extends \PHPUnit_Framework_TestCase
         $assetPackage = new AssetPackage($this->rootPackage, $this->jsonFile);
 
         $this->assertSame($package, $assetPackage->getPackage());
-        $this->assertSame($contentString, $assetPackage->getOriginalContent());
     }
 
     public function testWrite()
@@ -239,83 +238,6 @@ class AssetPackageTest extends \PHPUnit_Framework_TestCase
         $assetPackage->removeUnusedDependencies($dependencies);
 
         $this->assertEquals($expected, $assetPackage->getPackage());
-    }
-
-    public function testRestoreWithPackageFile()
-    {
-        $filename = $this->cwd.'/package.json';
-        $package = array(
-            'dependencies' => array(
-                '@composer-asset/foo--bar' => 'file:./path/foo/bar',
-                '@bar/foo' => '^1.0.0',
-                '@composer-asset/baz--bar' => 'file:./path/baz/bar',
-            ),
-        );
-        $contentString = json_encode($package);
-        $this->addPackageFile($package);
-        $this->assertFileExists($filename);
-        $this->assertSame($contentString, file_get_contents($filename));
-
-        $assetPackage = new AssetPackage($this->rootPackage, $this->jsonFile);
-        $newPackage = $package;
-        unset($newPackage['dependencies']['@bar/foo']);
-        $assetPackage->setPackage($newPackage);
-
-        $this->jsonFile->expects($this->any())
-            ->method('write')
-            ->with($newPackage)
-            ->willReturnCallback(function ($value) use ($filename) {
-                $contentStringNew = json_encode($value);
-                file_put_contents($filename, $contentStringNew);
-                $this->assertFileExists($filename);
-                $this->assertSame($contentStringNew, file_get_contents($filename));
-            });
-
-        $assetPackage->write();
-        $this->assertNotSame($contentString, file_get_contents($filename));
-
-        $assetPackage->restore();
-        $this->assertFileExists($filename);
-        $this->assertSame($contentString, file_get_contents($filename));
-    }
-
-    public function testRestoreWithoutPackageFile()
-    {
-        $filename = $this->cwd.'/package.json';
-        $newPackage = array(
-            'dependencies' => array(
-                '@composer-asset/foo--bar' => 'file:./path/foo/bar',
-                '@bar/foo' => '^1.0.0',
-                '@composer-asset/baz--bar' => 'file:./path/baz/bar',
-            ),
-        );
-        $this->assertFileNotExists($filename);
-
-        $assetPackage = new AssetPackage($this->rootPackage, $this->jsonFile);
-        $assetPackage->setPackage($newPackage);
-
-        $this->jsonFile->expects($this->any())
-            ->method('exists')
-            ->willReturn(false);
-
-        $this->jsonFile->expects($this->any())
-            ->method('getPath')
-            ->willReturn($filename);
-
-        $this->jsonFile->expects($this->any())
-            ->method('write')
-            ->with($newPackage)
-            ->willReturnCallback(function ($value) use ($filename) {
-                $contentStringNew = json_encode($value);
-                file_put_contents($filename, $contentStringNew);
-                $this->assertFileExists($filename);
-                $this->assertSame($contentStringNew, file_get_contents($filename));
-            });
-
-        $assetPackage->write();
-
-        $assetPackage->restore();
-        $this->assertFileNotExists($filename);
     }
 
     /**

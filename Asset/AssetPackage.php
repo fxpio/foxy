@@ -13,7 +13,6 @@ namespace Foxy\Asset;
 
 use Composer\Json\JsonFile;
 use Composer\Package\RootPackageInterface;
-use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * Asset package.
@@ -31,16 +30,6 @@ class AssetPackage implements AssetPackageInterface
     protected $jsonFile;
 
     /**
-     * @var Filesystem
-     */
-    protected $fs;
-
-    /**
-     * @var string|null
-     */
-    protected $originalContent;
-
-    /**
      * @var array
      */
     protected $package = array();
@@ -50,15 +39,12 @@ class AssetPackage implements AssetPackageInterface
      *
      * @param RootPackageInterface $rootPackage The composer root package
      * @param JsonFile             $jsonFile    The json file
-     * @param Filesystem           $fs          The filesystem
      */
-    public function __construct(RootPackageInterface $rootPackage, JsonFile $jsonFile, Filesystem $fs = null)
+    public function __construct(RootPackageInterface $rootPackage, JsonFile $jsonFile)
     {
         $this->jsonFile = $jsonFile;
-        $this->fs = $fs ?: new Filesystem();
 
         if ($jsonFile->exists()) {
-            $this->originalContent = file_get_contents($jsonFile->getPath());
             $this->setPackage((array) $jsonFile->read());
         }
 
@@ -73,29 +59,6 @@ class AssetPackage implements AssetPackageInterface
         $this->jsonFile->write($this->package);
 
         return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function restore()
-    {
-        $path = $this->jsonFile->getPath();
-        $this->fs->remove($path);
-
-        if (null !== $this->originalContent) {
-            file_put_contents($path, $this->originalContent);
-        }
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getOriginalContent()
-    {
-        return $this->originalContent;
     }
 
     /**

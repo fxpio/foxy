@@ -120,7 +120,7 @@ class ComposerFallback implements FallbackInterface
             return;
         }
 
-        $this->io->write('<info>Fallback to previous state</info>');
+        $this->io->write('<info>Fallback to previous state for Composer</info>');
         $hasLock = $this->restoreLockData();
 
         if ($hasLock) {

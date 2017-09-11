@@ -26,20 +26,6 @@ interface AssetPackageInterface
     public function write();
 
     /**
-     * Restore the original content.
-     *
-     * @return self
-     */
-    public function restore();
-
-    /**
-     * Get the original content of asset package file.
-     *
-     * @return string|null
-     */
-    public function getOriginalContent();
-
-    /**
      * Set the asset package.
      *
      * @param array $package The asset package

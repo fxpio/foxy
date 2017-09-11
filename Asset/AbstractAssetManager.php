@@ -19,6 +19,7 @@ use Composer\Util\Filesystem;
 use Composer\Util\ProcessExecutor;
 use Foxy\Config\Config;
 use Foxy\Exception\RuntimeException;
+use Foxy\Fallback\FallbackInterface;
 
 /**
  * Abstract Manager.
@@ -45,6 +46,11 @@ abstract class AbstractAssetManager implements AssetManagerInterface
     protected $fs;
 
     /**
+     * @var FallbackInterface|null
+     */
+    protected $fallback;
+
+    /**
      * @var bool
      */
     protected $updatable = true;
@@ -52,15 +58,20 @@ abstract class AbstractAssetManager implements AssetManagerInterface
     /**
      * Constructor.
      *
-     * @param Config          $config   The config
-     * @param ProcessExecutor $executor The process
-     * @param Filesystem      $fs       The filesystem
+     * @param Config            $config   The config
+     * @param ProcessExecutor   $executor The process
+     * @param Filesystem        $fs       The filesystem
+     * @param FallbackInterface $fallback The asset fallback
      */
-    public function __construct(Config $config, ProcessExecutor $executor, Filesystem $fs)
+    public function __construct(Config $config,
+                                ProcessExecutor $executor,
+                                Filesystem $fs,
+                                FallbackInterface $fallback = null)
     {
         $this->config = $config;
         $this->executor = $executor;
         $this->fs = $fs;
+        $this->fallback = $fallback;
     }
 
     /**
@@ -85,6 +96,16 @@ abstract class AbstractAssetManager implements AssetManagerInterface
     public function isInstalled()
     {
         return is_dir(self::NODE_MODULES_PATH) && file_exists($this->getPackageName());
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setFallback(FallbackInterface $fallback)
+    {
+        $this->fallback = $fallback;
+
+        return $this;
     }
 
     /**
@@ -145,7 +166,7 @@ abstract class AbstractAssetManager implements AssetManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function run(AssetPackageInterface $assetPackage = null)
+    public function run()
     {
         if (true !== $this->config->get('run-asset-manager')) {
             return 0;
@@ -157,8 +178,8 @@ abstract class AbstractAssetManager implements AssetManagerInterface
         $res = (int) $this->executor->execute($cmd);
         ProcessExecutor::setTimeout($timeout);
 
-        if ($res > 0 && $this->config->get('fallback-asset') && null !== $assetPackage) {
-            $assetPackage->restore();
+        if ($res > 0 && null !== $this->fallback) {
+            $this->fallback->restore();
         }
 
         return $res;

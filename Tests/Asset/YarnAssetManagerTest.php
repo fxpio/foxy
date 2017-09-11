@@ -25,7 +25,7 @@ class YarnAssetManagerTest extends AbstractAssetManagerTest
      */
     protected function getManager()
     {
-        return new YarnManager($this->config, $this->executor, $this->fs);
+        return new YarnManager($this->config, $this->executor, $this->fs, $this->fallback);
     }
 
     /**

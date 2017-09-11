@@ -246,15 +246,11 @@ class SolverTest extends \PHPUnit_Framework_TestCase
             ->method('getPackageName')
             ->willReturn('package.json');
 
-        $assetPackage = $this->getMockBuilder('Foxy\Asset\AssetPackageInterface')->getMock();
-
         $this->manager->expects($this->once())
-            ->method('addDependencies')
-            ->willReturn($assetPackage);
+            ->method('addDependencies');
 
         $this->manager->expects($this->once())
             ->method('run')
-            ->with($assetPackage)
             ->willReturn($resRunManager);
 
         if (0 === $resRunManager) {

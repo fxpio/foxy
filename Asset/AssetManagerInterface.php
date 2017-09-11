@@ -13,6 +13,7 @@ namespace Foxy\Asset;
 
 use Composer\Package\RootPackageInterface;
 use Foxy\Exception\RuntimeException;
+use Foxy\Fallback\FallbackInterface;
 
 /**
  * Interface of asset manager.
@@ -48,6 +49,15 @@ interface AssetManagerInterface
      * @return bool
      */
     public function isInstalled();
+
+    /**
+     * Set the fallback.
+     *
+     * @param FallbackInterface $fallback The fallback
+     *
+     * @return self
+     */
+    public function setFallback(FallbackInterface $fallback);
 
     /**
      * Define if the asset manager can be use the update command.
@@ -93,9 +103,7 @@ interface AssetManagerInterface
     /**
      * Run the asset manager to install/update the asset dependencies.
      *
-     * @param AssetPackageInterface|null $assetPackage The asset package
-     *
      * @return int
      */
-    public function run(AssetPackageInterface $assetPackage = null);
+    public function run();
 }
