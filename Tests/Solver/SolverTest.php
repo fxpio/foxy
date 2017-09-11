@@ -22,7 +22,7 @@ use Composer\Repository\WritableRepositoryInterface;
 use Composer\Util\Filesystem;
 use Foxy\AssetManager\AssetManagerInterface;
 use Foxy\Config\Config;
-use Foxy\Solver\ComposerFallbackInterface;
+use Foxy\Fallback\FallbackInterface;
 use Foxy\Solver\Solver;
 use Foxy\Solver\SolverInterface;
 
@@ -84,7 +84,7 @@ class SolverTest extends \PHPUnit_Framework_TestCase
     protected $manager;
 
     /**
-     * @var ComposerFallbackInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var FallbackInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     protected $composerFallback;
 
@@ -122,7 +122,7 @@ class SolverTest extends \PHPUnit_Framework_TestCase
         $this->sfs = new \Symfony\Component\Filesystem\Filesystem();
         $this->package = $this->getMockBuilder('Composer\Package\RootPackageInterface')->getMock();
         $this->manager = $this->getMockBuilder('Foxy\AssetManager\AssetManagerInterface')->getMock();
-        $this->composerFallback = $this->getMockBuilder('Foxy\Solver\ComposerFallbackInterface')->getMock();
+        $this->composerFallback = $this->getMockBuilder('Foxy\Fallback\FallbackInterface')->getMock();
         $this->sfs->mkdir($this->cwd);
         chdir($this->cwd);
 
@@ -259,11 +259,13 @@ class SolverTest extends \PHPUnit_Framework_TestCase
 
         if (0 === $resRunManager) {
             $this->composerFallback->expects($this->never())
-                ->method('run');
+                ->method('restore');
         } else {
             $this->composerFallback->expects($this->once())
-                ->method('run')
-                ->with($this->composer, $this->io);
+                ->method('restore');
+
+            $this->expectException('RuntimeException');
+            $this->expectExceptionMessage('The asset manager ended with an error');
         }
 
         $requirePackageFilename = $requirePackagePath.DIRECTORY_SEPARATOR.$this->manager->getPackageName();

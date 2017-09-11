@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Foxy\Solver;
+namespace Foxy\Fallback;
 
 use Composer\Composer;
 use Composer\Factory;
@@ -27,8 +27,18 @@ use Foxy\Util\PackageUtil;
  *
  * @author François Pluchino <francois.pluchino@gmail.com>
  */
-class ComposerFallback implements ComposerFallbackInterface
+class ComposerFallback implements FallbackInterface
 {
+    /**
+     * @var Composer
+     */
+    protected $composer;
+
+    /**
+     * @var IOInterface
+     */
+    protected $io;
+
     /**
      * @var Config
      */
@@ -47,11 +57,15 @@ class ComposerFallback implements ComposerFallbackInterface
     /**
      * Constructor.
      *
-     * @param Config          $config The config
-     * @param Filesystem|null $fs     The composer filesystem
+     * @param Composer        $composer The composer
+     * @param IOInterface     $io       The IO
+     * @param Config          $config   The config
+     * @param Filesystem|null $fs       The composer filesystem
      */
-    public function __construct(Config $config, Filesystem $fs = null)
+    public function __construct(Composer $composer, IOInterface $io, Config $config, Filesystem $fs = null)
     {
+        $this->composer = $composer;
+        $this->io = $io;
         $this->config = $config;
         $this->fs = $fs ?: new Filesystem();
     }
@@ -59,13 +73,13 @@ class ComposerFallback implements ComposerFallbackInterface
     /**
      * {@inheritdoc}
      */
-    public function saveLockFile(Composer $composer, IOInterface $io)
+    public function save()
     {
-        $rm = $composer->getRepositoryManager();
-        $im = $composer->getInstallationManager();
+        $rm = $this->composer->getRepositoryManager();
+        $im = $this->composer->getInstallationManager();
         $composerFile = Factory::getComposerFile();
         $lockFile = str_replace('.json', '.lock', $composerFile);
-        $locker = new Locker($io, new JsonFile($lockFile, null, $io), $rm, $im, file_get_contents($composerFile));
+        $locker = new Locker($this->io, new JsonFile($lockFile, null, $this->io), $rm, $im, file_get_contents($composerFile));
 
         try {
             $lock = $locker->getLockData();
@@ -80,32 +94,30 @@ class ComposerFallback implements ComposerFallbackInterface
     /**
      * {@inheritdoc}
      */
-    public function run(Composer $composer, IOInterface $io)
+    public function restore()
     {
-        if ($this->config->get('fallback-composer')) {
-            $io->write('<info>Fallback to previous state</info>');
-            $hasLock = $this->restoreLockData($composer);
-
-            if ($hasLock) {
-                $this->restorePreviousLockFile($composer, $io);
-            } else {
-                $this->fs->remove($composer->getConfig()->get('vendor-dir'));
-            }
+        if (!$this->config->get('fallback-composer')) {
+            return;
         }
 
-        throw new \RuntimeException('The asset manager ended with an error');
+        $this->io->write('<info>Fallback to previous state</info>');
+        $hasLock = $this->restoreLockData();
+
+        if ($hasLock) {
+            $this->restorePreviousLockFile();
+        } else {
+            $this->fs->remove($this->composer->getConfig()->get('vendor-dir'));
+        }
     }
 
     /**
      * Restore the data of lock file.
      *
-     * @param Composer $composer The composer
-     *
      * @return bool
      */
-    protected function restoreLockData(Composer $composer)
+    protected function restoreLockData()
     {
-        $composer->getLocker()->setLockData(
+        $this->composer->getLocker()->setLockData(
             $this->getLockValue('packages', array()),
             $this->getLockValue('packages-dev'),
             $this->getLockValue('platform', array()),
@@ -118,25 +130,22 @@ class ComposerFallback implements ComposerFallbackInterface
             $this->getLockValue('platform-overrides', array())
         );
 
-        return $composer->getLocker()->isLocked();
+        return $this->composer->getLocker()->isLocked();
     }
 
     /**
      * Restore the PHP dependencies with the previous lock file.
-     *
-     * @param Composer    $composer The composer
-     * @param IOInterface $io       The IO
      */
-    protected function restorePreviousLockFile(Composer $composer, IOInterface $io)
+    protected function restorePreviousLockFile()
     {
-        $input = ConsoleUtil::getInput($io);
-        $config = $composer->getConfig();
+        $input = ConsoleUtil::getInput($this->io);
+        $config = $this->composer->getConfig();
         list($preferSource, $preferDist) = ConsoleUtil::getPreferredInstallOptions($config, $input);
         $optimize = $input->getOption('optimize-autoloader') || $config->get('optimize-autoloader');
         $authoritative = $input->getOption('classmap-authoritative') || $config->get('classmap-authoritative');
         $apcu = $input->getOption('apcu-autoloader') || $config->get('apcu-autoloader');
 
-        Installer::create($io, $composer)
+        Installer::create($this->io, $this->composer)
             ->setVerbose($input->getOption('verbose'))
             ->setPreferSource($preferSource)
             ->setPreferDist($preferDist)

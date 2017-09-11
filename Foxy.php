@@ -23,7 +23,7 @@ use Foxy\AssetManager\AssetManagerInterface;
 use Foxy\Config\Config;
 use Foxy\Config\ConfigBuilder;
 use Foxy\Exception\RuntimeException;
-use Foxy\Solver\ComposerFallback;
+use Foxy\Fallback\ComposerFallback;
 use Foxy\Solver\Solver;
 use Foxy\Solver\SolverInterface;
 
@@ -89,8 +89,8 @@ class Foxy implements PluginInterface, EventSubscriberInterface
         $fs = new Filesystem($executor);
         $assetManager = $this->getAssetManager($config, $executor, $fs);
         $assetManager->validate();
-        $composerFallback = new ComposerFallback($config, $fs);
-        $composerFallback->saveLockFile($composer, $io);
+        $composerFallback = new ComposerFallback($composer, $io, $config, $fs);
+        $composerFallback->save();
         $this->solver = new Solver($assetManager, $config, $fs, $composerFallback);
     }
 

@@ -60,6 +60,16 @@ class FoxyTest extends \PHPUnit_Framework_TestCase
         $this->composer->expects($this->any())
             ->method('getConfig')
             ->willReturn($this->composerConfig);
+
+        $rm = $this->getMockBuilder('Composer\Repository\RepositoryManager')->disableOriginalConstructor()->getMock();
+        $this->composer->expects($this->any())
+            ->method('getRepositoryManager')
+            ->willReturn($rm);
+
+        $im = $this->getMockBuilder('Composer\Installer\InstallationManager')->disableOriginalConstructor()->getMock();
+        $this->composer->expects($this->any())
+            ->method('getInstallationManager')
+            ->willReturn($im);
     }
 
     public function testGetSubscribedEvents()

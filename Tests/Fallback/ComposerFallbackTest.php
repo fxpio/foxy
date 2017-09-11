@@ -9,13 +9,12 @@
  * file that was distributed with this source code.
  */
 
-namespace Foxy\Tests\Solver;
+namespace Foxy\Tests\Fallback;
 
 use Composer\Composer;
 use Composer\IO\IOInterface;
 use Foxy\Config\Config;
-use Foxy\Solver\ComposerFallback;
-use Foxy\Solver\ComposerFallbackInterface;
+use Foxy\Fallback\ComposerFallback;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
@@ -56,7 +55,7 @@ class ComposerFallbackTest extends \PHPUnit_Framework_TestCase
     protected $cwd;
 
     /**
-     * @var ComposerFallbackInterface
+     * @var ComposerFallback
      */
     protected $composerFallback;
 
@@ -75,7 +74,7 @@ class ComposerFallbackTest extends \PHPUnit_Framework_TestCase
         $this->sfs->mkdir($this->cwd);
         chdir($this->cwd);
 
-        $this->composerFallback = new ComposerFallback($this->config);
+        $this->composerFallback = new ComposerFallback($this->composer, $this->io, $this->config);
     }
 
     protected function tearDown()
@@ -98,12 +97,12 @@ class ComposerFallbackTest extends \PHPUnit_Framework_TestCase
         $config = new Config(array(
             'fallback-composer' => false,
         ));
-        $composerFallback = new ComposerFallback($config);
+        $composerFallback = new ComposerFallback($this->composer, $this->io, $config);
 
         $this->io->expects($this->never())
             ->method('write');
 
-        $composerFallback->run($this->composer, $this->io);
+        $composerFallback->restore();
     }
 
     /**
@@ -112,6 +111,6 @@ class ComposerFallbackTest extends \PHPUnit_Framework_TestCase
      */
     public function testRun()
     {
-        $this->composerFallback->run($this->composer, $this->io);
+        $this->composerFallback->restore();
     }
 }

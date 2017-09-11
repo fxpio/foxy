@@ -18,6 +18,7 @@ use Composer\Package\PackageInterface;
 use Composer\Util\Filesystem;
 use Foxy\AssetManager\AssetManagerInterface;
 use Foxy\Config\Config;
+use Foxy\Fallback\FallbackInterface;
 use Foxy\Util\AssetUtil;
 
 /**
@@ -43,22 +44,22 @@ class Solver implements SolverInterface
     protected $assetManager;
 
     /**
-     * @var ComposerFallbackInterface|null
+     * @var FallbackInterface|null
      */
     protected $composerFallback;
 
     /**
      * Constructor.
      *
-     * @param AssetManagerInterface          $assetManager     The asset manager
-     * @param Config                         $config           The config
-     * @param Filesystem                     $filesystem       The composer filesystem
-     * @param ComposerFallbackInterface|null $composerFallback The composer fallback
+     * @param AssetManagerInterface  $assetManager     The asset manager
+     * @param Config                 $config           The config
+     * @param Filesystem             $filesystem       The composer filesystem
+     * @param FallbackInterface|null $composerFallback The composer fallback
      */
     public function __construct(AssetManagerInterface $assetManager,
                                 Config $config,
                                 Filesystem $filesystem,
-                                ComposerFallbackInterface $composerFallback = null)
+                                FallbackInterface $composerFallback = null)
     {
         $this->config = $config;
         $this->fs = $filesystem;
@@ -98,7 +99,9 @@ class Solver implements SolverInterface
         $res = $this->assetManager->run($assetPackage);
 
         if ($res > 0 && $this->composerFallback) {
-            $this->composerFallback->run($composer, $io);
+            $this->composerFallback->restore();
+
+            throw new \RuntimeException('The asset manager ended with an error');
         }
     }
 
