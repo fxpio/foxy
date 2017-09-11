@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Foxy\AssetPackage;
+namespace Foxy\Asset;
 
 /**
  * Interface of asset package.

@@ -9,10 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Foxy\AssetManager;
+namespace Foxy\Asset;
 
 use Composer\Package\RootPackageInterface;
-use Foxy\AssetPackage\AssetPackageInterface;
 use Foxy\Exception\RuntimeException;
 
 /**

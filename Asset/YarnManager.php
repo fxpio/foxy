@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Foxy\AssetManager;
+namespace Foxy\Asset;
 
 /**
  * Yarn Manager.

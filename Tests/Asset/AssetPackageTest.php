@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Foxy\Tests\AssetPackage;
+namespace Foxy\Tests\Asset;
 
 use Composer\Json\JsonFile;
 use Composer\Package\RootPackageInterface;
-use Foxy\AssetPackage\AssetPackage;
+use Foxy\Asset\AssetPackage;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**

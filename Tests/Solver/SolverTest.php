@@ -20,7 +20,7 @@ use Composer\Package\RootPackageInterface;
 use Composer\Repository\RepositoryManager;
 use Composer\Repository\WritableRepositoryInterface;
 use Composer\Util\Filesystem;
-use Foxy\AssetManager\AssetManagerInterface;
+use Foxy\Asset\AssetManagerInterface;
 use Foxy\Config\Config;
 use Foxy\Fallback\FallbackInterface;
 use Foxy\Solver\Solver;
@@ -121,7 +121,7 @@ class SolverTest extends \PHPUnit_Framework_TestCase
             ->setMethods(array('getInstallPath'))->getMock();
         $this->sfs = new \Symfony\Component\Filesystem\Filesystem();
         $this->package = $this->getMockBuilder('Composer\Package\RootPackageInterface')->getMock();
-        $this->manager = $this->getMockBuilder('Foxy\AssetManager\AssetManagerInterface')->getMock();
+        $this->manager = $this->getMockBuilder('Foxy\Asset\AssetManagerInterface')->getMock();
         $this->composerFallback = $this->getMockBuilder('Foxy\Fallback\FallbackInterface')->getMock();
         $this->sfs->mkdir($this->cwd);
         chdir($this->cwd);
@@ -246,7 +246,7 @@ class SolverTest extends \PHPUnit_Framework_TestCase
             ->method('getPackageName')
             ->willReturn('package.json');
 
-        $assetPackage = $this->getMockBuilder('Foxy\AssetPackage\AssetPackageInterface')->getMock();
+        $assetPackage = $this->getMockBuilder('Foxy\Asset\AssetPackageInterface')->getMock();
 
         $this->manager->expects($this->once())
             ->method('addDependencies')

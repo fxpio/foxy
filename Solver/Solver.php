@@ -16,7 +16,7 @@ use Composer\IO\IOInterface;
 use Composer\Json\JsonFile;
 use Composer\Package\PackageInterface;
 use Composer\Util\Filesystem;
-use Foxy\AssetManager\AssetManagerInterface;
+use Foxy\Asset\AssetManagerInterface;
 use Foxy\Config\Config;
 use Foxy\Fallback\FallbackInterface;
 use Foxy\Util\AssetUtil;

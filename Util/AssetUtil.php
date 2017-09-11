@@ -14,8 +14,8 @@ namespace Foxy\Util;
 use Composer\Installer\InstallationManager;
 use Composer\Package\Link;
 use Composer\Package\PackageInterface;
-use Foxy\AssetManager\AssetManagerInterface;
-use Foxy\AssetPackage\AssetPackage;
+use Foxy\Asset\AssetManagerInterface;
+use Foxy\Asset\AssetPackage;
 
 /**
  * Helper for Foxy.

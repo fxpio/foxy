@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Foxy\AssetManager;
+namespace Foxy\Asset;
 
 use Composer\Json\JsonFile;
 use Composer\Package\RootPackageInterface;
@@ -17,8 +17,6 @@ use Composer\Semver\Constraint\Constraint;
 use Composer\Semver\VersionParser;
 use Composer\Util\Filesystem;
 use Composer\Util\ProcessExecutor;
-use Foxy\AssetPackage\AssetPackage;
-use Foxy\AssetPackage\AssetPackageInterface;
 use Foxy\Config\Config;
 use Foxy\Exception\RuntimeException;
 

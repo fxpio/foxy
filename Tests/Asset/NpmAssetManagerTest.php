@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Foxy\Tests\AssetManager;
+namespace Foxy\Tests\Asset;
 
-use Foxy\AssetManager\NpmManager;
+use Foxy\Asset\NpmManager;
 
 /**
  * NPM asset manager tests.

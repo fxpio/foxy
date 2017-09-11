@@ -14,7 +14,7 @@ namespace Foxy\Tests\Util;
 use Composer\Installer\InstallationManager;
 use Composer\Package\Link;
 use Composer\Package\PackageInterface;
-use Foxy\AssetManager\AbstractAssetManager;
+use Foxy\Asset\AbstractAssetManager;
 use Foxy\Util\AssetUtil;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -75,7 +75,7 @@ class AssetUtilTest extends \PHPUnit_Framework_TestCase
             ->method('getInstallPath');
 
         /* @var AbstractAssetManager|\PHPUnit_Framework_MockObject_MockObject $assetManager */
-        $assetManager = $this->getMockBuilder('Foxy\AssetManager\AbstractAssetManager')
+        $assetManager = $this->getMockBuilder('Foxy\Asset\AbstractAssetManager')
             ->disableOriginalConstructor()
             ->getMockForAbstractClass();
 
@@ -122,7 +122,7 @@ class AssetUtilTest extends \PHPUnit_Framework_TestCase
             ->willReturn($this->cwd);
 
         /* @var AbstractAssetManager|\PHPUnit_Framework_MockObject_MockObject $assetManager */
-        $assetManager = $this->getMockBuilder('Foxy\AssetManager\AbstractAssetManager')
+        $assetManager = $this->getMockBuilder('Foxy\Asset\AbstractAssetManager')
             ->disableOriginalConstructor()
             ->getMockForAbstractClass();
 

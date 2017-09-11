@@ -19,7 +19,7 @@ use Composer\Script\Event;
 use Composer\Script\ScriptEvents;
 use Composer\Util\Filesystem;
 use Composer\Util\ProcessExecutor;
-use Foxy\AssetManager\AssetManagerInterface;
+use Foxy\Asset\AssetManagerInterface;
 use Foxy\Config\Config;
 use Foxy\Config\ConfigBuilder;
 use Foxy\Exception\RuntimeException;
@@ -39,8 +39,8 @@ class Foxy implements PluginInterface, EventSubscriberInterface
      * The list of the classes of asset managers.
      */
     const ASSET_MANAGERS = array(
-        'Foxy\AssetManager\NpmManager',
-        'Foxy\AssetManager\YarnManager',
+        'Foxy\Asset\NpmManager',
+        'Foxy\Asset\YarnManager',
     );
 
     /**

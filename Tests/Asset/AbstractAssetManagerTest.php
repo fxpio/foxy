@@ -9,15 +9,15 @@
  * file that was distributed with this source code.
  */
 
-namespace Foxy\Tests\AssetManager;
+namespace Foxy\Tests\Asset;
 
 use Composer\IO\IOInterface;
 use Composer\Json\JsonFile;
 use Composer\Package\RootPackageInterface;
 use Composer\Util\Filesystem;
-use Foxy\AssetManager\AbstractAssetManager;
-use Foxy\AssetManager\AssetManagerInterface;
-use Foxy\AssetPackage\AssetPackageInterface;
+use Foxy\Asset\AbstractAssetManager;
+use Foxy\Asset\AssetManagerInterface;
+use Foxy\Asset\AssetPackageInterface;
 use Foxy\Config\Config;
 use Foxy\Tests\Fixtures\Util\ProcessExecutorMock;
 
@@ -148,7 +148,7 @@ abstract class AbstractAssetManagerTest extends \PHPUnit_Framework_TestCase
     public function testSetUpdatable()
     {
         $res = $this->manager->setUpdatable(false);
-        $this->assertInstanceOf('Foxy\AssetManager\AssetManagerInterface', $res);
+        $this->assertInstanceOf('Foxy\Asset\AssetManagerInterface', $res);
     }
 
     /**
@@ -231,7 +231,7 @@ abstract class AbstractAssetManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($this->manager->isUpdatable());
 
         $assetPackage = $this->manager->addDependencies($rootPackage, $allDependencies);
-        $this->assertInstanceOf('Foxy\AssetPackage\AssetPackageInterface', $assetPackage);
+        $this->assertInstanceOf('Foxy\Asset\AssetPackageInterface', $assetPackage);
 
         $this->assertEquals($expectedPackage, $assetPackage->getPackage());
     }
@@ -270,7 +270,7 @@ abstract class AbstractAssetManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->manager->isUpdatable());
 
         $assetPackage = $this->manager->addDependencies($rootPackage, $allDependencies);
-        $this->assertInstanceOf('Foxy\AssetPackage\AssetPackageInterface', $assetPackage);
+        $this->assertInstanceOf('Foxy\Asset\AssetPackageInterface', $assetPackage);
 
         $this->assertEquals($expectedPackage, $assetPackage->getPackage());
     }
@@ -309,7 +309,7 @@ abstract class AbstractAssetManagerTest extends \PHPUnit_Framework_TestCase
         ));
         $this->manager = $this->getManager();
         /* @var AssetPackageInterface|\PHPUnit_Framework_MockObject_MockObject $assetPackage */
-        $assetPackage = $this->getMockBuilder('Foxy\AssetPackage\AssetPackageInterface')->getMock();
+        $assetPackage = $this->getMockBuilder('Foxy\Asset\AssetPackageInterface')->getMock();
 
         if ('install' === $action) {
             $expectedCommand = $this->getValidInstallCommand();
