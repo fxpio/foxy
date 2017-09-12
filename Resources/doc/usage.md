@@ -29,6 +29,8 @@ deal with the asset dependencies.
 
 ## Use the plugin in PHP library
 
+### With the Foxy dependency
+
 In the case if you use Foxy in a PHP library, you can render Foxy optional by adding its dependency in
 the `require-dev` section of the Composer file.
 
@@ -41,5 +43,26 @@ the `require-dev` section of the Composer file.
 }
 ```
 
-If no PHP dependency requires Foxy inevitably (always in `require-dev` section), you must add it
-to the `composer.json` file of your project.
+> **Note:**
+>
+> If no PHP dependency requires Foxy inevitably (always in `require-dev` section), you must add Foxy
+> in the required dependencies to the `composer.json` file of your project.
+
+### With the Composer's extra option
+
+However, if you want enable the Foxy for your library, but without required dependencies or dev dependencies,
+you can use the extra option `extra.foxy` in your `composer.json` file:
+
+**composer.json:**
+```json
+{
+    "extra": {
+        "foxy": true
+    }
+}
+```
+
+> **Note:**
+>
+> Like for the activation with the Foxy dependencies, you must add Foxy in the required dependencies
+> to the `composer.json` file of your project.

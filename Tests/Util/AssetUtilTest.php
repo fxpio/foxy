@@ -154,6 +154,70 @@ class AssetUtilTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expectedFilename, $res);
     }
 
+    public function getExtraData()
+    {
+        return array(
+            array(false, false),
+            array(true,  false),
+            array(false, true),
+            array(true,  true),
+        );
+    }
+
+    /**
+     * @dataProvider getExtraData
+     *
+     * @param bool $withExtra
+     * @param bool $fileExists
+     */
+    public function testGetPathWithExtraActivation($withExtra, $fileExists = false)
+    {
+        /* @var InstallationManager|\PHPUnit_Framework_MockObject_MockObject $installationManager */
+        $installationManager = $this->getMockBuilder('Composer\Installer\InstallationManager')
+            ->disableOriginalConstructor()
+            ->setMethods(array('getInstallPath'))
+            ->getMock();
+
+        if ($withExtra && $fileExists) {
+            $installationManager->expects($this->once())
+                ->method('getInstallPath')
+                ->willReturn($this->cwd);
+        }
+
+        /* @var AbstractAssetManager|\PHPUnit_Framework_MockObject_MockObject $assetManager */
+        $assetManager = $this->getMockBuilder('Foxy\Asset\AbstractAssetManager')
+            ->disableOriginalConstructor()
+            ->getMockForAbstractClass();
+
+        /* @var PackageInterface|\PHPUnit_Framework_MockObject_MockObject $package */
+        $package = $this->getMockBuilder('Composer\Package\PackageInterface')->getMock();
+        $package->expects($this->atLeastOnce())
+            ->method('getRequires')
+            ->willReturn(array());
+
+        $package->expects($this->atLeastOnce())
+            ->method('getDevRequires')
+            ->willReturn(array());
+
+        $package->expects($this->atLeastOnce())
+            ->method('getExtra')
+            ->willReturn(array(
+                'foxy' => $withExtra,
+            ));
+
+        if ($fileExists) {
+            $expectedFilename = $this->cwd.DIRECTORY_SEPARATOR.$assetManager->getPackageName();
+            file_put_contents($expectedFilename, '{}');
+            $expectedFilename = $withExtra ? str_replace('\\', '/', realpath($expectedFilename)) : null;
+        } else {
+            $expectedFilename = null;
+        }
+
+        $res = AssetUtil::getPath($installationManager, $assetManager, $package);
+
+        $this->assertSame($expectedFilename, $res);
+    }
+
     public function testHasNoPluginDependency()
     {
         $this->assertFalse(AssetUtil::hasPluginDependency(array(

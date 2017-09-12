@@ -50,13 +50,27 @@ class AssetUtil
         $isAsset = static::hasPluginDependency($package->getRequires()) || static::hasPluginDependency($package->getDevRequires());
         $path = null;
 
-        if ($isAsset) {
+        if ($isAsset || static::hasExtraActivation($package)) {
             $installPath = $installationManager->getInstallPath($package);
             $filename = $installPath.'/'.$assetManager->getPackageName();
             $path = file_exists($filename) ? str_replace('\\', '/', realpath($filename)) : null;
         }
 
         return $path;
+    }
+
+    /**
+     * Check if foxy is enabled in extra section of package.
+     *
+     * @param PackageInterface $package The package
+     *
+     * @return bool
+     */
+    public static function hasExtraActivation(PackageInterface $package)
+    {
+        $extra = $package->getExtra();
+
+        return isset($extra['foxy']) && true === $extra['foxy'];
     }
 
     /**
