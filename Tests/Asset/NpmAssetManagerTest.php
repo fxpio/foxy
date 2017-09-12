@@ -25,7 +25,7 @@ class NpmAssetManagerTest extends AbstractAssetManagerTest
      */
     protected function getManager()
     {
-        return new NpmManager($this->config, $this->executor, $this->fs, $this->fallback);
+        return new NpmManager($this->io, $this->config, $this->executor, $this->fs, $this->fallback);
     }
 
     /**

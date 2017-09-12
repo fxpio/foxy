@@ -11,6 +11,7 @@
 
 namespace Foxy\Asset;
 
+use Composer\IO\IOInterface;
 use Composer\Json\JsonFile;
 use Composer\Package\RootPackageInterface;
 use Composer\Semver\Constraint\Constraint;
@@ -29,6 +30,11 @@ use Foxy\Fallback\FallbackInterface;
 abstract class AbstractAssetManager implements AssetManagerInterface
 {
     const NODE_MODULES_PATH = './node_modules';
+
+    /**
+     * @var IOInterface
+     */
+    protected $io;
 
     /**
      * @var Config
@@ -58,16 +64,19 @@ abstract class AbstractAssetManager implements AssetManagerInterface
     /**
      * Constructor.
      *
+     * @param IOInterface       $io       The IO
      * @param Config            $config   The config
      * @param ProcessExecutor   $executor The process
      * @param Filesystem        $fs       The filesystem
      * @param FallbackInterface $fallback The asset fallback
      */
-    public function __construct(Config $config,
+    public function __construct(IOInterface $io,
+                                Config $config,
                                 ProcessExecutor $executor,
                                 Filesystem $fs,
                                 FallbackInterface $fallback = null)
     {
+        $this->io = $io;
         $this->config = $config;
         $this->executor = $executor;
         $this->fs = $fs;
@@ -159,6 +168,7 @@ abstract class AbstractAssetManager implements AssetManagerInterface
         $alreadyInstalledDependencies = $assetPackage->addNewDependencies($dependencies);
 
         $this->actionWhenComposerDependenciesAreAlreadyInstalled($alreadyInstalledDependencies);
+        $this->io->write(sprintf('<info>Merging Composer dependencies in the %s file</info>', $this->getPackageName()));
 
         return $assetPackage->write();
     }
@@ -171,6 +181,9 @@ abstract class AbstractAssetManager implements AssetManagerInterface
         if (true !== $this->config->get('run-asset-manager')) {
             return 0;
         }
+
+        $info = sprintf('<info>%s %s dependencies</info>', $this->isUpdatable() ? 'Updating' : 'Installing', $this->getName());
+        $this->io->write($info);
 
         $timeout = ProcessExecutor::getTimeout();
         ProcessExecutor::setTimeout($this->config->get('manager-timeout'));

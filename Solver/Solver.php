@@ -86,9 +86,6 @@ class Solver implements SolverInterface
             return;
         }
 
-        $info = sprintf('<info>%s %s dependencies</info>', $this->assetManager->isUpdatable() ? 'Updating' : 'Installing', $this->assetManager->getName());
-        $io->write($info);
-
         $packages = $composer->getRepositoryManager()->getLocalRepository()->getCanonicalPackages();
         $vendorDir = $composer->getConfig()->get('vendor-dir');
         $assetDir = $this->config->get('composer-asset-dir', $vendorDir.'/foxy/composer-asset/');

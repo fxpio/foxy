@@ -194,8 +194,8 @@ class SolverTest extends \PHPUnit_Framework_TestCase
         ));
         $solver = new Solver($this->manager, $config, $this->fs);
 
-        $this->io->expects($this->never())
-            ->method('write');
+        $this->manager->expects($this->never())
+            ->method('run');
 
         $solver->solve($this->composer, $this->io);
     }
@@ -232,9 +232,6 @@ class SolverTest extends \PHPUnit_Framework_TestCase
         $this->addInstalledPackages(array(
             $requirePackage,
         ));
-
-        $this->io->expects($this->once())
-            ->method('write');
 
         $requirePackagePath = $this->cwd.'/vendor/foo/bar';
 

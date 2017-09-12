@@ -92,7 +92,7 @@ class Foxy implements PluginInterface, EventSubscriberInterface
         $config = ConfigBuilder::build($composer, self::DEFAULT_CONFIG, $io);
         $executor = new ProcessExecutor($io);
         $fs = new Filesystem($executor);
-        $assetManager = $this->getAssetManager($config, $executor, $fs);
+        $assetManager = $this->getAssetManager($io, $config, $executor, $fs);
         $assetFallback = new AssetFallback($io, $config, $assetManager->getPackageName(), $fs);
         $composerFallback = new ComposerFallback($composer, $io, $config, $input, $fs);
         $this->solver = new Solver($assetManager, $config, $fs, $composerFallback);
@@ -127,6 +127,7 @@ class Foxy implements PluginInterface, EventSubscriberInterface
     /**
      * Get the asset manager.
      *
+     * @param IOInterface     $io       The IO
      * @param Config          $config   The config
      * @param ProcessExecutor $executor The process executor
      * @param Filesystem      $fs       The composer filesystem
@@ -135,12 +136,12 @@ class Foxy implements PluginInterface, EventSubscriberInterface
      *
      * @throws RuntimeException When the asset manager is not found
      */
-    protected function getAssetManager(Config $config, ProcessExecutor $executor, Filesystem $fs)
+    protected function getAssetManager(IOInterface $io, Config $config, ProcessExecutor $executor, Filesystem $fs)
     {
         $manager = $config->get('manager');
 
         foreach (static::ASSET_MANAGERS as $class) {
-            $am = new $class($config, $executor, $fs);
+            $am = new $class($io, $config, $executor, $fs);
 
             if ($am instanceof AssetManagerInterface && $manager === $am->getName()) {
                 return $am;
