@@ -123,7 +123,7 @@ class AssetUtil
      */
     public static function isProjectActivation(PackageInterface $package, array $configPackages)
     {
-        return true === static::getProjectActivation($package, $configPackages);
+        return true === self::getProjectActivation($package, $configPackages);
     }
 
     /**
