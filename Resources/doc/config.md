@@ -61,6 +61,21 @@ The accepted value types are:
 
 Can be overridden by `FOXY__ENABLED="false"` environment variable.
 
+**Example:**
+```json
+{
+    "config": {
+        "foxy": {
+            "enable-packages": {
+                "foo/*": true
+            }
+        }
+    }
+}
+```
+
+Can be overridden by `FOXY__ENABLE_PACKAGES="{"foo/*": true}"` environment variable.
+
 ### Config priority order
 
 The config values are retrieved in priority in:
@@ -258,6 +273,50 @@ You can define the custom path of the mock package of PHP library with the optio
     "config": {
         "foxy": {
             "manager-bin": "./my/mock/asset/path/of/project"
+        }
+    }
+}
+```
+
+### Enable/disable manually the PHP packages with an asset package definition
+
+By default, Foxy looks in the `composer.json` file of the PHP dependencies, if the mock package needs
+to be added into NPM or Yarn. However, some public PHP package already uses the `package.json` file
+to handle their asset dependencies, but Foxy is not enabled for this package. In this case, you can
+manually enable the PHP packages to be scanned in your project.
+
+Patterns can be written in Glob style or with regular expressions. In this case, the pattern must
+start and end with slash (`/`).
+
+You can define the patterns to enable or disable the packages with the option
+`config.foxy.enable-packages` [`array`, default: `array()`].
+
+**Example:**
+```json
+{
+    "config": {
+        "foxy": {
+            "enable-packages": {
+                "/^bar\/*/": true,
+                "foo/*": true,
+                "baz/test-*": false
+            }
+        }
+    }
+}
+```
+
+If you do not deactivate any packages, you can use a simple array.
+
+**Example:**
+```json
+{
+    "config": {
+        "foxy": {
+            "enable-packages": [
+                "/^bar\/*/",
+                "foo/*"
+            ]
         }
     }
 }

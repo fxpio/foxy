@@ -59,6 +59,7 @@ class Foxy implements PluginInterface, EventSubscriberInterface
         'run-asset-manager' => true,
         'fallback-asset' => true,
         'fallback-composer' => true,
+        'enable-packages' => array(),
     );
 
     /**

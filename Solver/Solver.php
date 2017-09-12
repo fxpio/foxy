@@ -117,10 +117,11 @@ class Solver implements SolverInterface
     protected function getAssets(Composer $composer, $assetDir, array $packages)
     {
         $installationManager = $composer->getInstallationManager();
+        $configPackages = $this->config->getArray('enable-packages');
         $assets = array();
 
         foreach ($packages as $package) {
-            $filename = AssetUtil::getPath($installationManager, $this->assetManager, $package);
+            $filename = AssetUtil::getPath($installationManager, $this->assetManager, $package, $configPackages);
 
             if (null !== $filename) {
                 list($packageName, $packagePath) = $this->getMockPackagePath($package, $assetDir, $filename);

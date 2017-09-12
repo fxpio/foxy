@@ -234,6 +234,47 @@ class AssetUtilTest extends \PHPUnit_Framework_TestCase
         )));
     }
 
+    public function getIsProjectActivationData()
+    {
+        return array(
+            array('full/qualified', true),
+            array('full-disable/qualified', false),
+            array('foo/bar', true),
+            array('baz/foo', false),
+            array('baz/foo-test', false),
+            array('bar/test', true),
+            array('other/package', false),
+            array('test-string/package', true),
+        );
+    }
+
+    /**
+     * @dataProvider getIsProjectActivationData
+     *
+     * @param string $packageName
+     * @param bool   $expected
+     */
+    public function testIsProjectActivation($packageName, $expected)
+    {
+        $enablePackages = array(
+            0 => 'test-string/*',
+            'foo/*' => true,
+            'baz/foo' => false,
+            '/^bar\/*/' => true,
+            'full/qualified' => true,
+            'full-disable/qualified' => false,
+        );
+
+        /* @var PackageInterface|\PHPUnit_Framework_MockObject_MockObject $package */
+        $package = $this->getMockBuilder('Composer\Package\PackageInterface')->getMock();
+        $package->expects($this->once())
+            ->method('getName')
+            ->willReturn($packageName);
+
+        $res = AssetUtil::isProjectActivation($package, $enablePackages);
+        $this->assertSame($expected, $res);
+    }
+
     public function getFormatPackageData()
     {
         return array(

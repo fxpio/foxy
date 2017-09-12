@@ -42,14 +42,15 @@ class AssetUtil
      * @param InstallationManager   $installationManager The installation manager
      * @param AssetManagerInterface $assetManager        The asset manager
      * @param PackageInterface      $package             The package
+     * @param array                 $configPackages      The packages defined in config
      *
      * @return string|null
      */
-    public static function getPath(InstallationManager $installationManager, AssetManagerInterface $assetManager, PackageInterface $package)
+    public static function getPath(InstallationManager $installationManager, AssetManagerInterface $assetManager, PackageInterface $package, array $configPackages = array())
     {
         $path = null;
 
-        if (static::isAsset($package)) {
+        if (static::isAsset($package, $configPackages)) {
             $installPath = $installationManager->getInstallPath($package);
             $filename = $installPath.'/'.$assetManager->getPackageName();
             $path = file_exists($filename) ? str_replace('\\', '/', realpath($filename)) : null;
@@ -61,15 +62,17 @@ class AssetUtil
     /**
      * Check if the package is available for Foxy.
      *
-     * @param PackageInterface $package The package
+     * @param PackageInterface $package        The package
+     * @param array            $configPackages The packages defined in config
      *
      * @return bool
      */
-    public static function isAsset(PackageInterface $package)
+    public static function isAsset(PackageInterface $package, array $configPackages = array())
     {
         return static::hasExtraActivation($package)
             || static::hasPluginDependency($package->getRequires())
-            || static::hasPluginDependency($package->getDevRequires());
+            || static::hasPluginDependency($package->getDevRequires())
+            || static::isProjectActivation($package, $configPackages);
     }
 
     /**
@@ -105,6 +108,32 @@ class AssetUtil
         }
 
         return $assets;
+    }
+
+    /**
+     * Check if the package is enabled by the project config.
+     *
+     * @param PackageInterface $package        The package
+     * @param array            $configPackages The packages defined in config
+     *
+     * @return bool
+     */
+    public static function isProjectActivation(PackageInterface $package, array $configPackages)
+    {
+        $name = $package->getName();
+
+        foreach ($configPackages as $pattern => $activation) {
+            if (is_int($pattern) && is_string($activation)) {
+                $pattern = $activation;
+                $activation = true;
+            }
+
+            if ((0 === strpos($pattern, '/') && preg_match($pattern, $name)) || fnmatch($pattern, $name)) {
+                return $activation;
+            }
+        }
+
+        return false;
     }
 
     /**
