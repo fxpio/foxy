@@ -69,10 +69,13 @@ class AssetUtil
      */
     public static function isAsset(PackageInterface $package, array $configPackages = array())
     {
-        return static::hasExtraActivation($package)
+        $projectConfig = self::getProjectActivation($package, $configPackages);
+        $enabled = false !== $projectConfig;
+
+        return $enabled && (static::hasExtraActivation($package)
             || static::hasPluginDependency($package->getRequires())
             || static::hasPluginDependency($package->getDevRequires())
-            || static::isProjectActivation($package, $configPackages);
+            || true === $projectConfig);
     }
 
     /**
@@ -120,20 +123,7 @@ class AssetUtil
      */
     public static function isProjectActivation(PackageInterface $package, array $configPackages)
     {
-        $name = $package->getName();
-
-        foreach ($configPackages as $pattern => $activation) {
-            if (is_int($pattern) && is_string($activation)) {
-                $pattern = $activation;
-                $activation = true;
-            }
-
-            if ((0 === strpos($pattern, '/') && preg_match($pattern, $name)) || fnmatch($pattern, $name)) {
-                return $activation;
-            }
-        }
-
-        return false;
+        return true === static::getProjectActivation($package, $configPackages);
     }
 
     /**
@@ -183,5 +173,33 @@ class AssetUtil
         }
 
         return implode('.', $exp);
+    }
+
+    /**
+     * Get the activation of the package defined in the project config.
+     *
+     * @param PackageInterface $package        The package
+     * @param array            $configPackages The packages defined in config
+     *
+     * @return bool|null returns NULL, if the package isn't defined in the project config
+     */
+    private static function getProjectActivation(PackageInterface $package, array $configPackages)
+    {
+        $name = $package->getName();
+        $value = null;
+
+        foreach ($configPackages as $pattern => $activation) {
+            if (is_int($pattern) && is_string($activation)) {
+                $pattern = $activation;
+                $activation = true;
+            }
+
+            if ((0 === strpos($pattern, '/') && preg_match($pattern, $name)) || fnmatch($pattern, $name)) {
+                $value = $activation;
+                break;
+            }
+        }
+
+        return $value;
     }
 }
