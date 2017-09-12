@@ -52,6 +52,7 @@ class Foxy implements PluginInterface, EventSubscriberInterface
         'manager' => 'npm',
         'manager-version' => null,
         'manager-bin' => null,
+        'manager-options' => null,
         'manager-install-options' => null,
         'manager-update-options' => null,
         'manager-timeout' => null,

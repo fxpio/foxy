@@ -154,6 +154,27 @@ You can define the custom path of the binary of the asset manager with the optio
 }
 ```
 
+### Override the install and update command options for the asset manager
+
+You can add custom options for the asset manager binary for the install and update commands with the
+option `config.foxy.manager-options` [`string`, default: `null`].
+
+**Example:**
+```json
+{
+    "config": {
+        "foxy": {
+            "manager": "yarn",
+            "manager-options": "--production=true --module-folder=./assets"
+        }
+    }
+}
+```
+
+> **Note:**
+>
+> It is rather recommended that you use the configuration files `.npmrc` for NPM, and `.yarnrc` for Yarn
+
 ### Override the install command options for the asset manager
 
 You can add custom options for the asset manager binary for the install command with the

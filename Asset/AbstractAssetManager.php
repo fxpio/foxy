@@ -207,9 +207,12 @@ abstract class AbstractAssetManager implements AssetManagerInterface
     protected function buildCommand($defaultBin, $action, $command)
     {
         $bin = $this->config->get('manager-bin', $defaultBin);
+        $gOptions = trim($this->config->get('manager-options', ''));
         $options = trim($this->config->get('manager-'.$action.'-options', ''));
 
-        return $bin.' '.$command.(empty($options) ? '' : ' '.$options);
+        return $bin.' '.$command
+            .(empty($gOptions) ? '' : ' '.$gOptions)
+            .(empty($options) ? '' : ' '.$options);
     }
 
     /**
