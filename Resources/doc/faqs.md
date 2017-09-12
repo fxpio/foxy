@@ -100,6 +100,18 @@ The advantage of Foxy, is that it allows you to keep the workflows of each tool.
 package mocks for NPM, and in this case, Composer must be launched before NPM or Yarn. After, nothing prevents
 you to using all available commands of your favorite asset manager.
 
+Why Foxy does nothing with the '--dry-run' option?
+--------------------------------------------------
+
+Foxy can work with Composer's `--dry-run` option, but chose to do nothing.  Given that the PHP dependencies
+are not installed, updated or deleted, Foxy can not update the `package.json` file, and so, NPM can not
+check the new constraints, if any. To sum up, this amounts to running the commands
+`composer update --dry-run` followed by `npm update --dry-run`.
+
+However, with the Foxy's fallbacks, this behavior is automatically reproduced, but by downloading the PHP
+dependencies, and restoring the `package.json` file, the `composer.lock` file, and all the PHP dependencies
+if the asset manager finishes with an error.
+
 How to increase the PHP memory limit?
 -------------------------------------
 
