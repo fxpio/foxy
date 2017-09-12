@@ -191,11 +191,11 @@ class AssetUtilTest extends \PHPUnit_Framework_TestCase
 
         /* @var PackageInterface|\PHPUnit_Framework_MockObject_MockObject $package */
         $package = $this->getMockBuilder('Composer\Package\PackageInterface')->getMock();
-        $package->expects($this->atLeastOnce())
+        $package->expects($this->any())
             ->method('getRequires')
             ->willReturn(array());
 
-        $package->expects($this->atLeastOnce())
+        $package->expects($this->any())
             ->method('getDevRequires')
             ->willReturn(array());
 

@@ -47,16 +47,29 @@ class AssetUtil
      */
     public static function getPath(InstallationManager $installationManager, AssetManagerInterface $assetManager, PackageInterface $package)
     {
-        $isAsset = static::hasPluginDependency($package->getRequires()) || static::hasPluginDependency($package->getDevRequires());
         $path = null;
 
-        if ($isAsset || static::hasExtraActivation($package)) {
+        if (static::isAsset($package)) {
             $installPath = $installationManager->getInstallPath($package);
             $filename = $installPath.'/'.$assetManager->getPackageName();
             $path = file_exists($filename) ? str_replace('\\', '/', realpath($filename)) : null;
         }
 
         return $path;
+    }
+
+    /**
+     * Check if the package is available for Foxy.
+     *
+     * @param PackageInterface $package The package
+     *
+     * @return bool
+     */
+    public static function isAsset(PackageInterface $package)
+    {
+        return static::hasExtraActivation($package)
+            || static::hasPluginDependency($package->getRequires())
+            || static::hasPluginDependency($package->getDevRequires());
     }
 
     /**
