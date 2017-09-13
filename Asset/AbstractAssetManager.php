@@ -163,12 +163,12 @@ abstract class AbstractAssetManager implements AssetManagerInterface
      */
     public function addDependencies(RootPackageInterface $rootPackage, array $dependencies)
     {
-        $assetPackage = new AssetPackage($rootPackage, new JsonFile($this->getPackageName()));
+        $assetPackage = new AssetPackage($rootPackage, new JsonFile($this->getPackageName(), null, $this->io));
         $assetPackage->removeUnusedDependencies($dependencies);
         $alreadyInstalledDependencies = $assetPackage->addNewDependencies($dependencies);
 
         $this->actionWhenComposerDependenciesAreAlreadyInstalled($alreadyInstalledDependencies);
-        $this->io->write(sprintf('<info>Merging Composer dependencies in the %s file</info>', $this->getPackageName()));
+        $this->io->write('<info>Merging Composer dependencies in the asset package</info>');
 
         return $assetPackage->write();
     }
