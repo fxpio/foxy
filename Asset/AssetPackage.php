@@ -22,6 +22,7 @@ use Composer\Package\RootPackageInterface;
 class AssetPackage implements AssetPackageInterface
 {
     const SECTION_DEPENDENCIES = 'dependencies';
+    const SECTION_DEV_DEPENDENCIES = 'devDependencies';
     const COMPOSER_PREFIX = '@composer-asset/';
 
     /**
@@ -113,6 +114,9 @@ class AssetPackage implements AssetPackageInterface
             }
         }
 
+        $this->orderPackages(self::SECTION_DEPENDENCIES);
+        $this->orderPackages(self::SECTION_DEV_DEPENDENCIES);
+
         return $existingPackages;
     }
 
@@ -148,6 +152,18 @@ class AssetPackage implements AssetPackageInterface
             } else {
                 $this->package['license'] = $license;
             }
+        }
+    }
+
+    /**
+     * Order the packages section.
+     *
+     * @param string $section The package section
+     */
+    protected function orderPackages($section)
+    {
+        if (isset($this->package[$section]) && is_array($this->package[$section])) {
+            ksort($this->package[$section], SORT_STRING);
         }
     }
 }

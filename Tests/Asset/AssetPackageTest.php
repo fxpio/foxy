@@ -181,9 +181,9 @@ class AssetPackageTest extends \PHPUnit_Framework_TestCase
     {
         $expected = array(
             'dependencies' => array(
-                '@composer-asset/foo--bar' => 'file:./path/foo/bar',
                 '@bar/foo' => '^1.0.0',
                 '@composer-asset/baz--bar' => 'file:./path/baz/bar',
+                '@composer-asset/foo--bar' => 'file:./path/foo/bar',
                 '@composer-asset/new--dependency' => 'file:./path/new/dependency',
             ),
         );
@@ -209,8 +209,8 @@ class AssetPackageTest extends \PHPUnit_Framework_TestCase
         $assetPackage = new AssetPackage($this->rootPackage, $this->jsonFile);
         $existing = $assetPackage->addNewDependencies($dependencies);
 
-        $this->assertEquals($expected, $assetPackage->getPackage());
-        $this->assertEquals($expectedExisting, $existing);
+        $this->assertSame($expected, $assetPackage->getPackage());
+        $this->assertSame($expectedExisting, $existing);
     }
 
     public function testRemoveUnusedDependencies()
