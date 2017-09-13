@@ -53,6 +53,7 @@ Features
   - Override the install command options for the asset manager
   - Override the update command options for the asset manager
   - Define the custom path of the mock package of PHP library
+  - Enable/disable manually the asset packages for the PHP libraries
 - Works with the Composer commands:
   - `install`
   - `update`
