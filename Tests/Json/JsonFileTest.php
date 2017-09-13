@@ -58,6 +58,62 @@ class JsonFileTest extends \PHPUnit_Framework_TestCase
         $this->cwd = null;
     }
 
+    public function testGetArrayKeysWithoutFile()
+    {
+        $filename = './package.json';
+        $jsonFile = new JsonFile($filename);
+
+        $this->assertSame(array(), $jsonFile->getArrayKeys());
+    }
+
+    public function testGetArrayKeysWithExistingFile()
+    {
+        $expected = array(
+            'contributors',
+        );
+        $content = <<<JSON
+{
+  "name": "test",
+  "contributors": [],
+  "dependencies": {}
+}
+
+JSON;
+
+        $filename = './package.json';
+        file_put_contents($filename, $content);
+        $this->assertFileExists($filename);
+
+        $jsonFile = new JsonFile($filename);
+
+        $this->assertSame($expected, $jsonFile->getArrayKeys());
+    }
+
+    public function testGetIndentWithoutFile()
+    {
+        $filename = './package.json';
+        $jsonFile = new JsonFile($filename);
+
+        $this->assertSame(4, $jsonFile->getIndent());
+    }
+
+    public function testGetIndentWithExistingFile()
+    {
+        $content = <<<JSON
+{
+  "name": "test"
+}
+JSON;
+
+        $filename = './package.json';
+        file_put_contents($filename, $content);
+        $this->assertFileExists($filename);
+
+        $jsonFile = new JsonFile($filename);
+
+        $this->assertSame(2, $jsonFile->getIndent());
+    }
+
     public function testWriteWithoutFile()
     {
         $expected = <<<JSON
@@ -86,13 +142,17 @@ JSON;
         $expected = <<<JSON
 {
   "name": "test",
+  "contributors": [],
+  "dependencies": {},
   "private": true
 }
 
 JSON;
         $content = <<<JSON
 {
-  "name": "test"
+  "name": "test",
+  "contributors": [],
+  "dependencies": {}
 }
 
 JSON;

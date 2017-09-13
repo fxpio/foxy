@@ -20,12 +20,28 @@ use Foxy\Json\JsonFormatter;
  */
 class JsonFormatterTest extends \PHPUnit_Framework_TestCase
 {
+    public function testGetArrayKeys()
+    {
+        $content = <<<JSON
+{
+  "name": "test",
+  "contributors": [],
+  "dependencies": {}
+}
+JSON;
+        $expected = array(
+            'contributors',
+        );
+
+        $this->assertSame($expected, JsonFormatter::getArrayKeys($content));
+    }
+
     public function testGetIndent()
     {
         $content = <<<JSON
 {
   "name": "test",
-  "dependencies: {}
+  "dependencies": {}
 }
 JSON;
 
@@ -37,6 +53,7 @@ JSON;
         $expected = <<<JSON
 {
   "name": "test",
+  "contributors": [],
   "dependencies": {
     "@foo/bar": "^1.0.0"
   },
@@ -45,6 +62,7 @@ JSON;
 JSON;
         $data = array(
             'name' => 'test',
+            'contributors' => array(),
             'dependencies' => array(
                 '@foo/bar' => '^1.0.0',
             ),
@@ -52,6 +70,6 @@ JSON;
         );
         $content = json_encode($data);
 
-        $this->assertSame($expected, JsonFormatter::format($content, 2));
+        $this->assertSame($expected, JsonFormatter::format($content, array('contributors'), 2));
     }
 }
