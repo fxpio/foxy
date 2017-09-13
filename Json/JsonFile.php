@@ -21,24 +21,24 @@ use Composer\Json\JsonFile as BaseJsonFile;
 class JsonFile extends BaseJsonFile
 {
     /**
-     * @var string[]|null
+     * @var string[]
      */
     private $arrayKeys;
 
     /**
-     * @var int|null
+     * @var int
      */
     private $indent;
 
     /**
-     * @var string[]|null
+     * @var string[]
      */
-    private static $encodeArrayKeys;
+    private static $encodeArrayKeys = array();
 
     /**
-     * @var int|null
+     * @var int
      */
-    private static $encodeIndent;
+    private static $encodeIndent = JsonFormatter::DEFAULT_INDENT;
 
     /**
      * Get the list of keys to be retained with an array representation if they are empty.
@@ -85,13 +85,11 @@ class JsonFile extends BaseJsonFile
      */
     public function write(array $hash, $options = 448)
     {
-        $prevArrayKeys = self::$encodeArrayKeys;
-        $prevIndent = self::$encodeIndent;
         self::$encodeArrayKeys = $this->getArrayKeys();
         self::$encodeIndent = $this->getIndent();
         parent::write($hash, $options);
-        self::$encodeArrayKeys = $prevArrayKeys;
-        self::$encodeIndent = $prevIndent;
+        self::$encodeArrayKeys = array();
+        self::$encodeIndent = JsonFormatter::DEFAULT_INDENT;
     }
 
     /**
