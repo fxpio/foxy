@@ -12,7 +12,6 @@
 namespace Foxy\Asset;
 
 use Composer\IO\IOInterface;
-use Composer\Json\JsonFile;
 use Composer\Package\RootPackageInterface;
 use Composer\Semver\Constraint\Constraint;
 use Composer\Semver\VersionParser;
@@ -21,6 +20,7 @@ use Composer\Util\ProcessExecutor;
 use Foxy\Config\Config;
 use Foxy\Exception\RuntimeException;
 use Foxy\Fallback\FallbackInterface;
+use Foxy\Json\JsonFile;
 
 /**
  * Abstract Manager.
