@@ -141,8 +141,10 @@ class AssetPackage implements AssetPackageInterface
         if (!isset($this->package['license']) && count($rootPackage->getLicense()) > 0) {
             $license = current($rootPackage->getLicense());
 
-            if ('proprietary' === $license && !isset($this->package['private'])) {
-                $this->package['private'] = true;
+            if ('proprietary' === $license) {
+                if (!isset($this->package['private'])) {
+                    $this->package['private'] = true;
+                }
             } else {
                 $this->package['license'] = $license;
             }
