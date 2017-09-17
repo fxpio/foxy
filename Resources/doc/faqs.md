@@ -11,13 +11,19 @@ Why this plugin?
 
 It is certain that each language has its own dependency management system, and that it is highly recommended to use
 each package manager. NPM or Yarn works very well when the asset dependencies are managed only in the project,
-but when you create PHP libraries using assets, there is no way to automatically add asset dependencies,
-and most importantly, no verification of the versions can be done automatically. You must tell the developers
-that the library uses this or that asset, and you must ask him to add manually the asset dependencies to its
-asset manager of his project.
+but when you create PHP libraries that using assets, there is no way to automatically add asset dependencies,
+and most importantly, no validation of versions can be done automatically. You must tell the developers
+the list of asset dependencies that using by your PHP library, and you must ask him to add manually the asset
+dependencies to its asset manager of his project.
 
-Foxy automates the addition, update and deletion of the asset dependencies in NPM or Yarn, while restoring
-the project state, as well as PHP dependencies if NPM or Yarn terminates with an error.
+However, another solution exist - what many projects propose - you must add the assets in the folder of the
+PHP library (like `/assets`, `/Resources/public`). Of course, with this method, the code is duplicated, it
+pollutes the source code of the PHP library, no version management/validation is possible, and it is even
+less possible, to use all tools such as Babel, Sass, Less, etc ...
+
+Foxy focuses solely on automation of the addition, update and deletion of the dependencies in the definition
+file of the asset package, while restoring the project state, as well as PHP dependencies if NPM or Yarn
+terminates with an error.
 
 What is the difference between Foxy and Fxp Composer Asset Plugin?
 ------------------------------------------------------------------
@@ -36,7 +42,7 @@ disadvantages to this approach:
 
 Now, Bower has been depreciated, NPM has a true lock file (since 5.x), as well as the possibility
 of using the private repositories, Yarn arrived with his big performances, and more and more javascript
-library requires a compilation because they use Babel, Typescript, SCSS, Less, etc...
+library requires a compilation because they use Babel, Typescript, Sass, Less, etc...
 
 Nodejs filling its gaps, and becoming more and more required, a plugin could finally perform the reverse operation,
 retaining the benefits of Fxp Composer Asset Plugin and NPM. So, conversely, Foxy creates package mocks for NPM

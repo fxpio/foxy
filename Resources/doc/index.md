@@ -1,10 +1,19 @@
 Get starting
 ============
 
-1. [Installation](index.md#installation)
-2. [Usage](usage.md)
-3. [Configuration](config.md)
-4. [FAQs](faqs.md)
+1. [Required dependencies](index.md#required-dependencies)
+2. [Installation](index.md#installation)
+3. [Usage](usage.md)
+4. [Configuration](config.md)
+5. [FAQs](faqs.md)
+
+## Required dependencies
+
+Foxy required:
+
+- [Nodejs](https://nodejs.org)
+- [NPM](https://www.npmjs.com) or [Yarn](https://yarnpkg.com)
+- [Git](https://git-scm.com)
 
 ## Installation
 
@@ -15,7 +24,7 @@ to know the Composer version required.
 $ composer require "foxy/foxy:^1.0.0"
 ```
 
-Composer will install the plugin to your project's vendor/foxy directory.
+Composer will install the plugin to your project's `vendor/foxy` directory.
 
 ## Next step
 

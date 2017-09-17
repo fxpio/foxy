@@ -7,10 +7,13 @@ Foxy
 [![Scrutinizer Code Quality](https://img.shields.io/scrutinizer/g/foxypkg/foxy.svg)](https://scrutinizer-ci.com/g/foxypkg/foxy?branch=master)
 [![SensioLabsInsight](https://img.shields.io/sensiolabs/i/01030987-5dc5-4753-92c8-70a9de80323a.svg)](https://insight.sensiolabs.com/projects/01030987-5dc5-4753-92c8-70a9de80323a)
 
-Foxy allows you to validate and manage the assets (javascript, stylesheet, etc.) of PHP libraries
-during the installation of Composer dependencies with all permitted features
-by [NPM](https://www.npmjs.com) or [Yarn](https://yarnpkg.com) with the `package.json` file
-in your PHP project and PHP libraries.
+Foxy focuses on automation of the addition, update and deletion of the asset dependencies (javascript,
+stylesheet, etc.) of PHP libraries in the project's `package.json` file during the execution of Composer,
+while restoring the project state, as well as PHP dependencies if [NPM](https://www.npmjs.com) or
+[Yarn](https://yarnpkg.com) terminates with an error. Consequently, all features and tools are usable
+(*.rc* files, [Webpack](https://webpack.js.org), [Gulp](https://gulpjs.com), [Grunt](https://gruntjs.com),
+[Babel](https://babeljs.io), [TypeScript](https://www.typescriptlang.org), [Sass](http://sass-lang.com),
+[Less](http://lesscss.org), etc.).
 
 #### Fast
 
@@ -35,8 +38,9 @@ definition file in the previous state, if NPM or Yarn ends with an error.
 Features
 --------
 
-- Works with the installation in the dependencies of the project or the libraries (not in global mode)
 - Works with Nodejs and NPM or Yarn
+- Works with the asset dependencies defined in the `package.json` file for projects and PHP libraries
+- Works with the installation in the dependencies of the project or libraries (not in global mode)
 - Works with public or private repositories
 - Works with all features of Composer, NPM and Yarn
 - Retains the native performances of Composer, NPM and Yarn
