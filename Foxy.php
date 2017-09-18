@@ -27,6 +27,7 @@ use Foxy\Fallback\AssetFallback;
 use Foxy\Fallback\ComposerFallback;
 use Foxy\Solver\Solver;
 use Foxy\Solver\SolverInterface;
+use Foxy\Util\ComposerUtil;
 use Foxy\Util\ConsoleUtil;
 
 /**
@@ -36,6 +37,8 @@ use Foxy\Util\ConsoleUtil;
  */
 class Foxy implements PluginInterface, EventSubscriberInterface
 {
+    const REQUIRED_COMPOSER_VERSION = '1.5.0';
+
     /**
      * The list of the classes of asset managers.
      */
@@ -88,6 +91,7 @@ class Foxy implements PluginInterface, EventSubscriberInterface
      */
     public function activate(Composer $composer, IOInterface $io)
     {
+        ComposerUtil::validateVersion(static::REQUIRED_COMPOSER_VERSION, Composer::VERSION);
         $input = ConsoleUtil::getInput($io);
         $config = ConfigBuilder::build($composer, self::DEFAULT_CONFIG, $io);
         $executor = new ProcessExecutor($io);
