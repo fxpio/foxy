@@ -33,6 +33,7 @@ class PackageUtil
         $loader = new ArrayLoader();
         $lockData = static::loadLockPackage($loader, $lockData);
         $lockData = static::loadLockPackage($loader, $lockData, true);
+        $lockData = static::convertLockAlias($lockData);
 
         return $lockData;
     }
@@ -55,6 +56,31 @@ class PackageUtil
                 $package = $loader->load($package);
                 $lockData[$key][$i] = $package instanceof AliasPackage ? $package->getAliasOf() : $package;
             }
+        }
+
+        return $lockData;
+    }
+
+    /**
+     * Convert the package aliases of the locker load data.
+     *
+     * @param array $lockData The lock data of locker
+     *
+     * @return array The lock data
+     */
+    public static function convertLockAlias(array $lockData)
+    {
+        if (isset($lockData['aliases'])) {
+            $aliases = array();
+
+            foreach ($lockData['aliases'] as $i => $config) {
+                $aliases[$config['package']][$config['version']] = array(
+                    'alias' => $config['alias'],
+                    'alias_normalized' => $config['alias_normalized'],
+                );
+            }
+
+            $lockData['aliases'] = $aliases;
         }
 
         return $lockData;

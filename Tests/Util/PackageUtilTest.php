@@ -63,4 +63,43 @@ class PackageUtilTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertSame(array(), PackageUtil::loadLockPackages(array()));
     }
+
+    public function testConvertLockAlias()
+    {
+        $lockData = array(
+            'aliases' => array(
+                array(
+                    'alias' => '1.0.0',
+                    'alias_normalized' => '1.0.0.0',
+                    'version' => 'dev-feature/1.0-test',
+                    'package' => 'foo/bar',
+                ),
+                array(
+                    'alias' => '2.2.0',
+                    'alias_normalized' => '2.2.0.0',
+                    'version' => 'dev-feature/2.2-test',
+                    'package' => 'foo/baz',
+                ),
+            ),
+        );
+        $expectedAliases = array(
+            'foo/bar' => array(
+                'dev-feature/1.0-test' => array(
+                    'alias' => '1.0.0',
+                    'alias_normalized' => '1.0.0.0',
+                ),
+            ),
+            'foo/baz' => array(
+                'dev-feature/2.2-test' => array(
+                    'alias' => '2.2.0',
+                    'alias_normalized' => '2.2.0.0',
+                ),
+            ),
+        );
+
+        $convertedAliases = PackageUtil::convertLockAlias($lockData);
+
+        $this->assertArrayHasKey('aliases', $convertedAliases);
+        $this->assertEquals($convertedAliases['aliases'], $expectedAliases);
+    }
 }
