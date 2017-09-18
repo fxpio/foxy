@@ -275,6 +275,44 @@ class AssetUtilTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expected, $res);
     }
 
+    public function getIsProjectActivationWithWildcardData()
+    {
+        return array(
+            array('full/qualified', true),
+            array('full-disable/qualified', false),
+            array('foo/bar', true),
+            array('baz/foo', false),
+            array('baz/foo-test', false),
+            array('bar/test', true),
+            array('other/package', true),
+            array('test-string/package', true),
+        );
+    }
+
+    /**
+     * @dataProvider getIsProjectActivationWithWildcardData
+     *
+     * @param string $packageName
+     * @param bool   $expected
+     */
+    public function testIsProjectActivationWithWildcardPattern($packageName, $expected)
+    {
+        $enablePackages = array(
+            'baz/foo*' => false,
+            'full-disable/qualified' => false,
+            '*' => true,
+        );
+
+        /* @var PackageInterface|\PHPUnit_Framework_MockObject_MockObject $package */
+        $package = $this->getMockBuilder('Composer\Package\PackageInterface')->getMock();
+        $package->expects($this->once())
+            ->method('getName')
+            ->willReturn($packageName);
+
+        $res = AssetUtil::isProjectActivation($package, $enablePackages);
+        $this->assertSame($expected, $res);
+    }
+
     public function getFormatPackageData()
     {
         return array(
