@@ -84,7 +84,7 @@ final class Config
         }
 
         return array_key_exists($key, $this->config)
-            ? $this->config[$key]
+            ? $this->getByManager($key, $this->config[$key], $default)
             : $this->getDefaultValue($key, $default);
     }
 
@@ -217,5 +217,27 @@ final class Config
         return null === $default && array_key_exists($key, $this->defaults)
             ? $this->defaults[$key]
             : $default;
+    }
+
+    /**
+     * Get the value defined by the manager name in the key.
+     *
+     * @param string      $key     The config key
+     * @param array|mixed $value   The value
+     * @param mixed|null  $default The default value
+     *
+     * @return mixed|null
+     */
+    private function getByManager($key, $value, $default = null)
+    {
+        if (0 === strpos($key, 'manager-') && is_array($value)
+                && (!isset($this->defaults[$key]) || !is_array($this->defaults[$key]))) {
+            $manager = $manager = $this->get('manager', '');
+            $value = array_key_exists($manager, $value)
+                ? $value[$manager]
+                : $this->getDefaultValue($key, $default);
+        }
+
+        return $value;
     }
 }

@@ -85,6 +85,30 @@ The config values are retrieved in priority in:
 3. the global `<COMPOSER_HOME>/config.json` file
 4. the global `<COMPOSER_HOME>/composer.json` file
 
+### Define the config for multiple manager
+
+All keys starting with the prefix `manager-` can accept a unique value, but it will also can accept
+a map containing the value for each manager defined by her name.
+
+**Example:**
+```json
+{
+    "config": {
+        "foxy": {
+            "manager-version": {
+                "npm": ">=5.0",
+                "yarn": ">=1.0.0"
+            }
+        }
+    }
+}
+```
+
+> **Note:**
+>
+> This format is available only for the configuration file, and so, not available for the
+> environment variables.
+
 ## Use the config options
 
 ### Enable/disable the plugin

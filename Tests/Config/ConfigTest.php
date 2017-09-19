@@ -67,6 +67,8 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
             array('bar',                 'foo',                        'empty'),
             array('baz',                 false,                        true),
             array('test',                0,                            0),
+            array('manager-bar',         23,                           0),
+            array('manager-baz',         0,                            0),
             array('global-composer-foo', 90,                           0),
             array('global-composer-bar', 70,                           0),
             array('global-config-foo',   23,                           0),
@@ -115,6 +117,14 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
                     'bar' => 'foo',
                     'baz' => false,
                     'env-foo' => 55,
+                    'manager' => 'quill',
+                    'manager-bar' => array(
+                        'peter' => 42,
+                        'quill' => 23,
+                    ),
+                    'manager-baz' => array(
+                        'peter' => 42,
+                    ),
                 ),
             ));
 
