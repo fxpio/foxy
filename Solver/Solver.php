@@ -18,7 +18,11 @@ use Composer\Package\PackageInterface;
 use Composer\Util\Filesystem;
 use Foxy\Asset\AssetManagerInterface;
 use Foxy\Config\Config;
+use Foxy\Event\GetAssetsEvent;
+use Foxy\Event\PostSolveEvent;
+use Foxy\Event\PreSolveEvent;
 use Foxy\Fallback\FallbackInterface;
+use Foxy\FoxyEvents;
 use Foxy\Util\AssetUtil;
 
 /**
@@ -86,14 +90,17 @@ class Solver implements SolverInterface
             return;
         }
 
+        $dispatcher = $composer->getEventDispatcher();
         $packages = $composer->getRepositoryManager()->getLocalRepository()->getCanonicalPackages();
         $vendorDir = $composer->getConfig()->get('vendor-dir');
         $assetDir = $this->config->get('composer-asset-dir', $vendorDir.'/foxy/composer-asset/');
+        $dispatcher->dispatch(FoxyEvents::PRE_SOLVE, new PreSolveEvent($assetDir, $packages));
         $this->fs->remove($assetDir);
 
         $assets = $this->getAssets($composer, $assetDir, $packages);
         $this->assetManager->addDependencies($composer->getPackage(), $assets);
         $res = $this->assetManager->run();
+        $dispatcher->dispatch(FoxyEvents::POST_SOLVE, new PostSolveEvent($assetDir, $packages, $res));
 
         if ($res > 0 && $this->composerFallback) {
             $this->composerFallback->restore();
@@ -126,7 +133,10 @@ class Solver implements SolverInterface
             }
         }
 
-        return $assets;
+        $assetsEvent = new GetAssetsEvent($assetDir, $packages, $assets);
+        $composer->getEventDispatcher()->dispatch(FoxyEvents::GET_ASSETS, $assetsEvent);
+
+        return $assetsEvent->getAssets();
     }
 
     /**

@@ -5,7 +5,8 @@ Get starting
 2. [Installation](index.md#installation)
 3. [Usage](usage.md)
 4. [Configuration](config.md)
-5. [FAQs](faqs.md)
+5. [Event](events.md)
+6. [FAQs](faqs.md)
 
 ## Required dependencies
 
@@ -32,3 +33,4 @@ You can read how to:
 
 - [Use this plugin](usage.md)
 - [Configure this plugin](config.md)
+- [Expand Foxy with Composer events](events.md)

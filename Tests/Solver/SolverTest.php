@@ -12,6 +12,7 @@
 namespace Foxy\Tests\Solver;
 
 use Composer\Composer;
+use Composer\EventDispatcher\EventDispatcher;
 use Composer\Installer\InstallationManager;
 use Composer\IO\IOInterface;
 use Composer\Package\Link;
@@ -145,6 +146,10 @@ class SolverTest extends \PHPUnit_Framework_TestCase
         $this->composer->expects($this->any())
             ->method('getConfig')
             ->willReturn($this->composerConfig);
+
+        $this->composer->expects($this->any())
+            ->method('getEventDispatcher')
+            ->willReturn(new EventDispatcher($this->composer, $this->io));
 
         $sfs = $this->sfs;
         $this->fs->expects($this->any())
