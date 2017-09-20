@@ -31,7 +31,7 @@ class ComposerUtil
         if (false === strpos($composerVersion, '@') && !version_compare($composerVersion, $requiredVersion, '>=')) {
             $msg = 'Foxy requires the Composer\'s minimum version "%s", current version is "%s"';
 
-            throw new RuntimeException(sprintf($msg, $composerVersion, $requiredVersion));
+            throw new RuntimeException(sprintf($msg, $requiredVersion, $composerVersion));
         }
     }
 }
