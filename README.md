@@ -38,6 +38,8 @@ definition file, in the previous state if NPM or Yarn ends with an error.
 Features
 --------
 
+- Compatible with [Symfony Webpack Encore](http://symfony.com/doc/current/frontend.html)
+  and [Laravel Mix](https://laravel.com/docs/master/mix)
 - Works with Node.js and NPM or Yarn
 - Works with the asset dependencies defined in the `package.json` file for projects and PHP libraries
 - Works with the installation in the dependencies of the project or libraries (not in global mode)
