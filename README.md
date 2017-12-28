@@ -2,9 +2,9 @@ Foxy
 ====
 
 [![Latest Version](https://img.shields.io/packagist/v/foxy/foxy.svg)](https://packagist.org/packages/foxy/foxy)
-[![Build Status](https://img.shields.io/travis/foxypkg/foxy/master.svg)](https://travis-ci.org/foxypkg/foxy)
-[![Coverage Status](https://img.shields.io/coveralls/foxypkg/foxy/master.svg)](https://coveralls.io/r/foxypkg/foxy?branch=master)
-[![Scrutinizer Code Quality](https://img.shields.io/scrutinizer/g/foxypkg/foxy.svg)](https://scrutinizer-ci.com/g/foxypkg/foxy?branch=master)
+[![Build Status](https://img.shields.io/travis/fxpio/foxy/master.svg)](https://travis-ci.org/fxpio/foxy)
+[![Coverage Status](https://img.shields.io/coveralls/fxpio/foxy/master.svg)](https://coveralls.io/r/fxpio/foxy?branch=master)
+[![Scrutinizer Code Quality](https://img.shields.io/scrutinizer/g/fxpio/foxy.svg)](https://scrutinizer-ci.com/g/fxpio/foxy?branch=master)
 [![SensioLabsInsight](https://img.shields.io/sensiolabs/i/01030987-5dc5-4753-92c8-70a9de80323a.svg)](https://insight.sensiolabs.com/projects/01030987-5dc5-4753-92c8-70a9de80323a)
 
 Foxy is a Composer plugin to automates the validation, installation, updating and removing of PHP libraries
@@ -88,7 +88,7 @@ Documentation
 
 - [Guide](Resources/doc/index.md)
 - [FAQs](Resources/doc/faqs.md)
-- [Release Notes](https://github.com/foxypkg/foxy/releases)
+- [Release Notes](https://github.com/fxpio/foxy/releases)
 
 Installation
 ------------
@@ -106,12 +106,12 @@ About
 -----
 
 Foxy is a [François Pluchino](https://github.com/francoispluchino) initiative.
-See also the list of [contributors](https://github.com/foxypkg/foxy/contributors).
+See also the list of [contributors](https://github.com/fxpio/foxy/contributors).
 
 Reporting an issue or a feature request
 ---------------------------------------
 
-Issues and feature requests are tracked in the [Github issue tracker](https://github.com/foxypkg/foxy/issues).
+Issues and feature requests are tracked in the [Github issue tracker](https://github.com/fxpio/foxy/issues).
 
 Acknowledgments
 ---------------

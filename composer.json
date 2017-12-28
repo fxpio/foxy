@@ -2,7 +2,7 @@
     "name": "foxy/foxy",
     "description": "Fast, reliable, and secure NPM/Yarn bridge for Composer",
     "keywords": ["npm", "yarn", "composer", "bridge", "dependency manager", "package", "asset", "nodejs"],
-    "homepage": "https://github.com/foxypkg/foxy",
+    "homepage": "https://github.com/fxpio/foxy",
     "type": "composer-plugin",
     "license": "MIT",
     "authors": [
