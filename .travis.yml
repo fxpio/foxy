@@ -9,6 +9,7 @@ cache:
 matrix:
     include:
         - php: 7.1
+        - php: 7.2
         - php: nightly
 
     allow_failures:
@@ -18,7 +19,7 @@ matrix:
 
 before_script:
     - composer self-update
-    - composer global require --prefer-source phpunit/phpunit:"^6.2.0" satooshi/php-coveralls:^1.0.0
+    - composer global require --prefer-source phpunit/phpunit:"^6.5.0" satooshi/php-coveralls:^1.0.0
     - composer install --prefer-source
     - mkdir -p ./build/logs
 
