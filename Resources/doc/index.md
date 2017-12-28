@@ -18,7 +18,7 @@ Foxy required:
 
 ## Installation
 
-See the [Release Notes](https://github.com/foxypkg/foxy/releases)
+See the [Release Notes](https://github.com/fxpio/foxy/releases)
 to know the Composer version required.
 
 ```shell

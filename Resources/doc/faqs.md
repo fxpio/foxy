@@ -10,7 +10,7 @@ Why this plugin?
 ----------------
 
 It is certain that each language has its own dependency management system, and that it is highly recommended to use
-each package manager. NPM or Yarn works very well when the asset dependencies are managed only in the project,
+each package manager. NPM or Yarn works very well when the asset dependencies are managed only in the PHP project,
 but when you create PHP libraries that using assets, there is no way to automatically add asset dependencies,
 and most importantly, no validation of versions can be done automatically. You must tell the developers
 the list of asset dependencies that using by your PHP library, and you must ask him to add manually the asset
@@ -19,11 +19,11 @@ dependencies to its asset manager of his project.
 However, another solution exist - what many projects propose - you must add the assets in the folder of the
 PHP library (like `/assets`, `/Resources/public`). Of course, with this method, the code is duplicated, it
 pollutes the source code of the PHP library, no version management/validation is possible, and it is even
-less possible, to use all tools such as Babel, Sass, Less, etc ...
+less possible, to use correctly all tools such as Babel, Scss, Less, etc ...
 
-Foxy focuses solely on automation of the addition, update and deletion of the dependencies in the definition
-file of the asset package, while restoring the project state, as well as PHP dependencies if NPM or Yarn
-terminates with an error.
+Foxy focuses solely on automation of the validation, addition, updating and deleting of the dependencies in
+the definition file of the asset package, while restoring the project state, as well as PHP dependencies if
+NPM or Yarn terminates with an error.
 
 What is the difference between Foxy and Fxp Composer Asset Plugin?
 ------------------------------------------------------------------
