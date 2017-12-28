@@ -233,6 +233,9 @@ abstract class AbstractAssetManagerTest extends \PHPUnit_Framework_TestCase
         );
         /* @var RootPackageInterface|\PHPUnit_Framework_MockObject_MockObject $rootPackage */
         $rootPackage = $this->getMockBuilder('Composer\Package\RootPackageInterface')->getMock();
+        $rootPackage->expects($this->any())
+            ->method('getLicense')
+            ->willReturn(array());
 
         $this->assertFalse($this->manager->isInstalled());
         $this->assertFalse($this->manager->isUpdatable());
@@ -264,6 +267,9 @@ abstract class AbstractAssetManagerTest extends \PHPUnit_Framework_TestCase
         $jsonFile = new JsonFile($this->cwd.'/package.json');
         /* @var RootPackageInterface|\PHPUnit_Framework_MockObject_MockObject $rootPackage */
         $rootPackage = $this->getMockBuilder('Composer\Package\RootPackageInterface')->getMock();
+        $rootPackage->expects($this->any())
+            ->method('getLicense')
+            ->willReturn(array());
         $nodeModulePath = $this->cwd.ltrim(AbstractAssetManager::NODE_MODULES_PATH, '.');
 
         $jsonFile->write($package);

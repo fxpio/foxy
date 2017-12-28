@@ -54,6 +54,10 @@ class AssetPackageTest extends \PHPUnit_Framework_TestCase
             ->setMethods(array('exists', 'getPath', 'read', 'write'))
             ->getMock();
 
+        $this->rootPackage->expects($this->any())
+            ->method('getLicense')
+            ->willReturn(array());
+
         $this->sfs->mkdir($this->cwd);
     }
 
@@ -148,6 +152,7 @@ class AssetPackageTest extends \PHPUnit_Framework_TestCase
     {
         $this->addPackageFile($package);
 
+        $this->rootPackage = $this->getMockBuilder('Composer\Package\RootPackageInterface')->getMock();
         $this->rootPackage->expects($this->any())
             ->method('getLicense')
             ->willReturn(array($license));
