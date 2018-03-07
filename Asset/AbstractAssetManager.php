@@ -17,6 +17,7 @@ use Composer\Semver\Constraint\Constraint;
 use Composer\Semver\VersionParser;
 use Composer\Util\Filesystem;
 use Composer\Util\ProcessExecutor;
+use Composer\Util\Platform;
 use Foxy\Config\Config;
 use Foxy\Exception\RuntimeException;
 use Foxy\Fallback\FallbackInterface;
@@ -220,6 +221,11 @@ abstract class AbstractAssetManager implements AssetManagerInterface
     protected function buildCommand($defaultBin, $action, $command)
     {
         $bin = $this->config->get('manager-bin', $defaultBin);
+        
+        if (Platform::isWindows()) {
+            $bin = str_replace('/', DIRECTORY_SEPARATOR, $bin);
+        }
+
         $gOptions = trim($this->config->get('manager-options', ''));
         $options = trim($this->config->get('manager-'.$action.'-options', ''));
 
