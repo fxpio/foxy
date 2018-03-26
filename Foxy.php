@@ -42,7 +42,7 @@ class Foxy implements PluginInterface, EventSubscriberInterface
     /**
      * The list of the classes of asset managers.
      */
-    const ASSET_MANAGERS = array(
+    private static $assetManagers = array(
         'Foxy\Asset\NpmManager',
         'Foxy\Asset\YarnManager',
     );
@@ -50,7 +50,7 @@ class Foxy implements PluginInterface, EventSubscriberInterface
     /**
      * The default values of config.
      */
-    const DEFAULT_CONFIG = array(
+    private static $defaultConfig = array(
         'enabled' => true,
         'manager' => 'npm',
         'manager-version' => null,
@@ -93,7 +93,7 @@ class Foxy implements PluginInterface, EventSubscriberInterface
     {
         ComposerUtil::validateVersion(static::REQUIRED_COMPOSER_VERSION, Composer::VERSION);
         $input = ConsoleUtil::getInput($io);
-        $config = ConfigBuilder::build($composer, self::DEFAULT_CONFIG, $io);
+        $config = ConfigBuilder::build($composer, self::$defaultConfig, $io);
         $executor = new ProcessExecutor($io);
         $fs = new Filesystem($executor);
         $assetManager = $this->getAssetManager($io, $config, $executor, $fs);
@@ -147,7 +147,7 @@ class Foxy implements PluginInterface, EventSubscriberInterface
     {
         $manager = $config->get('manager');
 
-        foreach (static::ASSET_MANAGERS as $class) {
+        foreach (self::$assetManagers as $class) {
             $am = new $class($io, $config, $executor, $fs);
 
             if ($am instanceof AssetManagerInterface && $manager === $am->getName()) {
