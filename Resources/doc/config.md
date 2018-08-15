@@ -189,7 +189,7 @@ option `config.foxy.manager-options` [`string`, default: `null`].
     "config": {
         "foxy": {
             "manager": "yarn",
-            "manager-options": "--production=true --module-folder=./assets"
+            "manager-options": "--production=true --modules-folder=./assets"
         }
     }
 }
