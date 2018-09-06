@@ -47,7 +47,7 @@ class AssetPackageTest extends \PHPUnit_Framework_TestCase
     {
         parent::setUp();
 
-        $this->cwd = sys_get_temp_dir().DIRECTORY_SEPARATOR.'foxy_asset_package_test_'.uniqid();
+        $this->cwd = sys_get_temp_dir().\DIRECTORY_SEPARATOR.'foxy_asset_package_test_'.uniqid();
         $this->sfs = new Filesystem();
         $this->rootPackage = $this->getMockBuilder('Composer\Package\RootPackageInterface')->getMock();
         $this->jsonFile = $this->getMockBuilder('Composer\Json\JsonFile')->disableOriginalConstructor()

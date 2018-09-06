@@ -39,7 +39,7 @@ class AssetUtilTest extends \PHPUnit_Framework_TestCase
     {
         parent::setUp();
 
-        $this->cwd = sys_get_temp_dir().DIRECTORY_SEPARATOR.'foxy_asset_util_test_'.uniqid();
+        $this->cwd = sys_get_temp_dir().\DIRECTORY_SEPARATOR.'foxy_asset_util_test_'.uniqid();
         $this->sfs = new Filesystem();
         $this->sfs->mkdir($this->cwd);
     }
@@ -142,7 +142,7 @@ class AssetUtilTest extends \PHPUnit_Framework_TestCase
         }
 
         if ($fileExists) {
-            $expectedFilename = $this->cwd.DIRECTORY_SEPARATOR.$assetManager->getPackageName();
+            $expectedFilename = $this->cwd.\DIRECTORY_SEPARATOR.$assetManager->getPackageName();
             file_put_contents($expectedFilename, '{}');
             $expectedFilename = str_replace('\\', '/', realpath($expectedFilename));
         } else {
@@ -206,7 +206,7 @@ class AssetUtilTest extends \PHPUnit_Framework_TestCase
             ));
 
         if ($fileExists) {
-            $expectedFilename = $this->cwd.DIRECTORY_SEPARATOR.$assetManager->getPackageName();
+            $expectedFilename = $this->cwd.\DIRECTORY_SEPARATOR.$assetManager->getPackageName();
             file_put_contents($expectedFilename, '{}');
             $expectedFilename = $withExtra ? str_replace('\\', '/', realpath($expectedFilename)) : null;
         } else {

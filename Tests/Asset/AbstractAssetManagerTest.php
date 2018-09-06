@@ -85,7 +85,7 @@ abstract class AbstractAssetManagerTest extends \PHPUnit_Framework_TestCase
         $this->fallback = $this->getMockBuilder('Foxy\Fallback\FallbackInterface')->getMock();
         $this->manager = $this->getManager();
         $this->oldCwd = getcwd();
-        $this->cwd = sys_get_temp_dir().DIRECTORY_SEPARATOR.'foxy_asset_manager_test_'.uniqid();
+        $this->cwd = sys_get_temp_dir().\DIRECTORY_SEPARATOR.'foxy_asset_manager_test_'.uniqid();
         $this->sfs->mkdir($this->cwd);
         chdir($this->cwd);
     }
@@ -276,7 +276,7 @@ abstract class AbstractAssetManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertFileExists($jsonFile->getPath());
         $this->sfs->mkdir($nodeModulePath);
         $this->assertFileExists($nodeModulePath);
-        $lockFilePath = $this->cwd.DIRECTORY_SEPARATOR.$this->manager->getLockPackageName();
+        $lockFilePath = $this->cwd.\DIRECTORY_SEPARATOR.$this->manager->getLockPackageName();
         file_put_contents($lockFilePath, '{}');
         $this->assertFileExists($lockFilePath);
         $this->assertTrue($this->manager->isInstalled());
@@ -325,11 +325,11 @@ abstract class AbstractAssetManagerTest extends \PHPUnit_Framework_TestCase
             $expectedCommand = $this->getValidInstallCommand();
         } else {
             $expectedCommand = $this->getValidUpdateCommand();
-            file_put_contents($this->cwd.DIRECTORY_SEPARATOR.$this->manager->getPackageName(), '{}');
+            file_put_contents($this->cwd.\DIRECTORY_SEPARATOR.$this->manager->getPackageName(), '{}');
             $nodeModulePath = $this->cwd.ltrim(AbstractAssetManager::NODE_MODULES_PATH, '.');
             $this->sfs->mkdir($nodeModulePath);
             $this->assertFileExists($nodeModulePath);
-            $lockFilePath = $this->cwd.DIRECTORY_SEPARATOR.$this->manager->getLockPackageName();
+            $lockFilePath = $this->cwd.\DIRECTORY_SEPARATOR.$this->manager->getLockPackageName();
             file_put_contents($lockFilePath, '{}');
             $this->assertFileExists($lockFilePath);
             $this->assertTrue($this->manager->isInstalled());

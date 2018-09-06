@@ -109,7 +109,7 @@ class SolverTest extends \PHPUnit_Framework_TestCase
         parent::setUp();
 
         $this->oldCwd = getcwd();
-        $this->cwd = sys_get_temp_dir().DIRECTORY_SEPARATOR.'foxy_solver_test_'.uniqid();
+        $this->cwd = sys_get_temp_dir().\DIRECTORY_SEPARATOR.'foxy_solver_test_'.uniqid();
         $this->config = new Config(array(
             'enabled' => true,
             'composer-asset-dir' => $this->cwd.'/composer-asset-dir',
@@ -266,7 +266,7 @@ class SolverTest extends \PHPUnit_Framework_TestCase
             $this->expectExceptionMessage('The asset manager ended with an error');
         }
 
-        $requirePackageFilename = $requirePackagePath.DIRECTORY_SEPARATOR.$this->manager->getPackageName();
+        $requirePackageFilename = $requirePackagePath.\DIRECTORY_SEPARATOR.$this->manager->getPackageName();
         $this->sfs->mkdir(dirname($requirePackageFilename));
         file_put_contents($requirePackageFilename, '{}');
 

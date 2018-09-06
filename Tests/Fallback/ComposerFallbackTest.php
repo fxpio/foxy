@@ -83,7 +83,7 @@ class ComposerFallbackTest extends \PHPUnit_Framework_TestCase
         parent::setUp();
 
         $this->oldCwd = getcwd();
-        $this->cwd = sys_get_temp_dir().DIRECTORY_SEPARATOR.'foxy_composer_fallback_test_'.uniqid();
+        $this->cwd = sys_get_temp_dir().\DIRECTORY_SEPARATOR.'foxy_composer_fallback_test_'.uniqid();
         $this->config = new Config(array(
             'fallback-composer' => true,
         ));

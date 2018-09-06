@@ -40,7 +40,7 @@ abstract class AbstractSolveEventTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->assetDir = sys_get_temp_dir().DIRECTORY_SEPARATOR.'foxy_event_test_'.uniqid();
+        $this->assetDir = sys_get_temp_dir().\DIRECTORY_SEPARATOR.'foxy_event_test_'.uniqid();
         $this->packages = array(
             $this->getMockBuilder('Composer\Package\PackageInterface')->getMock(),
         );
