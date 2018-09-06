@@ -144,11 +144,10 @@ class AssetUtil
             $version = $package->getPrettyVersion();
 
             if (0 === strpos($version, 'dev-') && isset($extra['branch-alias'][$version])) {
-                $version = str_replace('-dev', '', $extra['branch-alias'][$version]);
-                $version = self::formatVersion($version);
+                $version = $extra['branch-alias'][$version];
             }
 
-            $packageValue['version'] = $version;
+            $packageValue['version'] = self::formatVersion(str_replace('-dev', '', $version));
         }
 
         return $packageValue;

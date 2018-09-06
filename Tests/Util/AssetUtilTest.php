@@ -318,6 +318,7 @@ class AssetUtilTest extends \PHPUnit_Framework_TestCase
         return array(
             array('1.0.0', null, '1.0.0'),
             array('1.0.1', '1.0.0', '1.0.0'),
+            array('1.0.0.x-dev', null, '1.0.0.0'),
             array('dev-master', null, '1.0.0', '1-dev'),
             array('dev-master', null, '1.0.0', '1.0-dev'),
             array('dev-master', null, '1.0.0', '1.0.0-dev'),
