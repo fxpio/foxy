@@ -171,7 +171,7 @@ class AssetUtil
             }
         }
 
-        return implode('.', $exp);
+        return $exp[0].'.'.$exp[1].'.'.$exp[2];
     }
 
     /**
