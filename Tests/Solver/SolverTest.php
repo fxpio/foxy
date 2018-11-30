@@ -267,7 +267,7 @@ class SolverTest extends \PHPUnit_Framework_TestCase
         }
 
         $requirePackageFilename = $requirePackagePath.\DIRECTORY_SEPARATOR.$this->manager->getPackageName();
-        $this->sfs->mkdir(dirname($requirePackageFilename));
+        $this->sfs->mkdir(\dirname($requirePackageFilename));
         file_put_contents($requirePackageFilename, '{}');
 
         $this->solver->solve($this->composer, $this->io);

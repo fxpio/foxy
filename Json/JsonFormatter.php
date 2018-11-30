@@ -52,7 +52,7 @@ class JsonFormatter
         preg_match(self::INDENT_REGEX, trim($content), $matches);
 
         if (!empty($matches)) {
-            $indent = strlen($matches[1]);
+            $indent = \strlen($matches[1]);
         }
 
         return $indent;
@@ -94,7 +94,7 @@ class JsonFormatter
         preg_match_all(self::ARRAY_KEYS_REGEX, $json, $matches, PREG_SET_ORDER);
 
         foreach ($matches as $match) {
-            if (!in_array($match[1], $arrayKeys)) {
+            if (!\in_array($match[1], $arrayKeys)) {
                 $replace = str_replace('[]', '{}', $match[0]);
                 $json = str_replace($match[0], $replace, $json);
             }

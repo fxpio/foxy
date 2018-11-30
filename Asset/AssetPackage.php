@@ -87,7 +87,7 @@ class AssetPackage implements AssetPackageInterface
     {
         $installedAssets = array();
 
-        if (isset($this->package[self::SECTION_DEPENDENCIES]) && is_array($this->package[self::SECTION_DEPENDENCIES])) {
+        if (isset($this->package[self::SECTION_DEPENDENCIES]) && \is_array($this->package[self::SECTION_DEPENDENCIES])) {
             foreach ($this->package[self::SECTION_DEPENDENCIES] as $dependency => $version) {
                 if (0 === strpos($dependency, self::COMPOSER_PREFIX)) {
                     $installedAssets[$dependency] = $version;
@@ -110,7 +110,7 @@ class AssetPackage implements AssetPackageInterface
             if (isset($installedAssets[$name])) {
                 $existingPackages[] = $name;
             } else {
-                $this->package[self::SECTION_DEPENDENCIES][$name] = 'file:./'.dirname($path);
+                $this->package[self::SECTION_DEPENDENCIES][$name] = 'file:./'.\dirname($path);
             }
         }
 
@@ -142,7 +142,7 @@ class AssetPackage implements AssetPackageInterface
      */
     protected function injectRequiredKeys(RootPackageInterface $rootPackage)
     {
-        if (!isset($this->package['license']) && count($rootPackage->getLicense()) > 0) {
+        if (!isset($this->package['license']) && \count($rootPackage->getLicense()) > 0) {
             $license = current($rootPackage->getLicense());
 
             if ('proprietary' === $license) {
@@ -162,7 +162,7 @@ class AssetPackage implements AssetPackageInterface
      */
     protected function orderPackages($section)
     {
-        if (isset($this->package[$section]) && is_array($this->package[$section])) {
+        if (isset($this->package[$section]) && \is_array($this->package[$section])) {
             ksort($this->package[$section], SORT_STRING);
         }
     }

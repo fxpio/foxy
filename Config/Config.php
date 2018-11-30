@@ -134,7 +134,7 @@ final class Config
     {
         $value = strtolower($value);
 
-        return in_array($value, array('true', 'false', '1', '0', 'yes', 'no', 'y', 'n'), true);
+        return \in_array($value, array('true', 'false', '1', '0', 'yes', 'no', 'y', 'n'), true);
     }
 
     /**
@@ -146,7 +146,7 @@ final class Config
      */
     private function convertBoolean($value)
     {
-        return in_array($value, array('true', '1', 'yes', 'y'), true);
+        return \in_array($value, array('true', '1', 'yes', 'y'), true);
     }
 
     /**
@@ -230,8 +230,8 @@ final class Config
      */
     private function getByManager($key, $value, $default = null)
     {
-        if (0 === strpos($key, 'manager-') && is_array($value)
-                && (!isset($this->defaults[$key]) || !is_array($this->defaults[$key]))) {
+        if (0 === strpos($key, 'manager-') && \is_array($value)
+                && (!isset($this->defaults[$key]) || !\is_array($this->defaults[$key]))) {
             $manager = $manager = $this->get('manager', '');
             $value = array_key_exists($manager, $value)
                 ? $value[$manager]

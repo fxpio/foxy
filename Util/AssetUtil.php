@@ -165,7 +165,7 @@ class AssetUtil
         $version = str_replace(array('x', 'X', '*'), '0', $version);
         $exp = explode('.', $version);
 
-        if (($size = count($exp)) < 3) {
+        if (($size = \count($exp)) < 3) {
             for ($i = $size; $i < 3; ++$i) {
                 $exp[] = '0';
             }
@@ -188,7 +188,7 @@ class AssetUtil
         $value = null;
 
         foreach ($configPackages as $pattern => $activation) {
-            if (is_int($pattern) && is_string($activation)) {
+            if (\is_int($pattern) && \is_string($activation)) {
                 $pattern = $activation;
                 $activation = true;
             }

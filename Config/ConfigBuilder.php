@@ -51,7 +51,7 @@ abstract class ConfigBuilder
         $globalPackageConfig = self::getGlobalConfig($composer, 'composer', $io);
         $globalConfig = self::getGlobalConfig($composer, 'config', $io);
         $packageConfig = $composer->getPackage()->getConfig();
-        $packageConfig = isset($packageConfig['foxy']) && is_array($packageConfig['foxy'])
+        $packageConfig = isset($packageConfig['foxy']) && \is_array($packageConfig['foxy'])
             ? $packageConfig['foxy']
             : array();
 
@@ -76,7 +76,7 @@ abstract class ConfigBuilder
         if ($file->exists()) {
             $data = $file->read();
 
-            if (isset($data['config']['foxy']) && is_array($data['config']['foxy'])) {
+            if (isset($data['config']['foxy']) && \is_array($data['config']['foxy'])) {
                 $config = $data['config']['foxy'];
 
                 if ($io instanceof IOInterface && $io->isDebug()) {

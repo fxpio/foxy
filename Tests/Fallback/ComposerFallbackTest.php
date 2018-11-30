@@ -226,7 +226,7 @@ class ComposerFallbackTest extends \PHPUnit_Framework_TestCase
                 return 'vendor-dir' === $key ? $vendorDir : $default;
             });
 
-        if (0 === count($packages)) {
+        if (0 === \count($packages)) {
             $this->fs->expects($this->once())
                 ->method('remove')
                 ->with($vendorDir);

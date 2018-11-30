@@ -132,7 +132,7 @@ class AssetUtilTest extends \PHPUnit_Framework_TestCase
             ->method('getRequires')
             ->willReturn($requires);
 
-        if (0 === count($devRequires)) {
+        if (0 === \count($devRequires)) {
             $package->expects($this->never())
                 ->method('getDevRequires');
         } else {
