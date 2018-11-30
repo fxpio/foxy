@@ -10,8 +10,6 @@ Get starting
 
 ## Required dependencies
 
-Foxy required:
-
 - [Nodejs](https://nodejs.org)
 - [NPM](https://www.npmjs.com) or [Yarn](https://yarnpkg.com)
 - [Git](https://git-scm.com)
@@ -22,7 +20,7 @@ See the [Release Notes](https://github.com/fxpio/foxy/releases)
 to know the Composer version required.
 
 ```shell
-$ composer require "foxy/foxy:^1.0.0"
+composer require "foxy/foxy:^1.0.0"
 ```
 
 Composer will install the plugin to your project's `vendor/foxy` directory.
