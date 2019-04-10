@@ -72,7 +72,7 @@ final class Config
      */
     public function get($key, $default = null)
     {
-        if (array_key_exists($key, $this->cacheEnv)) {
+        if (\array_key_exists($key, $this->cacheEnv)) {
             return $this->cacheEnv[$key];
         } else {
             $envKey = $this->convertEnvKey($key);
@@ -83,7 +83,7 @@ final class Config
             }
         }
 
-        return array_key_exists($key, $this->config)
+        return \array_key_exists($key, $this->config)
             ? $this->getByManager($key, $this->config[$key], $default)
             : $this->getDefaultValue($key, $default);
     }
@@ -214,7 +214,7 @@ final class Config
      */
     private function getDefaultValue($key, $default = null)
     {
-        return null === $default && array_key_exists($key, $this->defaults)
+        return null === $default && \array_key_exists($key, $this->defaults)
             ? $this->defaults[$key]
             : $default;
     }
@@ -233,7 +233,7 @@ final class Config
         if (0 === strpos($key, 'manager-') && \is_array($value)
                 && (!isset($this->defaults[$key]) || !\is_array($this->defaults[$key]))) {
             $manager = $manager = $this->get('manager', '');
-            $value = array_key_exists($manager, $value)
+            $value = \array_key_exists($manager, $value)
                 ? $value[$manager]
                 : $this->getDefaultValue($key, $default);
         }
