@@ -41,7 +41,7 @@ class JsonFileTest extends \PHPUnit_Framework_TestCase
         parent::setUp();
 
         $this->oldCwd = getcwd();
-        $this->cwd = sys_get_temp_dir().\DIRECTORY_SEPARATOR.'foxy_asset_json_file_test_'.uniqid();
+        $this->cwd = sys_get_temp_dir().\DIRECTORY_SEPARATOR.uniqid('foxy_asset_json_file_test_', true);
         $this->sfs = new Filesystem();
         $this->sfs->mkdir($this->cwd);
         chdir($this->cwd);

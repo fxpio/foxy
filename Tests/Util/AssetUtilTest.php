@@ -39,7 +39,7 @@ class AssetUtilTest extends \PHPUnit_Framework_TestCase
     {
         parent::setUp();
 
-        $this->cwd = sys_get_temp_dir().\DIRECTORY_SEPARATOR.'foxy_asset_util_test_'.uniqid();
+        $this->cwd = sys_get_temp_dir().\DIRECTORY_SEPARATOR.uniqid('foxy_asset_util_test_', true);
         $this->sfs = new Filesystem();
         $this->sfs->mkdir($this->cwd);
     }

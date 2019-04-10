@@ -109,7 +109,7 @@ class SolverTest extends \PHPUnit_Framework_TestCase
         parent::setUp();
 
         $this->oldCwd = getcwd();
-        $this->cwd = sys_get_temp_dir().\DIRECTORY_SEPARATOR.'foxy_solver_test_'.uniqid();
+        $this->cwd = sys_get_temp_dir().\DIRECTORY_SEPARATOR.uniqid('foxy_solver_test_', true);
         $this->config = new Config(array(
             'enabled' => true,
             'composer-asset-dir' => $this->cwd.'/composer-asset-dir',

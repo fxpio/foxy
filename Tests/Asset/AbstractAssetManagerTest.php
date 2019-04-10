@@ -85,7 +85,7 @@ abstract class AbstractAssetManagerTest extends \PHPUnit_Framework_TestCase
         $this->fallback = $this->getMockBuilder('Foxy\Fallback\FallbackInterface')->getMock();
         $this->manager = $this->getManager();
         $this->oldCwd = getcwd();
-        $this->cwd = sys_get_temp_dir().\DIRECTORY_SEPARATOR.'foxy_asset_manager_test_'.uniqid();
+        $this->cwd = sys_get_temp_dir().\DIRECTORY_SEPARATOR.uniqid('foxy_asset_manager_test_', true);
         $this->sfs->mkdir($this->cwd);
         chdir($this->cwd);
     }
