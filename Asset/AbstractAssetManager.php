@@ -133,7 +133,15 @@ abstract class AbstractAssetManager implements AssetManagerInterface
      */
     public function isUpdatable()
     {
-        return $this->updatable && $this->isInstalled();
+        return $this->updatable && $this->isInstalled() && $this->isValidForUpdate();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isValidForUpdate()
+    {
+        return true;
     }
 
     /**
@@ -183,12 +191,13 @@ abstract class AbstractAssetManager implements AssetManagerInterface
             return 0;
         }
 
-        $info = sprintf('<info>%s %s dependencies</info>', $this->isUpdatable() ? 'Updating' : 'Installing', $this->getName());
+        $updatable = $this->isUpdatable();
+        $info = sprintf('<info>%s %s dependencies</info>', $updatable ? 'Updating' : 'Installing', $this->getName());
         $this->io->write($info);
 
         $timeout = ProcessExecutor::getTimeout();
         ProcessExecutor::setTimeout($this->config->get('manager-timeout'));
-        $cmd = $this->isUpdatable() ? $this->getUpdateCommand() : $this->getInstallCommand();
+        $cmd = $updatable ? $this->getUpdateCommand() : $this->getInstallCommand();
         $res = (int) $this->executor->execute($cmd);
         ProcessExecutor::setTimeout($timeout);
 

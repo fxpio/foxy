@@ -76,6 +76,13 @@ interface AssetManagerInterface
     public function isUpdatable();
 
     /**
+     * Check if the asset package is valid for the update.
+     *
+     * @return bool
+     */
+    public function isValidForUpdate();
+
+    /**
      * Get the filename of the lock file.
      *
      * @return string

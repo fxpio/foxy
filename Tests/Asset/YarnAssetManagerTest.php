@@ -67,4 +67,23 @@ class YarnAssetManagerTest extends AbstractAssetManagerTest
     {
         return 'yarn upgrade --non-interactive';
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function actionForTestAddDependenciesForUpdateCommand()
+    {
+        $this->executor->addExpectedValues(0, 'CHECK OUTPUT');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function actionForTestRunForInstallCommand($action)
+    {
+        if ('update' === $action) {
+            $this->executor->addExpectedValues(0, 'CHECK OUTPUT');
+            $this->executor->addExpectedValues(0, 'CHECK OUTPUT');
+        }
+    }
 }

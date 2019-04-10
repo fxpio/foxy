@@ -193,7 +193,7 @@ abstract class AbstractAssetManagerTest extends \PHPUnit_Framework_TestCase
         ));
         $this->manager = $this->getManager();
 
-        $this->executor->mockExecuteOutputValue = '42.0.0';
+        $this->executor->addExpectedValues(0, '42.0.0');
 
         $this->manager->validate();
     }
@@ -205,7 +205,7 @@ abstract class AbstractAssetManagerTest extends \PHPUnit_Framework_TestCase
         ));
         $this->manager = $this->getManager();
 
-        $this->executor->mockExecuteOutputValue = '42.0.0';
+        $this->executor->addExpectedValues(0, '42.0.0');
 
         $this->manager->validate();
         $this->assertSame('>=41.0', $this->config->get('manager-version'));
@@ -213,7 +213,7 @@ abstract class AbstractAssetManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testValidateWithInstalledManagerAndWithoutValidationVersion()
     {
-        $this->executor->mockExecuteOutputValue = '42.0.0';
+        $this->executor->addExpectedValues(0, '42.0.0');
 
         $this->manager->validate();
         $this->assertNull($this->config->get('manager-version'));
@@ -248,6 +248,8 @@ abstract class AbstractAssetManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testAddDependenciesForUpdateCommand()
     {
+        $this->actionForTestAddDependenciesForUpdateCommand();
+
         $expectedPackage = array(
             'dependencies' => array(
                 '@composer-asset/foo--bar' => 'file:./path/foo/bar',
@@ -315,6 +317,8 @@ abstract class AbstractAssetManagerTest extends \PHPUnit_Framework_TestCase
      */
     public function testRunForInstallCommand($expectedRes, $action)
     {
+        $this->actionForTestRunForInstallCommand($action);
+
         $this->config = new Config(array(), array(
             'run-asset-manager' => true,
             'fallback-asset' => true,
@@ -344,11 +348,23 @@ abstract class AbstractAssetManagerTest extends \PHPUnit_Framework_TestCase
                 ->method('restore');
         }
 
-        $this->executor->mockExecuteReturnValue = $expectedRes;
-        $this->executor->mockExecuteOutputValue = 'ASSET MANAGER OUTPUT';
+        $this->executor->addExpectedValues($expectedRes, 'ASSET MANAGER OUTPUT');
 
         $this->assertSame($expectedRes, $this->getManager()->run());
         $this->assertSame($expectedCommand, $this->executor->getLastCommand());
         $this->assertSame('ASSET MANAGER OUTPUT', $this->executor->getLastOutput());
+    }
+
+    protected function actionForTestAddDependenciesForUpdateCommand()
+    {
+        // do nothing by default
+    }
+
+    /**
+     * @param string $action The action
+     */
+    protected function actionForTestRunForInstallCommand($action)
+    {
+        // do nothing by default
     }
 }

@@ -21,41 +21,83 @@ use Composer\Util\ProcessExecutor;
 class ProcessExecutorMock extends ProcessExecutor
 {
     /**
+     * @var array
+     */
+    private $expectedValues = array();
+
+    /**
+     * @var array
+     */
+    private $executedCommands = array();
+
+    /**
      * @var int
      */
-    public $mockExecuteReturnValue = 0;
-
-    /**
-     * @var string|null
-     */
-    public $mockExecuteOutputValue = null;
-
-    /**
-     * @var string|null
-     */
-    private $lastCommand;
-
-    /**
-     * @var string|null
-     */
-    private $lastOutput;
+    private $position = 0;
 
     /**
      * {@inheritdoc}
      */
     public function execute($command, &$output = null, $cwd = null)
     {
-        $output = $this->mockExecuteOutputValue;
-        $res = $this->mockExecuteReturnValue;
+        $expected = isset($this->expectedValues[$this->position])
+            ? $this->expectedValues[$this->position]
+            : array(null, $output);
 
-        $this->lastCommand = $command;
-        $this->lastOutput = $output;
+        list($returnedCode, $output) = $expected;
+        $this->executedCommands[] = array($command, $returnedCode, $output);
+        ++$this->position;
 
-        // reset
-        $this->mockExecuteReturnValue = 0;
-        $this->mockExecuteOutputValue = null;
+        return $returnedCode;
+    }
 
-        return $res;
+    /**
+     * @param int  $returnedCode The returned code
+     * @param null $output       The output
+     *
+     * @return self
+     */
+    public function addExpectedValues($returnedCode = 0, $output = null)
+    {
+        $this->expectedValues[] = array($returnedCode, $output);
+
+        return $this;
+    }
+
+    /**
+     * Get the executed command.
+     *
+     * @param int $position The position of executed command
+     *
+     * @return string|null
+     */
+    public function getExecutedCommand($position)
+    {
+        return $this->getExecutedValue($position, 0);
+    }
+
+    /**
+     * Get the executed returned code.
+     *
+     * @param int $position The position of executed command
+     *
+     * @return int|null
+     */
+    public function getExecutedReturnedCode($position)
+    {
+        return $this->getExecutedValue($position, 1);
+    }
+
+    /**
+     * Get the executed command.
+     *
+     * @param int $position The position of executed command
+     *
+     * @return string|null
+     */
+    public function getExecutedOutput($position)
+    {
+        return $this->getExecutedValue($position, 2);
     }
 
     /**
@@ -65,7 +107,17 @@ class ProcessExecutorMock extends ProcessExecutor
      */
     public function getLastCommand()
     {
-        return $this->lastCommand;
+        return $this->getExecutedCommand(\count($this->executedCommands) - 1);
+    }
+
+    /**
+     * Get the last executed returned code.
+     *
+     * @return int|null
+     */
+    public function getLastReturnedCode()
+    {
+        return $this->getExecutedReturnedCode(\count($this->executedCommands) - 1);
     }
 
     /**
@@ -75,6 +127,21 @@ class ProcessExecutorMock extends ProcessExecutor
      */
     public function getLastOutput()
     {
-        return $this->lastOutput;
+        return $this->getExecutedOutput(\count($this->executedCommands) - 1);
+    }
+
+    /**
+     * Get the value of the executed command.
+     *
+     * @param int $position The position
+     * @param int $index    The index of value
+     *
+     * @return string|int|null
+     */
+    private function getExecutedValue($position, $index)
+    {
+        return isset($this->executedCommands[$position])
+            ? $this->executedCommands[$position][$index]
+            : null;
     }
 }
