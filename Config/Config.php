@@ -74,18 +74,20 @@ final class Config
     {
         if (\array_key_exists($key, $this->cacheEnv)) {
             return $this->cacheEnv[$key];
-        } else {
-            $envKey = $this->convertEnvKey($key);
-            $envValue = getenv($envKey);
-
-            if (false !== $envValue) {
-                return $this->cacheEnv[$key] = $this->convertEnvValue($envValue, $envKey);
-            }
         }
 
+        $envKey = $this->convertEnvKey($key);
+        $envValue = getenv($envKey);
+
+        if (false !== $envValue) {
+            return $this->cacheEnv[$key] = $this->convertEnvValue($envValue, $envKey);
+        }
+
+        $defaultValue = $this->getDefaultValue($key, $default);
+
         return \array_key_exists($key, $this->config)
-            ? $this->getByManager($key, $this->config[$key], $default)
-            : $this->getDefaultValue($key, $default);
+            ? $this->getByManager($key, $this->config[$key], $defaultValue)
+            : $defaultValue;
     }
 
     /**
@@ -214,9 +216,11 @@ final class Config
      */
     private function getDefaultValue($key, $default = null)
     {
-        return null === $default && \array_key_exists($key, $this->defaults)
+        $value = null === $default && \array_key_exists($key, $this->defaults)
             ? $this->defaults[$key]
             : $default;
+
+        return $this->getByManager($key, $value, $default);
     }
 
     /**
@@ -230,12 +234,12 @@ final class Config
      */
     private function getByManager($key, $value, $default = null)
     {
-        if (0 === strpos($key, 'manager-') && \is_array($value)
-                && (!isset($this->defaults[$key]) || !\is_array($this->defaults[$key]))) {
+        if (0 === strpos($key, 'manager-') && \is_array($value)) {
             $manager = $manager = $this->get('manager', '');
+
             $value = \array_key_exists($manager, $value)
                 ? $value[$manager]
-                : $this->getDefaultValue($key, $default);
+                : $default;
         }
 
         return $value;

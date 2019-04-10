@@ -53,7 +53,10 @@ class Foxy implements PluginInterface, EventSubscriberInterface
     private static $defaultConfig = array(
         'enabled' => true,
         'manager' => 'npm',
-        'manager-version' => null,
+        'manager-version' => array(
+            'npm' => '>=5.0.0',
+            'yarn' => '>=1.0.0',
+        ),
         'manager-bin' => null,
         'manager-options' => null,
         'manager-install-options' => null,
