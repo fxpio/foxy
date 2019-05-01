@@ -17,8 +17,10 @@ use Foxy\Event\GetAssetsEvent;
  * Tests for get assets event.
  *
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
  */
-class GetAssetsEventTest extends AbstractSolveEventTest
+final class GetAssetsEventTest extends AbstractSolveEventTest
 {
     /**
      * @var array

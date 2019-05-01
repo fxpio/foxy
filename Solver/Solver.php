@@ -48,7 +48,7 @@ class Solver implements SolverInterface
     protected $assetManager;
 
     /**
-     * @var FallbackInterface|null
+     * @var null|FallbackInterface
      */
     protected $composerFallback;
 
@@ -58,13 +58,14 @@ class Solver implements SolverInterface
      * @param AssetManagerInterface  $assetManager     The asset manager
      * @param Config                 $config           The config
      * @param Filesystem             $filesystem       The composer filesystem
-     * @param FallbackInterface|null $composerFallback The composer fallback
+     * @param null|FallbackInterface $composerFallback The composer fallback
      */
-    public function __construct(AssetManagerInterface $assetManager,
-                                Config $config,
-                                Filesystem $filesystem,
-                                FallbackInterface $composerFallback = null)
-    {
+    public function __construct(
+        AssetManagerInterface $assetManager,
+        Config $config,
+        Filesystem $filesystem,
+        FallbackInterface $composerFallback = null
+    ) {
         $this->config = $config;
         $this->fs = $filesystem;
         $this->assetManager = $assetManager;

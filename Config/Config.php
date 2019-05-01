@@ -66,9 +66,9 @@ final class Config
      * Get the config value.
      *
      * @param string     $key     The config key
-     * @param mixed|null $default The default value
+     * @param null|mixed $default The default value
      *
-     * @return mixed|null
+     * @return null|mixed
      */
     public function get($key, $default = null)
     {
@@ -108,7 +108,7 @@ final class Config
      * @param string $value               The value of environment variable
      * @param string $environmentVariable The environment variable name
      *
-     * @return string|bool|int|array
+     * @return array|bool|int|string
      */
     private function convertEnvValue($value, $environmentVariable)
     {
@@ -210,9 +210,9 @@ final class Config
      * Get the configured default value or custom default value.
      *
      * @param string     $key     The config key
-     * @param mixed|null $default The default value
+     * @param null|mixed $default The default value
      *
-     * @return mixed|null
+     * @return null|mixed
      */
     private function getDefaultValue($key, $default = null)
     {
@@ -228,9 +228,9 @@ final class Config
      *
      * @param string      $key     The config key
      * @param array|mixed $value   The value
-     * @param mixed|null  $default The default value
+     * @param null|mixed  $default The default value
      *
-     * @return mixed|null
+     * @return null|mixed
      */
     private function getByManager($key, $value, $default = null)
     {

@@ -16,8 +16,8 @@ use Composer\Package\RootPackageInterface;
 use Composer\Semver\Constraint\Constraint;
 use Composer\Semver\VersionParser;
 use Composer\Util\Filesystem;
-use Composer\Util\ProcessExecutor;
 use Composer\Util\Platform;
+use Composer\Util\ProcessExecutor;
 use Foxy\Config\Config;
 use Foxy\Exception\RuntimeException;
 use Foxy\Fallback\FallbackInterface;
@@ -53,7 +53,7 @@ abstract class AbstractAssetManager implements AssetManagerInterface
     protected $fs;
 
     /**
-     * @var FallbackInterface|null
+     * @var null|FallbackInterface
      */
     protected $fallback;
 
@@ -71,12 +71,13 @@ abstract class AbstractAssetManager implements AssetManagerInterface
      * @param Filesystem        $fs       The filesystem
      * @param FallbackInterface $fallback The asset fallback
      */
-    public function __construct(IOInterface $io,
-                                Config $config,
-                                ProcessExecutor $executor,
-                                Filesystem $fs,
-                                FallbackInterface $fallback = null)
-    {
+    public function __construct(
+        IOInterface $io,
+        Config $config,
+        ProcessExecutor $executor,
+        Filesystem $fs,
+        FallbackInterface $fallback = null
+    ) {
         $this->io = $io;
         $this->config = $config;
         $this->executor = $executor;

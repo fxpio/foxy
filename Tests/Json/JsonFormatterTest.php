@@ -17,12 +17,14 @@ use Foxy\Json\JsonFormatter;
  * Tests for json formatter.
  *
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
  */
-class JsonFormatterTest extends \PHPUnit_Framework_TestCase
+final class JsonFormatterTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetArrayKeys()
     {
-        $content = <<<JSON
+        $content = <<<'JSON'
 {
   "name": "test",
   "contributors": [],
@@ -38,7 +40,7 @@ JSON;
 
     public function testGetIndent()
     {
-        $content = <<<JSON
+        $content = <<<'JSON'
 {
   "name": "test",
   "dependencies": {}
@@ -50,7 +52,7 @@ JSON;
 
     public function testFormat()
     {
-        $expected = <<<JSON
+        $expected = <<<'JSON'
 {
   "name": "test",
   "contributors": [],

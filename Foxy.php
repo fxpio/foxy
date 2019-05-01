@@ -40,6 +40,11 @@ class Foxy implements PluginInterface, EventSubscriberInterface
     const REQUIRED_COMPOSER_VERSION = '1.5.0';
 
     /**
+     * @var SolverInterface
+     */
+    protected $solver;
+
+    /**
      * The list of the classes of asset managers.
      */
     private static $assetManagers = array(
@@ -68,11 +73,6 @@ class Foxy implements PluginInterface, EventSubscriberInterface
         'fallback-composer' => true,
         'enable-packages' => array(),
     );
-
-    /**
-     * @var SolverInterface
-     */
-    protected $solver;
 
     /**
      * {@inheritdoc}
@@ -142,9 +142,9 @@ class Foxy implements PluginInterface, EventSubscriberInterface
      * @param ProcessExecutor $executor The process executor
      * @param Filesystem      $fs       The composer filesystem
      *
-     * @return AssetManagerInterface
-     *
      * @throws RuntimeException When the asset manager is not found
+     *
+     * @return AssetManagerInterface
      */
     protected function getAssetManager(IOInterface $io, Config $config, ProcessExecutor $executor, Filesystem $fs)
     {

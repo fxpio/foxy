@@ -17,8 +17,10 @@ use Foxy\Event\PreSolveEvent;
  * Tests for pre solve event.
  *
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
  */
-class PreSolveEventTest extends AbstractSolveEventTest
+final class PreSolveEventTest extends AbstractSolveEventTest
 {
     /**
      * {@inheritdoc}

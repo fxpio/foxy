@@ -93,16 +93,6 @@ class JsonFile extends BaseJsonFile
     }
 
     /**
-     * Parse the original content.
-     */
-    private function parseOriginalContent()
-    {
-        $content = $this->exists() ? file_get_contents($this->getPath()) : '';
-        $this->arrayKeys = JsonFormatter::getArrayKeys($content);
-        $this->indent = JsonFormatter::getIndent($content);
-    }
-
-    /**
      * {@inheritdoc}
      */
     public static function encode($data, $options = 448)
@@ -110,5 +100,15 @@ class JsonFile extends BaseJsonFile
         $result = parent::encode($data, $options);
 
         return JsonFormatter::format($result, self::$encodeArrayKeys, self::$encodeIndent, false);
+    }
+
+    /**
+     * Parse the original content.
+     */
+    private function parseOriginalContent()
+    {
+        $content = $this->exists() ? file_get_contents($this->getPath()) : '';
+        $this->arrayKeys = JsonFormatter::getArrayKeys($content);
+        $this->indent = JsonFormatter::getIndent($content);
     }
 }

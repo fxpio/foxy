@@ -63,9 +63,11 @@ class ConsoleUtil
         switch ($config->get('preferred-install')) {
             case 'source':
                 $preferSource = true;
+
                 break;
             case 'dist':
                 $preferDist = true;
+
                 break;
             case 'auto':
             default:

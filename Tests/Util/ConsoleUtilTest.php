@@ -24,8 +24,10 @@ use Symfony\Component\Console\Output\NullOutput;
  * Tests for console util.
  *
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
  */
-class ConsoleUtilTest extends \PHPUnit_Framework_TestCase
+final class ConsoleUtilTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetInput()
     {
@@ -39,7 +41,7 @@ class ConsoleUtilTest extends \PHPUnit_Framework_TestCase
 
     public function testGetInputWithoutValidInput()
     {
-        /* @var IOInterface $io */
+        /** @var IOInterface $io */
         $io = $this->getMockBuilder('Composer\IO\IOInterface')->getMock();
 
         $this->assertInstanceOf('Symfony\Component\Console\Input\ArgvInput', ConsoleUtil::getInput($io));
@@ -65,37 +67,42 @@ class ConsoleUtilTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetPreferredInstallOptions($expectedPreferSource, $expectedPreferDist, $preferedInstall, $inputPrefer)
     {
-        /* @var Config|\PHPUnit_Framework_MockObject_MockObject $config */
+        /** @var Config|\PHPUnit_Framework_MockObject_MockObject $config */
         $config = $this->getMockBuilder(Config::class)->disableOriginalConstructor()
             ->setMethods(array('get'))->getMock();
-        /* @var InputInterface|\PHPUnit_Framework_MockObject_MockObject $input */
+        /** @var InputInterface|\PHPUnit_Framework_MockObject_MockObject $input */
         $input = $this->getMockBuilder('Symfony\Component\Console\Input\InputInterface')->getMock();
 
         $config->expects($this->once())
             ->method('get')
             ->with('preferred-install')
-            ->willReturn($preferedInstall);
+            ->willReturn($preferedInstall)
+        ;
 
         if ($inputPrefer) {
             $input->expects($this->at(0))
                 ->method('getOption')
                 ->with('prefer-source')
-                ->willReturn(false);
+                ->willReturn(false)
+            ;
 
             $input->expects($this->at(1))
                 ->method('getOption')
                 ->with('prefer-dist')
-                ->willReturn(true);
+                ->willReturn(true)
+            ;
 
             $input->expects($this->at(2))
                 ->method('getOption')
                 ->with('prefer-source')
-                ->willReturn(false);
+                ->willReturn(false)
+            ;
 
             $input->expects($this->at(3))
                 ->method('getOption')
                 ->with('prefer-dist')
-                ->willReturn(true);
+                ->willReturn(true)
+            ;
         }
 
         $res = ConsoleUtil::getPreferredInstallOptions($config, $input);

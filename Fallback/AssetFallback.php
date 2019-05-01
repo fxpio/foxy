@@ -43,7 +43,7 @@ class AssetFallback implements FallbackInterface
     protected $fs;
 
     /**
-     * @var string|null
+     * @var null|string
      */
     protected $originalContent;
 

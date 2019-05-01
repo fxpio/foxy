@@ -19,7 +19,7 @@ use Foxy\Event\AbstractSolveEvent;
  *
  * @author François Pluchino <francois.pluchino@gmail.com>
  */
-abstract class AbstractSolveEventTest extends \PHPUnit_Framework_TestCase
+abstract class AbstractSolveEventTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var string
@@ -30,13 +30,6 @@ abstract class AbstractSolveEventTest extends \PHPUnit_Framework_TestCase
      * @var PackageInterface[]|\PHPUnit_Framework_MockObject_MockObject[]
      */
     protected $packages;
-
-    /**
-     * Get the event instance.
-     *
-     * @return AbstractSolveEvent
-     */
-    abstract public function getEvent();
 
     protected function setUp()
     {
@@ -51,6 +44,13 @@ abstract class AbstractSolveEventTest extends \PHPUnit_Framework_TestCase
         $this->assetDir = null;
         $this->packages = null;
     }
+
+    /**
+     * Get the event instance.
+     *
+     * @return AbstractSolveEvent
+     */
+    abstract public function getEvent();
 
     public function testGetAssetDir()
     {

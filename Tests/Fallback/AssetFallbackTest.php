@@ -20,8 +20,10 @@ use Foxy\Fallback\AssetFallback;
  * Tests for composer fallback.
  *
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
  */
-class AssetFallbackTest extends \PHPUnit_Framework_TestCase
+final class AssetFallbackTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var Config
@@ -121,10 +123,12 @@ class AssetFallbackTest extends \PHPUnit_Framework_TestCase
         $assetFallback = new AssetFallback($this->io, $config, 'package.json', $this->fs);
 
         $this->io->expects($this->never())
-            ->method('write');
+            ->method('write')
+        ;
 
         $this->fs->expects($this->never())
-            ->method('remove');
+            ->method('remove')
+        ;
 
         $assetFallback->restore();
     }
@@ -152,11 +156,13 @@ class AssetFallbackTest extends \PHPUnit_Framework_TestCase
         }
 
         $this->io->expects($this->once())
-            ->method('write');
+            ->method('write')
+        ;
 
         $this->fs->expects($this->once())
             ->method('remove')
-            ->with('package.json');
+            ->with('package.json')
+        ;
 
         $this->assetFallback->save();
         $this->assetFallback->restore();

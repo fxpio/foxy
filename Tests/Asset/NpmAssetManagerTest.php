@@ -17,8 +17,10 @@ use Foxy\Asset\NpmManager;
  * NPM asset manager tests.
  *
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
  */
-class NpmAssetManagerTest extends AbstractAssetManagerTest
+final class NpmAssetManagerTest extends AbstractAssetManagerTest
 {
     /**
      * {@inheritdoc}

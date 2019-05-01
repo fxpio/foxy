@@ -18,8 +18,10 @@ use Foxy\Util\PackageUtil;
  * Tests for package util.
  *
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
  */
-class PackageUtilTest extends \PHPUnit_Framework_TestCase
+final class PackageUtilTest extends \PHPUnit\Framework\TestCase
 {
     public function testLoadLockPackages()
     {

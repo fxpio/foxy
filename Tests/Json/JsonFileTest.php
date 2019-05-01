@@ -18,8 +18,10 @@ use Symfony\Component\Filesystem\Filesystem;
  * Tests for json file.
  *
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
  */
-class JsonFileTest extends \PHPUnit_Framework_TestCase
+final class JsonFileTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var Filesystem
@@ -71,7 +73,7 @@ class JsonFileTest extends \PHPUnit_Framework_TestCase
         $expected = array(
             'contributors',
         );
-        $content = <<<JSON
+        $content = <<<'JSON'
 {
   "name": "test",
   "contributors": [],
@@ -99,7 +101,7 @@ JSON;
 
     public function testGetIndentWithExistingFile()
     {
-        $content = <<<JSON
+        $content = <<<'JSON'
 {
   "name": "test"
 }
@@ -116,7 +118,7 @@ JSON;
 
     public function testWriteWithoutFile()
     {
-        $expected = <<<JSON
+        $expected = <<<'JSON'
 {
     "name": "test"
 }
@@ -139,7 +141,7 @@ JSON;
 
     public function testWriteWithExistingFile()
     {
-        $expected = <<<JSON
+        $expected = <<<'JSON'
 {
   "name": "test",
   "contributors": [],
@@ -148,7 +150,7 @@ JSON;
 }
 
 JSON;
-        $content = <<<JSON
+        $content = <<<'JSON'
 {
   "name": "test",
   "contributors": [],

@@ -22,8 +22,10 @@ use Symfony\Component\Filesystem\Filesystem;
  * Tests for asset util.
  *
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
  */
-class AssetUtilTest extends \PHPUnit_Framework_TestCase
+final class AssetUtilTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var Filesystem
@@ -55,38 +57,44 @@ class AssetUtilTest extends \PHPUnit_Framework_TestCase
 
     public function testGetName()
     {
-        /* @var PackageInterface|\PHPUnit_Framework_MockObject_MockObject $package */
+        /** @var PackageInterface|\PHPUnit_Framework_MockObject_MockObject $package */
         $package = $this->getMockBuilder('Composer\Package\PackageInterface')->getMock();
         $package->expects($this->once())
             ->method('getName')
-            ->willReturn('foo/bar');
+            ->willReturn('foo/bar')
+        ;
 
         $this->assertSame('@composer-asset/foo--bar', AssetUtil::getName($package));
     }
 
     public function testGetPathWithoutRequiredFoxy()
     {
-        /* @var InstallationManager|\PHPUnit_Framework_MockObject_MockObject $installationManager */
+        /** @var InstallationManager|\PHPUnit_Framework_MockObject_MockObject $installationManager */
         $installationManager = $this->getMockBuilder('Composer\Installer\InstallationManager')
             ->disableOriginalConstructor()
             ->setMethods(array('getInstallPath'))
-            ->getMock();
+            ->getMock()
+        ;
         $installationManager->expects($this->never())
-            ->method('getInstallPath');
+            ->method('getInstallPath')
+        ;
 
-        /* @var AbstractAssetManager|\PHPUnit_Framework_MockObject_MockObject $assetManager */
+        /** @var AbstractAssetManager|\PHPUnit_Framework_MockObject_MockObject $assetManager */
         $assetManager = $this->getMockBuilder('Foxy\Asset\AbstractAssetManager')
             ->disableOriginalConstructor()
-            ->getMockForAbstractClass();
+            ->getMockForAbstractClass()
+        ;
 
-        /* @var PackageInterface|\PHPUnit_Framework_MockObject_MockObject $package */
+        /** @var PackageInterface|\PHPUnit_Framework_MockObject_MockObject $package */
         $package = $this->getMockBuilder('Composer\Package\PackageInterface')->getMock();
         $package->expects($this->once())
             ->method('getRequires')
-            ->willReturn(array());
+            ->willReturn(array())
+        ;
         $package->expects($this->once())
             ->method('getDevRequires')
-            ->willReturn(array());
+            ->willReturn(array())
+        ;
 
         $res = AssetUtil::getPath($installationManager, $assetManager, $package);
 
@@ -112,33 +120,39 @@ class AssetUtilTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetPathWithRequiredFoxy(array $requires, array $devRequires, $fileExists = false)
     {
-        /* @var InstallationManager|\PHPUnit_Framework_MockObject_MockObject $installationManager */
+        /** @var InstallationManager|\PHPUnit_Framework_MockObject_MockObject $installationManager */
         $installationManager = $this->getMockBuilder('Composer\Installer\InstallationManager')
             ->disableOriginalConstructor()
             ->setMethods(array('getInstallPath'))
-            ->getMock();
+            ->getMock()
+        ;
         $installationManager->expects($this->once())
             ->method('getInstallPath')
-            ->willReturn($this->cwd);
+            ->willReturn($this->cwd)
+        ;
 
-        /* @var AbstractAssetManager|\PHPUnit_Framework_MockObject_MockObject $assetManager */
+        /** @var AbstractAssetManager|\PHPUnit_Framework_MockObject_MockObject $assetManager */
         $assetManager = $this->getMockBuilder('Foxy\Asset\AbstractAssetManager')
             ->disableOriginalConstructor()
-            ->getMockForAbstractClass();
+            ->getMockForAbstractClass()
+        ;
 
-        /* @var PackageInterface|\PHPUnit_Framework_MockObject_MockObject $package */
+        /** @var PackageInterface|\PHPUnit_Framework_MockObject_MockObject $package */
         $package = $this->getMockBuilder('Composer\Package\PackageInterface')->getMock();
         $package->expects($this->once())
             ->method('getRequires')
-            ->willReturn($requires);
+            ->willReturn($requires)
+        ;
 
         if (0 === \count($devRequires)) {
             $package->expects($this->never())
-                ->method('getDevRequires');
+                ->method('getDevRequires')
+            ;
         } else {
             $package->expects($this->once())
                 ->method('getDevRequires')
-                ->willReturn($devRequires);
+                ->willReturn($devRequires)
+            ;
         }
 
         if ($fileExists) {
@@ -172,38 +186,44 @@ class AssetUtilTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetPathWithExtraActivation($withExtra, $fileExists = false)
     {
-        /* @var InstallationManager|\PHPUnit_Framework_MockObject_MockObject $installationManager */
+        /** @var InstallationManager|\PHPUnit_Framework_MockObject_MockObject $installationManager */
         $installationManager = $this->getMockBuilder('Composer\Installer\InstallationManager')
             ->disableOriginalConstructor()
             ->setMethods(array('getInstallPath'))
-            ->getMock();
+            ->getMock()
+        ;
 
         if ($withExtra && $fileExists) {
             $installationManager->expects($this->once())
                 ->method('getInstallPath')
-                ->willReturn($this->cwd);
+                ->willReturn($this->cwd)
+            ;
         }
 
-        /* @var AbstractAssetManager|\PHPUnit_Framework_MockObject_MockObject $assetManager */
+        /** @var AbstractAssetManager|\PHPUnit_Framework_MockObject_MockObject $assetManager */
         $assetManager = $this->getMockBuilder('Foxy\Asset\AbstractAssetManager')
             ->disableOriginalConstructor()
-            ->getMockForAbstractClass();
+            ->getMockForAbstractClass()
+        ;
 
-        /* @var PackageInterface|\PHPUnit_Framework_MockObject_MockObject $package */
+        /** @var PackageInterface|\PHPUnit_Framework_MockObject_MockObject $package */
         $package = $this->getMockBuilder('Composer\Package\PackageInterface')->getMock();
         $package->expects($this->any())
             ->method('getRequires')
-            ->willReturn(array());
+            ->willReturn(array())
+        ;
 
         $package->expects($this->any())
             ->method('getDevRequires')
-            ->willReturn(array());
+            ->willReturn(array())
+        ;
 
         $package->expects($this->atLeastOnce())
             ->method('getExtra')
             ->willReturn(array(
                 'foxy' => $withExtra,
-            ));
+            ))
+        ;
 
         if ($fileExists) {
             $expectedFilename = $this->cwd.\DIRECTORY_SEPARATOR.$assetManager->getPackageName();
@@ -265,11 +285,12 @@ class AssetUtilTest extends \PHPUnit_Framework_TestCase
             'full-disable/qualified' => false,
         );
 
-        /* @var PackageInterface|\PHPUnit_Framework_MockObject_MockObject $package */
+        /** @var PackageInterface|\PHPUnit_Framework_MockObject_MockObject $package */
         $package = $this->getMockBuilder('Composer\Package\PackageInterface')->getMock();
         $package->expects($this->once())
             ->method('getName')
-            ->willReturn($packageName);
+            ->willReturn($packageName)
+        ;
 
         $res = AssetUtil::isProjectActivation($package, $enablePackages);
         $this->assertSame($expected, $res);
@@ -303,11 +324,12 @@ class AssetUtilTest extends \PHPUnit_Framework_TestCase
             '*' => true,
         );
 
-        /* @var PackageInterface|\PHPUnit_Framework_MockObject_MockObject $package */
+        /** @var PackageInterface|\PHPUnit_Framework_MockObject_MockObject $package */
         $package = $this->getMockBuilder('Composer\Package\PackageInterface')->getMock();
         $package->expects($this->once())
             ->method('getName')
-            ->willReturn($packageName);
+            ->willReturn($packageName)
+        ;
 
         $res = AssetUtil::isProjectActivation($package, $enablePackages);
         $this->assertSame($expected, $res);
@@ -335,14 +357,14 @@ class AssetUtilTest extends \PHPUnit_Framework_TestCase
      * @dataProvider getFormatPackageData
      *
      * @param string      $packageVersion
-     * @param string|null $assetVersion
+     * @param null|string $assetVersion
      * @param string      $expectedAssetVersion
-     * @param string|null $branchAlias
+     * @param null|string $branchAlias
      */
     public function testFormatPackage($packageVersion, $assetVersion, $expectedAssetVersion, $branchAlias = null)
     {
         $packageName = '@composer-asset/foo--bar';
-        /* @var PackageInterface|\PHPUnit_Framework_MockObject_MockObject $package */
+        /** @var PackageInterface|\PHPUnit_Framework_MockObject_MockObject $package */
         $package = $this->getMockBuilder('Composer\Package\PackageInterface')->getMock();
 
         $assetPackage = array();
@@ -351,9 +373,11 @@ class AssetUtilTest extends \PHPUnit_Framework_TestCase
             $assetPackage['version'] = $assetVersion;
 
             $package->expects($this->never())
-                ->method('getPrettyVersion');
+                ->method('getPrettyVersion')
+            ;
             $package->expects($this->never())
-                ->method('getExtra');
+                ->method('getExtra')
+            ;
         } else {
             $extra = array();
 
@@ -363,10 +387,12 @@ class AssetUtilTest extends \PHPUnit_Framework_TestCase
 
             $package->expects($this->once())
                 ->method('getPrettyVersion')
-                ->willReturn($packageVersion);
+                ->willReturn($packageVersion)
+            ;
             $package->expects($this->once())
                 ->method('getExtra')
-                ->willReturn($extra);
+                ->willReturn($extra)
+            ;
         }
 
         $expected = array(

@@ -26,7 +26,7 @@ use Foxy\Tests\Fixtures\Util\ProcessExecutorMock;
  *
  * @author François Pluchino <francois.pluchino@gmail.com>
  */
-abstract class AbstractAssetManagerTest extends \PHPUnit_Framework_TestCase
+abstract class AbstractAssetManagerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var Config
@@ -107,25 +107,10 @@ abstract class AbstractAssetManagerTest extends \PHPUnit_Framework_TestCase
         $this->cwd = null;
     }
 
-    /**
-     * @return AssetManagerInterface
-     */
-    abstract protected function getManager();
-
-    /**
-     * @return string
-     */
-    abstract protected function getValidName();
-
     public function testGetName()
     {
         $this->assertSame($this->getValidName(), $this->manager->getName());
     }
-
-    /**
-     * @return string
-     */
-    abstract protected function getValidLockPackageName();
 
     public function testGetLockPackageName()
     {
@@ -157,21 +142,6 @@ abstract class AbstractAssetManagerTest extends \PHPUnit_Framework_TestCase
         $res = $this->manager->setUpdatable(false);
         $this->assertInstanceOf('Foxy\Asset\AssetManagerInterface', $res);
     }
-
-    /**
-     * @return string
-     */
-    abstract protected function getValidVersionCommand();
-
-    /**
-     * @return string
-     */
-    abstract protected function getValidInstallCommand();
-
-    /**
-     * @return string
-     */
-    abstract protected function getValidUpdateCommand();
 
     /**
      * @expectedException \Foxy\Exception\RuntimeException
@@ -231,11 +201,12 @@ abstract class AbstractAssetManagerTest extends \PHPUnit_Framework_TestCase
             '@composer-asset/foo--bar' => 'path/foo/bar/package.json',
             '@composer-asset/new--dependency' => 'path/new/dependency/package.json',
         );
-        /* @var RootPackageInterface|\PHPUnit_Framework_MockObject_MockObject $rootPackage */
+        /** @var \PHPUnit_Framework_MockObject_MockObject|RootPackageInterface $rootPackage */
         $rootPackage = $this->getMockBuilder('Composer\Package\RootPackageInterface')->getMock();
         $rootPackage->expects($this->any())
             ->method('getLicense')
-            ->willReturn(array());
+            ->willReturn(array())
+        ;
 
         $this->assertFalse($this->manager->isInstalled());
         $this->assertFalse($this->manager->isUpdatable());
@@ -267,11 +238,12 @@ abstract class AbstractAssetManagerTest extends \PHPUnit_Framework_TestCase
             '@composer-asset/new--dependency' => 'path/new/dependency/package.json',
         );
         $jsonFile = new JsonFile($this->cwd.'/package.json');
-        /* @var RootPackageInterface|\PHPUnit_Framework_MockObject_MockObject $rootPackage */
+        /** @var \PHPUnit_Framework_MockObject_MockObject|RootPackageInterface $rootPackage */
         $rootPackage = $this->getMockBuilder('Composer\Package\RootPackageInterface')->getMock();
         $rootPackage->expects($this->any())
             ->method('getLicense')
-            ->willReturn(array());
+            ->willReturn(array())
+        ;
         $nodeModulePath = $this->cwd.ltrim(AbstractAssetManager::NODE_MODULES_PATH, '.');
 
         $jsonFile->write($package);
@@ -342,10 +314,12 @@ abstract class AbstractAssetManagerTest extends \PHPUnit_Framework_TestCase
 
         if (0 === $expectedRes) {
             $this->fallback->expects($this->never())
-                ->method('restore');
+                ->method('restore')
+            ;
         } else {
             $this->fallback->expects($this->once())
-                ->method('restore');
+                ->method('restore')
+            ;
         }
 
         $this->executor->addExpectedValues($expectedRes, 'ASSET MANAGER OUTPUT');
@@ -354,6 +328,36 @@ abstract class AbstractAssetManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expectedCommand, $this->executor->getLastCommand());
         $this->assertSame('ASSET MANAGER OUTPUT', $this->executor->getLastOutput());
     }
+
+    /**
+     * @return AssetManagerInterface
+     */
+    abstract protected function getManager();
+
+    /**
+     * @return string
+     */
+    abstract protected function getValidName();
+
+    /**
+     * @return string
+     */
+    abstract protected function getValidLockPackageName();
+
+    /**
+     * @return string
+     */
+    abstract protected function getValidVersionCommand();
+
+    /**
+     * @return string
+     */
+    abstract protected function getValidInstallCommand();
+
+    /**
+     * @return string
+     */
+    abstract protected function getValidUpdateCommand();
 
     protected function actionForTestAddDependenciesForUpdateCommand()
     {

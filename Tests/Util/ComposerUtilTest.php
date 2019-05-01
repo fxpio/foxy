@@ -17,8 +17,10 @@ use Foxy\Util\ComposerUtil;
  * Tests for composer util.
  *
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
  */
-class ComposerUtilTest extends \PHPUnit_Framework_TestCase
+final class ComposerUtilTest extends \PHPUnit\Framework\TestCase
 {
     public function getValidateVersionData()
     {

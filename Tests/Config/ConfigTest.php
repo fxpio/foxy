@@ -21,8 +21,10 @@ use Foxy\Config\ConfigBuilder;
  * Tests for config.
  *
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
  */
-class ConfigTest extends \PHPUnit_Framework_TestCase
+final class ConfigTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var Composer|\PHPUnit_Framework_MockObject_MockObject
@@ -40,7 +42,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
     protected $io;
 
     /**
-     * @var RootPackageInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject|RootPackageInterface
      */
     protected $package;
 
@@ -53,11 +55,13 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
 
         $this->composer->expects($this->any())
             ->method('getPackage')
-            ->willReturn($this->package);
+            ->willReturn($this->package)
+        ;
 
         $this->composer->expects($this->any())
             ->method('getConfig')
-            ->willReturn($this->composerConfig);
+            ->willReturn($this->composerConfig)
+        ;
     }
 
     public function getDataForGetConfig()
@@ -88,8 +92,8 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
      *
      * @param string      $key      The key
      * @param mixed       $expected The expected value
-     * @param mixed|null  $default  The default value
-     * @param string|null $env      The env variable
+     * @param null|mixed  $default  The default value
+     * @param null|string $env      The env variable
      * @param array       $defaults The configured default values
      */
     public function testGetConfig($key, $expected, $default = null, $env = null, array $defaults = array())
@@ -103,12 +107,14 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
         $this->composerConfig->expects($this->any())
             ->method('has')
             ->with('home')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
 
         $this->composerConfig->expects($this->any())
             ->method('get')
             ->with('home')
-            ->willReturn($globalPath);
+            ->willReturn($globalPath)
+        ;
 
         $this->package->expects($this->any())
             ->method('getConfig')
@@ -126,19 +132,23 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
                         'peter' => 42,
                     ),
                 ),
-            ));
+            ))
+        ;
 
         if (0 === strpos($key, 'global-')) {
             $this->io->expects($this->atLeast(2))
                 ->method('isDebug')
-                ->willReturn(true);
+                ->willReturn(true)
+            ;
 
             $this->io->expects($this->at(1))
                 ->method('writeError')
-                ->with(sprintf('Loading Foxy config in file %s/composer.json', $globalPath));
+                ->with(sprintf('Loading Foxy config in file %s/composer.json', $globalPath))
+            ;
             $this->io->expects($this->at(3))
                 ->method('writeError')
-                ->with(sprintf('Loading Foxy config in file %s/config.json', $globalPath));
+                ->with(sprintf('Loading Foxy config in file %s/config.json', $globalPath))
+            ;
         }
 
         $config = ConfigBuilder::build($this->composer, $defaults, $this->io);

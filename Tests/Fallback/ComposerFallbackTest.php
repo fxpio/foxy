@@ -25,8 +25,10 @@ use Symfony\Component\Console\Input\InputInterface;
  * Tests for composer fallback.
  *
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
  */
-class ComposerFallbackTest extends \PHPUnit_Framework_TestCase
+final class ComposerFallbackTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var Config
@@ -135,12 +137,14 @@ class ComposerFallbackTest extends \PHPUnit_Framework_TestCase
         $rm = $this->getMockBuilder('Composer\Repository\RepositoryManager')->disableOriginalConstructor()->getMock();
         $this->composer->expects($this->any())
             ->method('getRepositoryManager')
-            ->willReturn($rm);
+            ->willReturn($rm)
+        ;
 
         $im = $this->getMockBuilder('Composer\Installer\InstallationManager')->disableOriginalConstructor()->getMock();
         $this->composer->expects($this->any())
             ->method('getInstallationManager')
-            ->willReturn($im);
+            ->willReturn($im)
+        ;
 
         file_put_contents($this->cwd.'/composer.json', '{}');
 
@@ -159,7 +163,8 @@ class ComposerFallbackTest extends \PHPUnit_Framework_TestCase
         $composerFallback = new ComposerFallback($this->composer, $this->io, $config, $this->input);
 
         $this->io->expects($this->never())
-            ->method('write');
+            ->method('write')
+        ;
 
         $composerFallback->restore();
     }
@@ -200,42 +205,51 @@ class ComposerFallbackTest extends \PHPUnit_Framework_TestCase
         $rm = $this->getMockBuilder('Composer\Repository\RepositoryManager')->disableOriginalConstructor()->getMock();
         $this->composer->expects($this->any())
             ->method('getRepositoryManager')
-            ->willReturn($rm);
+            ->willReturn($rm)
+        ;
 
         $im = $this->getMockBuilder('Composer\Installer\InstallationManager')->disableOriginalConstructor()->getMock();
         $this->composer->expects($this->any())
             ->method('getInstallationManager')
-            ->willReturn($im);
+            ->willReturn($im)
+        ;
 
         $this->io->expects($this->once())
-            ->method('write');
+            ->method('write')
+        ;
 
         $locker = new Locker($this->io, new JsonFile($lockFile, null, $this->io), $rm, $im, file_get_contents($composerFile));
         $this->composer->expects($this->atLeastOnce())
             ->method('getLocker')
-            ->willReturn($locker);
+            ->willReturn($locker)
+        ;
 
         $config = $this->getMockBuilder('Composer\Config')->disableOriginalConstructor()->setMethods(array('get'))->getMock();
         $this->composer->expects($this->atLeastOnce())
             ->method('getConfig')
-            ->willReturn($config);
+            ->willReturn($config)
+        ;
 
         $config->expects($this->atLeastOnce())
             ->method('get')
             ->willReturnCallback(function ($key, $default = null) use ($vendorDir) {
                 return 'vendor-dir' === $key ? $vendorDir : $default;
-            });
+            })
+        ;
 
         if (0 === \count($packages)) {
             $this->fs->expects($this->once())
                 ->method('remove')
-                ->with($vendorDir);
+                ->with($vendorDir)
+            ;
         } else {
             $this->fs->expects($this->never())
-                ->method('remove');
+                ->method('remove')
+            ;
 
             $this->installer->expects($this->once())
-                ->method('run');
+                ->method('run')
+            ;
         }
 
         $this->composerFallback->save();

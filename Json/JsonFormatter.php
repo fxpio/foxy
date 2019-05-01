@@ -34,9 +34,8 @@ class JsonFormatter
     public static function getArrayKeys($content)
     {
         preg_match_all(self::ARRAY_KEYS_REGEX, trim($content), $matches);
-        $keys = !empty($matches) ? $matches[1] : array();
 
-        return $keys;
+        return !empty($matches) ? $matches[1] : array();
     }
 
     /**
@@ -94,7 +93,7 @@ class JsonFormatter
         preg_match_all(self::ARRAY_KEYS_REGEX, $json, $matches, PREG_SET_ORDER);
 
         foreach ($matches as $match) {
-            if (!\in_array($match[1], $arrayKeys)) {
+            if (!\in_array($match[1], $arrayKeys, true)) {
                 $replace = str_replace('[]', '{}', $match[0]);
                 $json = str_replace($match[0], $replace, $json);
             }

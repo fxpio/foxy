@@ -17,8 +17,10 @@ use Foxy\Event\PostSolveEvent;
  * Tests for post solve event.
  *
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
  */
-class PostSolveEventTest extends AbstractSolveEventTest
+final class PostSolveEventTest extends AbstractSolveEventTest
 {
     /**
      * {@inheritdoc}

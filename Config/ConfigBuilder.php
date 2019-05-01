@@ -27,7 +27,7 @@ abstract class ConfigBuilder
      *
      * @param Composer         $composer The composer
      * @param array            $defaults The default values
-     * @param IOInterface|null $io       The composer input/output
+     * @param null|IOInterface $io       The composer input/output
      *
      * @return Config
      */
@@ -42,7 +42,7 @@ abstract class ConfigBuilder
      * Get the base of data.
      *
      * @param Composer         $composer The composer
-     * @param IOInterface|null $io       The composer input/output
+     * @param null|IOInterface $io       The composer input/output
      *
      * @return array
      */
@@ -63,7 +63,7 @@ abstract class ConfigBuilder
      *
      * @param Composer         $composer The composer
      * @param string           $filename The filename
-     * @param IOInterface|null $io       The composer input/output
+     * @param null|IOInterface $io       The composer input/output
      *
      * @return array
      */

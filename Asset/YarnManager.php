@@ -37,6 +37,24 @@ class YarnManager extends AbstractAssetManager
     /**
      * {@inheritdoc}
      */
+    public function isInstalled()
+    {
+        return parent::isInstalled() && file_exists($this->getLockPackageName());
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isValidForUpdate()
+    {
+        $cmd = $this->buildCommand('yarn', 'check', 'check --non-interactive');
+
+        return 0 === $this->executor->execute($cmd);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     protected function getVersionCommand()
     {
         return $this->buildCommand('yarn', 'version', '--version');
@@ -56,23 +74,5 @@ class YarnManager extends AbstractAssetManager
     protected function getUpdateCommand()
     {
         return $this->buildCommand('yarn', 'update', 'upgrade --non-interactive');
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isInstalled()
-    {
-        return parent::isInstalled() && file_exists($this->getLockPackageName());
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isValidForUpdate()
-    {
-        $cmd = $this->buildCommand('yarn', 'check', 'check --non-interactive');
-
-        return 0 === $this->executor->execute($cmd);
     }
 }

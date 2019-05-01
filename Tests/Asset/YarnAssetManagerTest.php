@@ -17,9 +17,22 @@ use Foxy\Asset\YarnManager;
  * Yarn asset manager tests.
  *
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
  */
-class YarnAssetManagerTest extends AbstractAssetManagerTest
+final class YarnAssetManagerTest extends AbstractAssetManagerTest
 {
+    /**
+     * {@inheritdoc}
+     */
+    public function actionForTestRunForInstallCommand($action)
+    {
+        if ('update' === $action) {
+            $this->executor->addExpectedValues(0, 'CHECK OUTPUT');
+            $this->executor->addExpectedValues(0, 'CHECK OUTPUT');
+        }
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -74,16 +87,5 @@ class YarnAssetManagerTest extends AbstractAssetManagerTest
     protected function actionForTestAddDependenciesForUpdateCommand()
     {
         $this->executor->addExpectedValues(0, 'CHECK OUTPUT');
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function actionForTestRunForInstallCommand($action)
-    {
-        if ('update' === $action) {
-            $this->executor->addExpectedValues(0, 'CHECK OUTPUT');
-            $this->executor->addExpectedValues(0, 'CHECK OUTPUT');
-        }
     }
 }

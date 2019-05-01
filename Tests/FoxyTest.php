@@ -23,8 +23,10 @@ use Foxy\Solver\SolverInterface;
  * Tests for foxy.
  *
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
  */
-class FoxyTest extends \PHPUnit_Framework_TestCase
+final class FoxyTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var Composer|\PHPUnit_Framework_MockObject_MockObject
@@ -42,7 +44,7 @@ class FoxyTest extends \PHPUnit_Framework_TestCase
     protected $io;
 
     /**
-     * @var RootPackageInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject|RootPackageInterface
      */
     protected $package;
 
@@ -55,21 +57,25 @@ class FoxyTest extends \PHPUnit_Framework_TestCase
 
         $this->composer->expects($this->any())
             ->method('getPackage')
-            ->willReturn($this->package);
+            ->willReturn($this->package)
+        ;
 
         $this->composer->expects($this->any())
             ->method('getConfig')
-            ->willReturn($this->composerConfig);
+            ->willReturn($this->composerConfig)
+        ;
 
         $rm = $this->getMockBuilder('Composer\Repository\RepositoryManager')->disableOriginalConstructor()->getMock();
         $this->composer->expects($this->any())
             ->method('getRepositoryManager')
-            ->willReturn($rm);
+            ->willReturn($rm)
+        ;
 
         $im = $this->getMockBuilder('Composer\Installer\InstallationManager')->disableOriginalConstructor()->getMock();
         $this->composer->expects($this->any())
             ->method('getInstallationManager')
-            ->willReturn($im);
+            ->willReturn($im)
+        ;
     }
 
     public function testGetSubscribedEvents()
@@ -96,7 +102,8 @@ class FoxyTest extends \PHPUnit_Framework_TestCase
                 'foxy' => array(
                     'manager' => 'invalid_manager',
                 ),
-            ));
+            ))
+        ;
 
         $foxy = new Foxy();
         $foxy->activate($this->composer, $this->io);
@@ -119,14 +126,16 @@ class FoxyTest extends \PHPUnit_Framework_TestCase
     public function testSolveAssets($eventName, $expectedUpdatable)
     {
         $event = new Event($eventName, $this->composer, $this->io);
-        /* @var SolverInterface|\PHPUnit_Framework_MockObject_MockObject $solver */
+        /** @var \PHPUnit_Framework_MockObject_MockObject|SolverInterface $solver */
         $solver = $this->getMockBuilder('Foxy\Solver\SolverInterface')->getMock();
         $solver->expects($this->once())
             ->method('setUpdatable')
-            ->with($expectedUpdatable);
+            ->with($expectedUpdatable)
+        ;
         $solver->expects($this->once())
             ->method('solve')
-            ->with($this->composer, $this->io);
+            ->with($this->composer, $this->io)
+        ;
 
         $foxy = new Foxy();
         $foxy->setSolver($solver);

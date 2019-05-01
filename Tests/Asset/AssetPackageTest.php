@@ -20,8 +20,10 @@ use Symfony\Component\Filesystem\Filesystem;
  * Asset package tests.
  *
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
  */
-class AssetPackageTest extends \PHPUnit_Framework_TestCase
+final class AssetPackageTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var string
@@ -34,7 +36,7 @@ class AssetPackageTest extends \PHPUnit_Framework_TestCase
     protected $sfs;
 
     /**
-     * @var RootPackageInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject|RootPackageInterface
      */
     protected $rootPackage;
 
@@ -52,11 +54,13 @@ class AssetPackageTest extends \PHPUnit_Framework_TestCase
         $this->rootPackage = $this->getMockBuilder('Composer\Package\RootPackageInterface')->getMock();
         $this->jsonFile = $this->getMockBuilder('Composer\Json\JsonFile')->disableOriginalConstructor()
             ->setMethods(array('exists', 'getPath', 'read', 'write'))
-            ->getMock();
+            ->getMock()
+        ;
 
         $this->rootPackage->expects($this->any())
             ->method('getLicense')
-            ->willReturn(array());
+            ->willReturn(array())
+        ;
 
         $this->sfs->mkdir($this->cwd);
     }
@@ -93,11 +97,13 @@ class AssetPackageTest extends \PHPUnit_Framework_TestCase
 
         $this->jsonFile->expects($this->once())
             ->method('exists')
-            ->willReturn(false);
+            ->willReturn(false)
+        ;
 
         $this->jsonFile->expects($this->once())
             ->method('write')
-            ->with($package);
+            ->with($package)
+        ;
 
         $assetPackage = new AssetPackage($this->rootPackage, $this->jsonFile);
         $assetPackage->setPackage($package);
@@ -155,7 +161,8 @@ class AssetPackageTest extends \PHPUnit_Framework_TestCase
         $this->rootPackage = $this->getMockBuilder('Composer\Package\RootPackageInterface')->getMock();
         $this->rootPackage->expects($this->any())
             ->method('getLicense')
-            ->willReturn(array($license));
+            ->willReturn(array($license))
+        ;
 
         $assetPackage = new AssetPackage($this->rootPackage, $this->jsonFile);
 
@@ -249,7 +256,7 @@ class AssetPackageTest extends \PHPUnit_Framework_TestCase
      * Add the package in file.
      *
      * @param array       $package       The package
-     * @param string|null $contentString The string content of package
+     * @param null|string $contentString The string content of package
      */
     protected function addPackageFile(array $package, $contentString = null)
     {
@@ -258,15 +265,18 @@ class AssetPackageTest extends \PHPUnit_Framework_TestCase
 
         $this->jsonFile->expects($this->any())
             ->method('exists')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
 
         $this->jsonFile->expects($this->any())
             ->method('getPath')
-            ->willReturn($filename);
+            ->willReturn($filename)
+        ;
 
         $this->jsonFile->expects($this->any())
             ->method('read')
-            ->willReturn($package);
+            ->willReturn($package)
+        ;
 
         file_put_contents($filename, $contentString);
     }

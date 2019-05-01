@@ -69,7 +69,7 @@ class ProcessExecutorMock extends ProcessExecutor
      *
      * @param int $position The position of executed command
      *
-     * @return string|null
+     * @return null|string
      */
     public function getExecutedCommand($position)
     {
@@ -81,7 +81,7 @@ class ProcessExecutorMock extends ProcessExecutor
      *
      * @param int $position The position of executed command
      *
-     * @return int|null
+     * @return null|int
      */
     public function getExecutedReturnedCode($position)
     {
@@ -93,7 +93,7 @@ class ProcessExecutorMock extends ProcessExecutor
      *
      * @param int $position The position of executed command
      *
-     * @return string|null
+     * @return null|string
      */
     public function getExecutedOutput($position)
     {
@@ -103,7 +103,7 @@ class ProcessExecutorMock extends ProcessExecutor
     /**
      * Get the last executed command.
      *
-     * @return string|null
+     * @return null|string
      */
     public function getLastCommand()
     {
@@ -113,7 +113,7 @@ class ProcessExecutorMock extends ProcessExecutor
     /**
      * Get the last executed returned code.
      *
-     * @return int|null
+     * @return null|int
      */
     public function getLastReturnedCode()
     {
@@ -123,7 +123,7 @@ class ProcessExecutorMock extends ProcessExecutor
     /**
      * Get the last executed output.
      *
-     * @return string|null
+     * @return null|string
      */
     public function getLastOutput()
     {
@@ -136,7 +136,7 @@ class ProcessExecutorMock extends ProcessExecutor
      * @param int $position The position
      * @param int $index    The index of value
      *
-     * @return string|int|null
+     * @return null|int|string
      */
     private function getExecutedValue($position, $index)
     {

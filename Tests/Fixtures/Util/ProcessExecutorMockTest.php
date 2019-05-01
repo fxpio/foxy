@@ -17,8 +17,10 @@ use Foxy\Tests\Fixtures\Util\ProcessExecutorMock;
  * Tests for the process executor mock.
  *
  * @author François Pluchino <francois.pluchino@gmail.com>
+ *
+ * @internal
  */
-class ProcessExecutorMockTest extends \PHPUnit_Framework_TestCase
+final class ProcessExecutorMockTest extends \PHPUnit\Framework\TestCase
 {
     public function testExecuteWithoutExpectedValues()
     {

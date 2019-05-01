@@ -56,7 +56,7 @@ class ComposerFallback implements FallbackInterface
     protected $fs;
 
     /**
-     * @var Installer|null
+     * @var null|Installer
      */
     protected $installer;
 
@@ -72,16 +72,17 @@ class ComposerFallback implements FallbackInterface
      * @param IOInterface     $io        The IO
      * @param Config          $config    The config
      * @param InputInterface  $input     The input
-     * @param Filesystem|null $fs        The composer filesystem
-     * @param Installer|null  $installer The installer
+     * @param null|Filesystem $fs        The composer filesystem
+     * @param null|Installer  $installer The installer
      */
-    public function __construct(Composer $composer,
-                                IOInterface $io,
-                                Config $config,
-                                InputInterface $input,
-                                Filesystem $fs = null,
-                                Installer $installer = null)
-    {
+    public function __construct(
+        Composer $composer,
+        IOInterface $io,
+        Config $config,
+        InputInterface $input,
+        Filesystem $fs = null,
+        Installer $installer = null
+    ) {
         $this->composer = $composer;
         $this->io = $io;
         $this->config = $config;
@@ -184,9 +185,9 @@ class ComposerFallback implements FallbackInterface
      * Get the lock value.
      *
      * @param string     $key     The key
-     * @param mixed|null $default The default value
+     * @param null|mixed $default The default value
      *
-     * @return mixed|null
+     * @return null|mixed
      */
     private function getLockValue($key, $default = null)
     {

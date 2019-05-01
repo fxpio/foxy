@@ -44,7 +44,7 @@ class AssetUtil
      * @param PackageInterface      $package             The package
      * @param array                 $configPackages      The packages defined in config
      *
-     * @return string|null
+     * @return null|string
      */
     public static function getPath(InstallationManager $installationManager, AssetManagerInterface $assetManager, PackageInterface $package, array $configPackages = array())
     {
@@ -106,6 +106,7 @@ class AssetUtil
         foreach ($requires as $require) {
             if ('foxy/foxy' === $require->getTarget()) {
                 $assets = true;
+
                 break;
             }
         }
@@ -180,7 +181,7 @@ class AssetUtil
      * @param PackageInterface $package        The package
      * @param array            $configPackages The packages defined in config
      *
-     * @return bool|null returns NULL, if the package isn't defined in the project config
+     * @return null|bool returns NULL, if the package isn't defined in the project config
      */
     private static function getProjectActivation(PackageInterface $package, array $configPackages)
     {
@@ -195,6 +196,7 @@ class AssetUtil
 
             if ((0 === strpos($pattern, '/') && preg_match($pattern, $name)) || fnmatch($pattern, $name)) {
                 $value = $activation;
+
                 break;
             }
         }
