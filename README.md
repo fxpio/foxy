@@ -7,7 +7,7 @@ Foxy
 [![Scrutinizer Code Quality](https://img.shields.io/scrutinizer/g/fxpio/foxy.svg)](https://scrutinizer-ci.com/g/fxpio/foxy?branch=master)
 [![SensioLabsInsight](https://img.shields.io/sensiolabs/i/01030987-5dc5-4753-92c8-70a9de80323a.svg)](https://insight.sensiolabs.com/projects/01030987-5dc5-4753-92c8-70a9de80323a)
 
-Foxy is a Composer plugin to automates the validation, installation, updating and removing of PHP libraries
+Foxy is a Composer plugin to automate the validation, installation, updating and removing of PHP libraries
 asset dependencies (javaScript, stylesheets, etc.) defined in the NPM `package.json` file of the project and
 PHP libraries during the execution of Composer. It handles restoring the project state in case
 [NPM](https://www.npmjs.com) or [Yarn](https://yarnpkg.com) terminates with an error. All features and tools
