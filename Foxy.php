@@ -13,6 +13,7 @@ namespace Foxy;
 
 use Composer\Composer;
 use Composer\EventDispatcher\EventSubscriberInterface;
+use Composer\Installer\InstallerEvents;
 use Composer\IO\IOInterface;
 use Composer\Plugin\PluginInterface;
 use Composer\Script\Event;
@@ -40,9 +41,34 @@ class Foxy implements PluginInterface, EventSubscriberInterface
     const REQUIRED_COMPOSER_VERSION = '1.5.0';
 
     /**
+     * @var Config
+     */
+    protected $config;
+
+    /**
+     * @var AssetManagerInterface
+     */
+    protected $assetManager;
+
+    /**
+     * @var AssetFallback
+     */
+    protected $assetFallback;
+
+    /**
+     * @var ComposerFallback
+     */
+    protected $composerFallback;
+
+    /**
      * @var SolverInterface
      */
     protected $solver;
+
+    /**
+     * @var bool
+     */
+    protected $initialized = false;
 
     /**
      * The list of the classes of asset managers.
@@ -80,6 +106,9 @@ class Foxy implements PluginInterface, EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return array(
+            InstallerEvents::PRE_DEPENDENCIES_SOLVING => array(
+                array('init', 100),
+            ),
             ScriptEvents::POST_INSTALL_CMD => array(
                 array('solveAssets', 100),
             ),
@@ -95,21 +124,33 @@ class Foxy implements PluginInterface, EventSubscriberInterface
     public function activate(Composer $composer, IOInterface $io)
     {
         ComposerUtil::validateVersion(static::REQUIRED_COMPOSER_VERSION, Composer::VERSION);
+
         $input = ConsoleUtil::getInput($io);
-        $config = ConfigBuilder::build($composer, self::$defaultConfig, $io);
         $executor = new ProcessExecutor($io);
         $fs = new Filesystem($executor);
-        $assetManager = $this->getAssetManager($io, $config, $executor, $fs);
-        $assetFallback = new AssetFallback($io, $config, $assetManager->getPackageName(), $fs);
-        $composerFallback = new ComposerFallback($composer, $io, $config, $input, $fs);
-        $this->solver = new Solver($assetManager, $config, $fs, $composerFallback);
 
-        $assetFallback->save();
-        $composerFallback->save();
-        $assetManager->setFallback($assetFallback);
+        $this->config = ConfigBuilder::build($composer, self::$defaultConfig, $io);
+        $this->assetManager = $this->getAssetManager($io, $this->config, $executor, $fs);
+        $this->assetFallback = new AssetFallback($io, $this->config, $this->assetManager->getPackageName(), $fs);
+        $this->composerFallback = new ComposerFallback($composer, $io, $this->config, $input, $fs);
+        $this->solver = new Solver($this->assetManager, $this->config, $fs, $this->composerFallback);
 
-        if ($config->get('enabled')) {
-            $assetManager->validate();
+        $this->assetManager->setFallback($this->assetFallback);
+    }
+
+    /**
+     * Init the plugin.
+     */
+    public function init()
+    {
+        if (!$this->initialized) {
+            $this->initialized = true;
+            $this->assetFallback->save();
+            $this->composerFallback->save();
+
+            if ($this->config->get('enabled')) {
+                $this->assetManager->validate();
+            }
         }
     }
 

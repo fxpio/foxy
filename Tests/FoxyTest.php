@@ -80,13 +80,14 @@ final class FoxyTest extends \PHPUnit\Framework\TestCase
 
     public function testGetSubscribedEvents()
     {
-        $this->assertCount(2, Foxy::getSubscribedEvents());
+        $this->assertCount(3, Foxy::getSubscribedEvents());
     }
 
     public function testActivate()
     {
         $foxy = new Foxy();
         $foxy->activate($this->composer, $this->io);
+        $foxy->init();
         $this->assertTrue(true);
     }
 
