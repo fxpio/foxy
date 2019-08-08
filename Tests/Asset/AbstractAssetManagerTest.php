@@ -109,38 +109,38 @@ abstract class AbstractAssetManagerTest extends \PHPUnit\Framework\TestCase
 
     public function testGetName()
     {
-        $this->assertSame($this->getValidName(), $this->manager->getName());
+        static::assertSame($this->getValidName(), $this->manager->getName());
     }
 
     public function testGetLockPackageName()
     {
-        $this->assertSame($this->getValidLockPackageName(), $this->manager->getLockPackageName());
+        static::assertSame($this->getValidLockPackageName(), $this->manager->getLockPackageName());
     }
 
     public function testGetPackageName()
     {
-        $this->assertSame('package.json', $this->manager->getPackageName());
+        static::assertSame('package.json', $this->manager->getPackageName());
     }
 
     public function testHasLockFile()
     {
-        $this->assertFalse($this->manager->hasLockFile());
+        static::assertFalse($this->manager->hasLockFile());
     }
 
     public function testIsInstalled()
     {
-        $this->assertFalse($this->manager->isInstalled());
+        static::assertFalse($this->manager->isInstalled());
     }
 
     public function testIsUpdatable()
     {
-        $this->assertFalse($this->manager->isUpdatable());
+        static::assertFalse($this->manager->isUpdatable());
     }
 
     public function testSetUpdatable()
     {
         $res = $this->manager->setUpdatable(false);
-        $this->assertInstanceOf('Foxy\Asset\AssetManagerInterface', $res);
+        static::assertInstanceOf('Foxy\Asset\AssetManagerInterface', $res);
     }
 
     /**
@@ -178,7 +178,7 @@ abstract class AbstractAssetManagerTest extends \PHPUnit\Framework\TestCase
         $this->executor->addExpectedValues(0, '42.0.0');
 
         $this->manager->validate();
-        $this->assertSame('>=41.0', $this->config->get('manager-version'));
+        static::assertSame('>=41.0', $this->config->get('manager-version'));
     }
 
     public function testValidateWithInstalledManagerAndWithoutValidationVersion()
@@ -186,7 +186,7 @@ abstract class AbstractAssetManagerTest extends \PHPUnit\Framework\TestCase
         $this->executor->addExpectedValues(0, '42.0.0');
 
         $this->manager->validate();
-        $this->assertNull($this->config->get('manager-version'));
+        static::assertNull($this->config->get('manager-version'));
     }
 
     public function testAddDependenciesForInstallCommand()
@@ -203,18 +203,18 @@ abstract class AbstractAssetManagerTest extends \PHPUnit\Framework\TestCase
         );
         /** @var \PHPUnit_Framework_MockObject_MockObject|RootPackageInterface $rootPackage */
         $rootPackage = $this->getMockBuilder('Composer\Package\RootPackageInterface')->getMock();
-        $rootPackage->expects($this->any())
+        $rootPackage->expects(static::any())
             ->method('getLicense')
             ->willReturn(array())
         ;
 
-        $this->assertFalse($this->manager->isInstalled());
-        $this->assertFalse($this->manager->isUpdatable());
+        static::assertFalse($this->manager->isInstalled());
+        static::assertFalse($this->manager->isUpdatable());
 
         $assetPackage = $this->manager->addDependencies($rootPackage, $allDependencies);
-        $this->assertInstanceOf('Foxy\Asset\AssetPackageInterface', $assetPackage);
+        static::assertInstanceOf('Foxy\Asset\AssetPackageInterface', $assetPackage);
 
-        $this->assertEquals($expectedPackage, $assetPackage->getPackage());
+        static::assertEquals($expectedPackage, $assetPackage->getPackage());
     }
 
     public function testAddDependenciesForUpdateCommand()
@@ -240,26 +240,26 @@ abstract class AbstractAssetManagerTest extends \PHPUnit\Framework\TestCase
         $jsonFile = new JsonFile($this->cwd.'/package.json');
         /** @var \PHPUnit_Framework_MockObject_MockObject|RootPackageInterface $rootPackage */
         $rootPackage = $this->getMockBuilder('Composer\Package\RootPackageInterface')->getMock();
-        $rootPackage->expects($this->any())
+        $rootPackage->expects(static::any())
             ->method('getLicense')
             ->willReturn(array())
         ;
         $nodeModulePath = $this->cwd.ltrim(AbstractAssetManager::NODE_MODULES_PATH, '.');
 
         $jsonFile->write($package);
-        $this->assertFileExists($jsonFile->getPath());
+        static::assertFileExists($jsonFile->getPath());
         $this->sfs->mkdir($nodeModulePath);
-        $this->assertFileExists($nodeModulePath);
+        static::assertFileExists($nodeModulePath);
         $lockFilePath = $this->cwd.\DIRECTORY_SEPARATOR.$this->manager->getLockPackageName();
         file_put_contents($lockFilePath, '{}');
-        $this->assertFileExists($lockFilePath);
-        $this->assertTrue($this->manager->isInstalled());
-        $this->assertTrue($this->manager->isUpdatable());
+        static::assertFileExists($lockFilePath);
+        static::assertTrue($this->manager->isInstalled());
+        static::assertTrue($this->manager->isUpdatable());
 
         $assetPackage = $this->manager->addDependencies($rootPackage, $allDependencies);
-        $this->assertInstanceOf('Foxy\Asset\AssetPackageInterface', $assetPackage);
+        static::assertInstanceOf('Foxy\Asset\AssetPackageInterface', $assetPackage);
 
-        $this->assertEquals($expectedPackage, $assetPackage->getPackage());
+        static::assertEquals($expectedPackage, $assetPackage->getPackage());
     }
 
     public function testRunWithDisableOption()
@@ -268,7 +268,7 @@ abstract class AbstractAssetManagerTest extends \PHPUnit\Framework\TestCase
             'run-asset-manager' => false,
         ));
 
-        $this->assertSame(0, $this->getManager()->run());
+        static::assertSame(0, $this->getManager()->run());
     }
 
     public function getRunData()
@@ -304,29 +304,29 @@ abstract class AbstractAssetManagerTest extends \PHPUnit\Framework\TestCase
             file_put_contents($this->cwd.\DIRECTORY_SEPARATOR.$this->manager->getPackageName(), '{}');
             $nodeModulePath = $this->cwd.ltrim(AbstractAssetManager::NODE_MODULES_PATH, '.');
             $this->sfs->mkdir($nodeModulePath);
-            $this->assertFileExists($nodeModulePath);
+            static::assertFileExists($nodeModulePath);
             $lockFilePath = $this->cwd.\DIRECTORY_SEPARATOR.$this->manager->getLockPackageName();
             file_put_contents($lockFilePath, '{}');
-            $this->assertFileExists($lockFilePath);
-            $this->assertTrue($this->manager->isInstalled());
-            $this->assertTrue($this->manager->isUpdatable());
+            static::assertFileExists($lockFilePath);
+            static::assertTrue($this->manager->isInstalled());
+            static::assertTrue($this->manager->isUpdatable());
         }
 
         if (0 === $expectedRes) {
-            $this->fallback->expects($this->never())
+            $this->fallback->expects(static::never())
                 ->method('restore')
             ;
         } else {
-            $this->fallback->expects($this->once())
+            $this->fallback->expects(static::once())
                 ->method('restore')
             ;
         }
 
         $this->executor->addExpectedValues($expectedRes, 'ASSET MANAGER OUTPUT');
 
-        $this->assertSame($expectedRes, $this->getManager()->run());
-        $this->assertSame($expectedCommand, $this->executor->getLastCommand());
-        $this->assertSame('ASSET MANAGER OUTPUT', $this->executor->getLastOutput());
+        static::assertSame($expectedRes, $this->getManager()->run());
+        static::assertSame($expectedCommand, $this->executor->getLastCommand());
+        static::assertSame('ASSET MANAGER OUTPUT', $this->executor->getLastOutput());
     }
 
     /**

@@ -112,7 +112,7 @@ final class AssetFallbackTest extends \PHPUnit\Framework\TestCase
             file_put_contents($this->cwd.'/package.json', '{}');
         }
 
-        $this->assertInstanceOf('Foxy\Fallback\AssetFallback', $this->assetFallback->save());
+        static::assertInstanceOf('Foxy\Fallback\AssetFallback', $this->assetFallback->save());
     }
 
     public function testRestoreWithDisableOption()
@@ -122,11 +122,11 @@ final class AssetFallbackTest extends \PHPUnit\Framework\TestCase
         ));
         $assetFallback = new AssetFallback($this->io, $config, 'package.json', $this->fs);
 
-        $this->io->expects($this->never())
+        $this->io->expects(static::never())
             ->method('write')
         ;
 
-        $this->fs->expects($this->never())
+        $this->fs->expects(static::never())
             ->method('remove')
         ;
 
@@ -155,11 +155,11 @@ final class AssetFallbackTest extends \PHPUnit\Framework\TestCase
             file_put_contents($path, $content);
         }
 
-        $this->io->expects($this->once())
+        $this->io->expects(static::once())
             ->method('write')
         ;
 
-        $this->fs->expects($this->once())
+        $this->fs->expects(static::once())
             ->method('remove')
             ->with('package.json')
         ;
@@ -168,10 +168,10 @@ final class AssetFallbackTest extends \PHPUnit\Framework\TestCase
         $this->assetFallback->restore();
 
         if ($withPackageFile) {
-            $this->assertFileExists($path);
-            $this->assertSame($content, file_get_contents($path));
+            static::assertFileExists($path);
+            static::assertSame($content, file_get_contents($path));
         } else {
-            $this->assertFileNotExists($path);
+            static::assertFileNotExists($path);
         }
     }
 }

@@ -42,7 +42,7 @@ final class GetAssetsEventTest extends AbstractSolveEventTest
     public function testHasAsset()
     {
         $event = $this->getEvent();
-        $this->assertTrue($event->hasAsset('@composer-asset/foo--bar'));
+        static::assertTrue($event->hasAsset('@composer-asset/foo--bar'));
     }
 
     public function testAddAsset()
@@ -51,15 +51,15 @@ final class GetAssetsEventTest extends AbstractSolveEventTest
         $assetPackagePath = 'file:./vendor/foxy/composer-asset/bar/foo';
         $event = $this->getEvent();
 
-        $this->assertFalse($event->hasAsset($assetPackageName));
+        static::assertFalse($event->hasAsset($assetPackageName));
         $event->addAsset($assetPackageName, $assetPackagePath);
-        $this->assertTrue($event->hasAsset($assetPackageName));
+        static::assertTrue($event->hasAsset($assetPackageName));
     }
 
     public function testGetAssets()
     {
         $event = $this->getEvent();
-        $this->assertSame($this->assets, $event->getAssets());
+        static::assertSame($this->assets, $event->getAssets());
 
         $expectedAssets = array(
             '@composer-asset/foo--bar' => 'file:./vendor/foxy/composer-asset/foo/bar',
@@ -67,6 +67,6 @@ final class GetAssetsEventTest extends AbstractSolveEventTest
         );
 
         $event->addAsset('@composer-asset/bar--foo', 'file:./vendor/foxy/composer-asset/bar/foo');
-        $this->assertSame($expectedAssets, $event->getAssets());
+        static::assertSame($expectedAssets, $event->getAssets());
     }
 }
