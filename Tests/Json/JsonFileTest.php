@@ -65,7 +65,7 @@ final class JsonFileTest extends \PHPUnit\Framework\TestCase
         $filename = './package.json';
         $jsonFile = new JsonFile($filename);
 
-        static::assertSame(array(), $jsonFile->getArrayKeys());
+        $this->assertSame(array(), $jsonFile->getArrayKeys());
     }
 
     public function testGetArrayKeysWithExistingFile()
@@ -84,11 +84,11 @@ JSON;
 
         $filename = './package.json';
         file_put_contents($filename, $content);
-        static::assertFileExists($filename);
+        $this->assertFileExists($filename);
 
         $jsonFile = new JsonFile($filename);
 
-        static::assertSame($expected, $jsonFile->getArrayKeys());
+        $this->assertSame($expected, $jsonFile->getArrayKeys());
     }
 
     public function testGetIndentWithoutFile()
@@ -96,7 +96,7 @@ JSON;
         $filename = './package.json';
         $jsonFile = new JsonFile($filename);
 
-        static::assertSame(4, $jsonFile->getIndent());
+        $this->assertSame(4, $jsonFile->getIndent());
     }
 
     public function testGetIndentWithExistingFile()
@@ -109,11 +109,11 @@ JSON;
 
         $filename = './package.json';
         file_put_contents($filename, $content);
-        static::assertFileExists($filename);
+        $this->assertFileExists($filename);
 
         $jsonFile = new JsonFile($filename);
 
-        static::assertSame(2, $jsonFile->getIndent());
+        $this->assertSame(2, $jsonFile->getIndent());
     }
 
     public function testWriteWithoutFile()
@@ -133,10 +133,10 @@ JSON;
         $jsonFile = new JsonFile($filename);
         $jsonFile->write($data);
 
-        static::assertFileExists($filename);
+        $this->assertFileExists($filename);
         $content = file_get_contents($filename);
 
-        static::assertSame($expected, $content);
+        $this->assertSame($expected, $content);
     }
 
     public function testWriteWithExistingFile()
@@ -161,16 +161,16 @@ JSON;
 
         $filename = './package.json';
         file_put_contents($filename, $content);
-        static::assertFileExists($filename);
+        $this->assertFileExists($filename);
 
         $jsonFile = new JsonFile($filename);
         $data = (array) $jsonFile->read();
         $data['private'] = true;
         $jsonFile->write($data);
 
-        static::assertFileExists($filename);
+        $this->assertFileExists($filename);
         $content = file_get_contents($filename);
 
-        static::assertSame($expected, $content);
+        $this->assertSame($expected, $content);
     }
 }

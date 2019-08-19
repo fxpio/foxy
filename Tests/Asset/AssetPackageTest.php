@@ -57,7 +57,7 @@ final class AssetPackageTest extends \PHPUnit\Framework\TestCase
             ->getMock()
         ;
 
-        $this->rootPackage->expects(static::any())
+        $this->rootPackage->expects($this->any())
             ->method('getLicense')
             ->willReturn(array())
         ;
@@ -86,7 +86,7 @@ final class AssetPackageTest extends \PHPUnit\Framework\TestCase
 
         $assetPackage = new AssetPackage($this->rootPackage, $this->jsonFile);
 
-        static::assertSame($package, $assetPackage->getPackage());
+        $this->assertSame($package, $assetPackage->getPackage());
     }
 
     public function testWrite()
@@ -95,12 +95,12 @@ final class AssetPackageTest extends \PHPUnit\Framework\TestCase
             'name' => '@foo/bar',
         );
 
-        $this->jsonFile->expects(static::once())
+        $this->jsonFile->expects($this->once())
             ->method('exists')
             ->willReturn(false)
         ;
 
-        $this->jsonFile->expects(static::once())
+        $this->jsonFile->expects($this->once())
             ->method('write')
             ->with($package)
         ;
@@ -159,14 +159,14 @@ final class AssetPackageTest extends \PHPUnit\Framework\TestCase
         $this->addPackageFile($package);
 
         $this->rootPackage = $this->getMockBuilder('Composer\Package\RootPackageInterface')->getMock();
-        $this->rootPackage->expects(static::any())
+        $this->rootPackage->expects($this->any())
             ->method('getLicense')
             ->willReturn(array($license))
         ;
 
         $assetPackage = new AssetPackage($this->rootPackage, $this->jsonFile);
 
-        static::assertEquals($expected, $assetPackage->getPackage());
+        $this->assertEquals($expected, $assetPackage->getPackage());
     }
 
     public function testGetInstalledDependencies()
@@ -186,7 +186,7 @@ final class AssetPackageTest extends \PHPUnit\Framework\TestCase
 
         $assetPackage = new AssetPackage($this->rootPackage, $this->jsonFile);
 
-        static::assertEquals($expected, $assetPackage->getInstalledDependencies());
+        $this->assertEquals($expected, $assetPackage->getInstalledDependencies());
     }
 
     public function testAddNewDependencies()
@@ -221,8 +221,8 @@ final class AssetPackageTest extends \PHPUnit\Framework\TestCase
         $assetPackage = new AssetPackage($this->rootPackage, $this->jsonFile);
         $existing = $assetPackage->addNewDependencies($dependencies);
 
-        static::assertSame($expected, $assetPackage->getPackage());
-        static::assertSame($expectedExisting, $existing);
+        $this->assertSame($expected, $assetPackage->getPackage());
+        $this->assertSame($expectedExisting, $existing);
     }
 
     public function testRemoveUnusedDependencies()
@@ -249,7 +249,7 @@ final class AssetPackageTest extends \PHPUnit\Framework\TestCase
         $assetPackage = new AssetPackage($this->rootPackage, $this->jsonFile);
         $assetPackage->removeUnusedDependencies($dependencies);
 
-        static::assertEquals($expected, $assetPackage->getPackage());
+        $this->assertEquals($expected, $assetPackage->getPackage());
     }
 
     /**
@@ -263,17 +263,17 @@ final class AssetPackageTest extends \PHPUnit\Framework\TestCase
         $filename = $this->cwd.'/package.json';
         $contentString = null !== $contentString ? $contentString : json_encode($package);
 
-        $this->jsonFile->expects(static::any())
+        $this->jsonFile->expects($this->any())
             ->method('exists')
             ->willReturn(true)
         ;
 
-        $this->jsonFile->expects(static::any())
+        $this->jsonFile->expects($this->any())
             ->method('getPath')
             ->willReturn($filename)
         ;
 
-        $this->jsonFile->expects(static::any())
+        $this->jsonFile->expects($this->any())
             ->method('read')
             ->willReturn($package)
         ;

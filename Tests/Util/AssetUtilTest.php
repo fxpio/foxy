@@ -59,12 +59,12 @@ final class AssetUtilTest extends \PHPUnit\Framework\TestCase
     {
         /** @var PackageInterface|\PHPUnit_Framework_MockObject_MockObject $package */
         $package = $this->getMockBuilder('Composer\Package\PackageInterface')->getMock();
-        $package->expects(static::once())
+        $package->expects($this->once())
             ->method('getName')
             ->willReturn('foo/bar')
         ;
 
-        static::assertSame('@composer-asset/foo--bar', AssetUtil::getName($package));
+        $this->assertSame('@composer-asset/foo--bar', AssetUtil::getName($package));
     }
 
     public function testGetPathWithoutRequiredFoxy()
@@ -75,7 +75,7 @@ final class AssetUtilTest extends \PHPUnit\Framework\TestCase
             ->setMethods(array('getInstallPath'))
             ->getMock()
         ;
-        $installationManager->expects(static::never())
+        $installationManager->expects($this->never())
             ->method('getInstallPath')
         ;
 
@@ -87,18 +87,18 @@ final class AssetUtilTest extends \PHPUnit\Framework\TestCase
 
         /** @var PackageInterface|\PHPUnit_Framework_MockObject_MockObject $package */
         $package = $this->getMockBuilder('Composer\Package\PackageInterface')->getMock();
-        $package->expects(static::once())
+        $package->expects($this->once())
             ->method('getRequires')
             ->willReturn(array())
         ;
-        $package->expects(static::once())
+        $package->expects($this->once())
             ->method('getDevRequires')
             ->willReturn(array())
         ;
 
         $res = AssetUtil::getPath($installationManager, $assetManager, $package);
 
-        static::assertNull($res);
+        $this->assertNull($res);
     }
 
     public function getRequiresData()
@@ -126,7 +126,7 @@ final class AssetUtilTest extends \PHPUnit\Framework\TestCase
             ->setMethods(array('getInstallPath'))
             ->getMock()
         ;
-        $installationManager->expects(static::once())
+        $installationManager->expects($this->once())
             ->method('getInstallPath')
             ->willReturn($this->cwd)
         ;
@@ -139,17 +139,17 @@ final class AssetUtilTest extends \PHPUnit\Framework\TestCase
 
         /** @var PackageInterface|\PHPUnit_Framework_MockObject_MockObject $package */
         $package = $this->getMockBuilder('Composer\Package\PackageInterface')->getMock();
-        $package->expects(static::once())
+        $package->expects($this->once())
             ->method('getRequires')
             ->willReturn($requires)
         ;
 
         if (0 === \count($devRequires)) {
-            $package->expects(static::never())
+            $package->expects($this->never())
                 ->method('getDevRequires')
             ;
         } else {
-            $package->expects(static::once())
+            $package->expects($this->once())
                 ->method('getDevRequires')
                 ->willReturn($devRequires)
             ;
@@ -165,7 +165,7 @@ final class AssetUtilTest extends \PHPUnit\Framework\TestCase
 
         $res = AssetUtil::getPath($installationManager, $assetManager, $package);
 
-        static::assertSame($expectedFilename, $res);
+        $this->assertSame($expectedFilename, $res);
     }
 
     public function getExtraData()
@@ -194,7 +194,7 @@ final class AssetUtilTest extends \PHPUnit\Framework\TestCase
         ;
 
         if ($withExtra && $fileExists) {
-            $installationManager->expects(static::once())
+            $installationManager->expects($this->once())
                 ->method('getInstallPath')
                 ->willReturn($this->cwd)
             ;
@@ -208,17 +208,17 @@ final class AssetUtilTest extends \PHPUnit\Framework\TestCase
 
         /** @var PackageInterface|\PHPUnit_Framework_MockObject_MockObject $package */
         $package = $this->getMockBuilder('Composer\Package\PackageInterface')->getMock();
-        $package->expects(static::any())
+        $package->expects($this->any())
             ->method('getRequires')
             ->willReturn(array())
         ;
 
-        $package->expects(static::any())
+        $package->expects($this->any())
             ->method('getDevRequires')
             ->willReturn(array())
         ;
 
-        $package->expects(static::atLeastOnce())
+        $package->expects($this->atLeastOnce())
             ->method('getExtra')
             ->willReturn(array(
                 'foxy' => $withExtra,
@@ -235,19 +235,19 @@ final class AssetUtilTest extends \PHPUnit\Framework\TestCase
 
         $res = AssetUtil::getPath($installationManager, $assetManager, $package);
 
-        static::assertSame($expectedFilename, $res);
+        $this->assertSame($expectedFilename, $res);
     }
 
     public function testHasNoPluginDependency()
     {
-        static::assertFalse(AssetUtil::hasPluginDependency(array(
+        $this->assertFalse(AssetUtil::hasPluginDependency(array(
             new Link('root/package', 'foo/bar'),
         )));
     }
 
     public function testHasPluginDependency()
     {
-        static::assertTrue(AssetUtil::hasPluginDependency(array(
+        $this->assertTrue(AssetUtil::hasPluginDependency(array(
             new Link('root/package', 'foo/bar'),
             new Link('root/package', 'foxy/foxy'),
             new Link('root/package', 'bar/foo'),
@@ -287,13 +287,13 @@ final class AssetUtilTest extends \PHPUnit\Framework\TestCase
 
         /** @var PackageInterface|\PHPUnit_Framework_MockObject_MockObject $package */
         $package = $this->getMockBuilder('Composer\Package\PackageInterface')->getMock();
-        $package->expects(static::once())
+        $package->expects($this->once())
             ->method('getName')
             ->willReturn($packageName)
         ;
 
         $res = AssetUtil::isProjectActivation($package, $enablePackages);
-        static::assertSame($expected, $res);
+        $this->assertSame($expected, $res);
     }
 
     public function getIsProjectActivationWithWildcardData()
@@ -326,13 +326,13 @@ final class AssetUtilTest extends \PHPUnit\Framework\TestCase
 
         /** @var PackageInterface|\PHPUnit_Framework_MockObject_MockObject $package */
         $package = $this->getMockBuilder('Composer\Package\PackageInterface')->getMock();
-        $package->expects(static::once())
+        $package->expects($this->once())
             ->method('getName')
             ->willReturn($packageName)
         ;
 
         $res = AssetUtil::isProjectActivation($package, $enablePackages);
-        static::assertSame($expected, $res);
+        $this->assertSame($expected, $res);
     }
 
     public function getFormatPackageData()
@@ -372,10 +372,10 @@ final class AssetUtilTest extends \PHPUnit\Framework\TestCase
         if (null !== $assetVersion) {
             $assetPackage['version'] = $assetVersion;
 
-            $package->expects(static::never())
+            $package->expects($this->never())
                 ->method('getPrettyVersion')
             ;
-            $package->expects(static::never())
+            $package->expects($this->never())
                 ->method('getExtra')
             ;
         } else {
@@ -385,11 +385,11 @@ final class AssetUtilTest extends \PHPUnit\Framework\TestCase
                 $extra['branch-alias'][$packageVersion] = $branchAlias;
             }
 
-            $package->expects(static::once())
+            $package->expects($this->once())
                 ->method('getPrettyVersion')
                 ->willReturn($packageVersion)
             ;
-            $package->expects(static::once())
+            $package->expects($this->once())
                 ->method('getExtra')
                 ->willReturn($extra)
             ;
@@ -402,6 +402,6 @@ final class AssetUtilTest extends \PHPUnit\Framework\TestCase
 
         $res = AssetUtil::formatPackage($package, $packageName, $assetPackage);
 
-        static::assertEquals($expected, $res);
+        $this->assertEquals($expected, $res);
     }
 }

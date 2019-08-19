@@ -55,15 +55,15 @@ final class PackageUtilTest extends \PHPUnit\Framework\TestCase
 
         $lockDataLoaded = PackageUtil::loadLockPackages($lockData);
 
-        static::assertArrayHasKey('packages', $lockDataLoaded);
-        static::assertArrayHasKey('packages-dev', $lockDataLoaded);
-        static::assertEquals($lockDataLoaded['packages'], $expectedPackages);
-        static::assertEquals($lockDataLoaded['packages-dev'], $expectedDevPackages);
+        $this->assertArrayHasKey('packages', $lockDataLoaded);
+        $this->assertArrayHasKey('packages-dev', $lockDataLoaded);
+        $this->assertEquals($lockDataLoaded['packages'], $expectedPackages);
+        $this->assertEquals($lockDataLoaded['packages-dev'], $expectedDevPackages);
     }
 
     public function testLoadLockPackagesWithoutPackages()
     {
-        static::assertSame(array(), PackageUtil::loadLockPackages(array()));
+        $this->assertSame(array(), PackageUtil::loadLockPackages(array()));
     }
 
     public function testConvertLockAlias()
@@ -101,7 +101,7 @@ final class PackageUtilTest extends \PHPUnit\Framework\TestCase
 
         $convertedAliases = PackageUtil::convertLockAlias($lockData);
 
-        static::assertArrayHasKey('aliases', $convertedAliases);
-        static::assertEquals($convertedAliases['aliases'], $expectedAliases);
+        $this->assertArrayHasKey('aliases', $convertedAliases);
+        $this->assertEquals($convertedAliases['aliases'], $expectedAliases);
     }
 }

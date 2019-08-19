@@ -55,24 +55,24 @@ final class FoxyTest extends \PHPUnit\Framework\TestCase
         $this->io = $this->getMockBuilder('Composer\IO\IOInterface')->getMock();
         $this->package = $this->getMockBuilder('Composer\Package\RootPackageInterface')->getMock();
 
-        $this->composer->expects(static::any())
+        $this->composer->expects($this->any())
             ->method('getPackage')
             ->willReturn($this->package)
         ;
 
-        $this->composer->expects(static::any())
+        $this->composer->expects($this->any())
             ->method('getConfig')
             ->willReturn($this->composerConfig)
         ;
 
         $rm = $this->getMockBuilder('Composer\Repository\RepositoryManager')->disableOriginalConstructor()->getMock();
-        $this->composer->expects(static::any())
+        $this->composer->expects($this->any())
             ->method('getRepositoryManager')
             ->willReturn($rm)
         ;
 
         $im = $this->getMockBuilder('Composer\Installer\InstallationManager')->disableOriginalConstructor()->getMock();
-        $this->composer->expects(static::any())
+        $this->composer->expects($this->any())
             ->method('getInstallationManager')
             ->willReturn($im)
         ;
@@ -80,7 +80,7 @@ final class FoxyTest extends \PHPUnit\Framework\TestCase
 
     public function testGetSubscribedEvents()
     {
-        static::assertCount(3, Foxy::getSubscribedEvents());
+        $this->assertCount(4, Foxy::getSubscribedEvents());
     }
 
     public function testActivate()
@@ -88,7 +88,7 @@ final class FoxyTest extends \PHPUnit\Framework\TestCase
         $foxy = new Foxy();
         $foxy->activate($this->composer, $this->io);
         $foxy->init();
-        static::assertTrue(true);
+        $this->assertTrue(true);
     }
 
     /**
@@ -97,7 +97,7 @@ final class FoxyTest extends \PHPUnit\Framework\TestCase
      */
     public function testActivateWithInvalidManager()
     {
-        $this->package->expects(static::any())
+        $this->package->expects($this->any())
             ->method('getConfig')
             ->willReturn(array(
                 'foxy' => array(
@@ -129,11 +129,11 @@ final class FoxyTest extends \PHPUnit\Framework\TestCase
         $event = new Event($eventName, $this->composer, $this->io);
         /** @var \PHPUnit_Framework_MockObject_MockObject|SolverInterface $solver */
         $solver = $this->getMockBuilder('Foxy\Solver\SolverInterface')->getMock();
-        $solver->expects(static::once())
+        $solver->expects($this->once())
             ->method('setUpdatable')
             ->with($expectedUpdatable)
         ;
-        $solver->expects(static::once())
+        $solver->expects($this->once())
             ->method('solve')
             ->with($this->composer, $this->io)
         ;

@@ -36,7 +36,7 @@ final class ConsoleUtilTest extends \PHPUnit\Framework\TestCase
         $helperSet = new HelperSet();
         $io = new ConsoleIO($input, $output, $helperSet);
 
-        static::assertSame($input, ConsoleUtil::getInput($io));
+        $this->assertSame($input, ConsoleUtil::getInput($io));
     }
 
     public function testGetInputWithoutValidInput()
@@ -44,7 +44,7 @@ final class ConsoleUtilTest extends \PHPUnit\Framework\TestCase
         /** @var IOInterface $io */
         $io = $this->getMockBuilder('Composer\IO\IOInterface')->getMock();
 
-        static::assertInstanceOf('Symfony\Component\Console\Input\ArgvInput', ConsoleUtil::getInput($io));
+        $this->assertInstanceOf('Symfony\Component\Console\Input\ArgvInput', ConsoleUtil::getInput($io));
     }
 
     public function getPreferredInstallOptionsData()
@@ -73,32 +73,32 @@ final class ConsoleUtilTest extends \PHPUnit\Framework\TestCase
         /** @var InputInterface|\PHPUnit_Framework_MockObject_MockObject $input */
         $input = $this->getMockBuilder('Symfony\Component\Console\Input\InputInterface')->getMock();
 
-        $config->expects(static::once())
+        $config->expects($this->once())
             ->method('get')
             ->with('preferred-install')
             ->willReturn($preferedInstall)
         ;
 
         if ($inputPrefer) {
-            $input->expects(static::at(0))
+            $input->expects($this->at(0))
                 ->method('getOption')
                 ->with('prefer-source')
                 ->willReturn(false)
             ;
 
-            $input->expects(static::at(1))
+            $input->expects($this->at(1))
                 ->method('getOption')
                 ->with('prefer-dist')
                 ->willReturn(true)
             ;
 
-            $input->expects(static::at(2))
+            $input->expects($this->at(2))
                 ->method('getOption')
                 ->with('prefer-source')
                 ->willReturn(false)
             ;
 
-            $input->expects(static::at(3))
+            $input->expects($this->at(3))
                 ->method('getOption')
                 ->with('prefer-dist')
                 ->willReturn(true)
@@ -107,6 +107,6 @@ final class ConsoleUtilTest extends \PHPUnit\Framework\TestCase
 
         $res = ConsoleUtil::getPreferredInstallOptions($config, $input);
 
-        static::assertEquals(array($expectedPreferSource, $expectedPreferDist), $res);
+        $this->assertEquals(array($expectedPreferSource, $expectedPreferDist), $res);
     }
 }

@@ -35,6 +35,6 @@ final class PostSolveEventTest extends AbstractSolveEventTest
     public function testGetRunResult()
     {
         $event = $this->getEvent();
-        static::assertSame(42, $event->getRunResult());
+        $this->assertSame(42, $event->getRunResult());
     }
 }

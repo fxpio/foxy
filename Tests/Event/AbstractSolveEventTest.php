@@ -55,12 +55,12 @@ abstract class AbstractSolveEventTest extends \PHPUnit\Framework\TestCase
     public function testGetAssetDir()
     {
         $event = $this->getEvent();
-        static::assertSame($this->assetDir, $event->getAssetDir());
+        $this->assertSame($this->assetDir, $event->getAssetDir());
     }
 
     public function testGetPackages()
     {
         $event = $this->getEvent();
-        static::assertSame($this->packages, $event->getPackages());
+        $this->assertSame($this->packages, $event->getPackages());
     }
 }
