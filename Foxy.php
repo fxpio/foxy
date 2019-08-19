@@ -12,8 +12,11 @@
 namespace Foxy;
 
 use Composer\Composer;
+use Composer\DependencyResolver\Operation\InstallOperation;
 use Composer\EventDispatcher\EventSubscriberInterface;
 use Composer\Installer\InstallerEvents;
+use Composer\Installer\PackageEvent;
+use Composer\Installer\PackageEvents;
 use Composer\IO\IOInterface;
 use Composer\Plugin\PluginInterface;
 use Composer\Script\Event;
@@ -109,6 +112,9 @@ class Foxy implements PluginInterface, EventSubscriberInterface
             InstallerEvents::PRE_DEPENDENCIES_SOLVING => array(
                 array('init', 100),
             ),
+            PackageEvents::POST_PACKAGE_INSTALL => array(
+                array('initOnInstall', 100),
+            ),
             ScriptEvents::POST_INSTALL_CMD => array(
                 array('solveAssets', 100),
             ),
@@ -136,6 +142,20 @@ class Foxy implements PluginInterface, EventSubscriberInterface
         $this->solver = new Solver($this->assetManager, $this->config, $fs, $this->composerFallback);
 
         $this->assetManager->setFallback($this->assetFallback);
+    }
+
+    /**
+     * Init the plugin just after the first installation.
+     *
+     * @param PackageEvent $event The package event
+     */
+    public function initOnInstall(PackageEvent $event)
+    {
+        $operation = $event->getOperation();
+
+        if ($operation instanceof InstallOperation && 'foxy/foxy' === $operation->getPackage()->getName()) {
+            $this->init();
+        }
     }
 
     /**

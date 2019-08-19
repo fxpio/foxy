@@ -13,11 +13,13 @@ namespace Foxy\Tests;
 
 use Composer\Composer;
 use Composer\Config;
+use Composer\Installer\PackageEvent;
 use Composer\IO\IOInterface;
 use Composer\Package\RootPackageInterface;
 use Composer\Script\Event;
 use Foxy\Foxy;
 use Foxy\Solver\SolverInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * Tests for foxy.
@@ -89,6 +91,36 @@ final class FoxyTest extends \PHPUnit\Framework\TestCase
         $foxy->activate($this->composer, $this->io);
         $foxy->init();
         $this->assertTrue(true);
+    }
+
+    public function testActivateOnInstall()
+    {
+        $package = $this->getMockBuilder('Composer\Package\Package')
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+        $package->expects($this->once())
+            ->method('getName')
+            ->willReturn('foxy/foxy')
+        ;
+
+        $operation = $this->getMockBuilder('Composer\DependencyResolver\Operation\InstallOperation')
+            ->disableOriginalConstructor()->getMock();
+        $operation->expects($this->once())
+            ->method('getPackage')
+            ->willReturn($package)
+        ;
+
+        /** @var MockObject|PackageEvent $event */
+        $event = $this->getMockBuilder('Composer\Installer\PackageEvent')->disableOriginalConstructor()->getMock();
+        $event->expects($this->once())
+            ->method('getOperation')
+            ->willReturn($operation)
+        ;
+
+        $foxy = new Foxy();
+        $foxy->activate($this->composer, $this->io);
+        $foxy->initOnInstall($event);
     }
 
     /**
