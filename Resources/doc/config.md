@@ -317,7 +317,7 @@ You can define the custom path of the mock package of PHP library with the optio
 {
     "config": {
         "foxy": {
-            "manager-bin": "./my/mock/asset/path/of/project"
+            "composer-asset-dir": "./my/mock/asset/path/of/project"
         }
     }
 }
