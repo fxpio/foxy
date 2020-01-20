@@ -1,0 +1,10 @@
+{
+    "name": "foxy/foxydependency",
+    "description": "Dependecies Stub Package",
+    "require": {
+        "foxy/foxy": "@dev"
+    },
+    "extra": {
+        "foxy": true
+    }
+}

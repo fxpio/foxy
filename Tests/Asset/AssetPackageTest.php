@@ -196,8 +196,10 @@ final class AssetPackageTest extends \PHPUnit\Framework\TestCase
                 '@bar/foo' => '^1.0.0',
                 '@composer-asset/baz--bar' => 'file:./path/baz/bar',
                 '@composer-asset/foo--bar' => 'file:./path/foo/bar',
-                '@composer-asset/new--dependency' => 'file:./path/new/dependency',
             ),
+            'devDependencies' => array(
+                '@composer-asset/new--dependency' => 'file:./path/new/dependency'
+            )
         );
         $expectedExisting = array(
             '@composer-asset/foo--bar',
@@ -216,10 +218,13 @@ final class AssetPackageTest extends \PHPUnit\Framework\TestCase
             '@composer-asset/baz--bar' => 'path/baz/bar/package.json',
             '@composer-asset/new--dependency' => 'path/new/dependency/package.json',
         );
+        $devDependencies = array(
+            '@composer-asset/new--dependency' => 'path/new/dependency/package.json',
+        );
         $this->addPackageFile($package);
 
         $assetPackage = new AssetPackage($this->rootPackage, $this->jsonFile);
-        $existing = $assetPackage->addNewDependencies($dependencies);
+        $existing = $assetPackage->addNewDependencies($dependencies, $devDependencies);
 
         $this->assertSame($expected, $assetPackage->getPackage());
         $this->assertSame($expectedExisting, $existing);

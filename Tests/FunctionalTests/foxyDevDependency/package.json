@@ -1,0 +1,11 @@
+{
+    "name": "foxydevdependency",
+    "version": "0.0.1",
+    "description": "Foxy Dev Dependency",
+    "dependencies": {
+        "webpack": "*"
+    },
+    "devDependencies": {
+        "stylelint": "*"
+    }
+}

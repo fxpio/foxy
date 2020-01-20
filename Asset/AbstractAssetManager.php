@@ -53,6 +53,11 @@ abstract class AbstractAssetManager implements AssetManagerInterface
     protected $fs;
 
     /**
+     * @var boolean
+     */
+    protected $isDevMode;
+
+    /**
      * @var null|FallbackInterface
      */
     protected $fallback;
@@ -171,11 +176,11 @@ abstract class AbstractAssetManager implements AssetManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function addDependencies(RootPackageInterface $rootPackage, array $dependencies)
+    public function addDependencies(RootPackageInterface $rootPackage, array $dependencies, array $devDependencies = array())
     {
         $assetPackage = new AssetPackage($rootPackage, new JsonFile($this->getPackageName(), null, $this->io));
         $assetPackage->removeUnusedDependencies($dependencies);
-        $alreadyInstalledDependencies = $assetPackage->addNewDependencies($dependencies);
+        $alreadyInstalledDependencies = $assetPackage->addNewDependencies($dependencies, $devDependencies);
 
         $this->actionWhenComposerDependenciesAreAlreadyInstalled($alreadyInstalledDependencies);
         $this->io->write('<info>Merging Composer dependencies in the asset package</info>');
@@ -210,6 +215,16 @@ abstract class AbstractAssetManager implements AssetManagerInterface
     }
 
     /**
+     * Set developer mode for package-handling
+     *
+     * @param boolean $isDevMode true if composer is called in dev-mode
+     */
+    public function setDevMode($isDevMode)
+    {
+        $this->isDevMode = $isDevMode;
+    }
+
+    /**
      * Action when the composer dependencies are already installed.
      *
      * @param string[] $names the asset package name of composer dependencies
@@ -223,21 +238,24 @@ abstract class AbstractAssetManager implements AssetManagerInterface
      * Build the command with binary and command options.
      *
      * @param string $defaultBin The default binary of command if option isn't defined
-     * @param string $action     The command action to retrieve the options in config
-     * @param string $command    The command
+     * @param string $action The command action to retrieve the options in config
+     * @param string $command The command
+     * @param array $additionalOptions Additional options for the command
      *
      * @return string
      */
-    protected function buildCommand($defaultBin, $action, $command)
+    protected function buildCommand($defaultBin, $action, $command, array $additionalOptions = array())
     {
         $bin = $this->config->get('manager-bin', $defaultBin);
         $bin = Platform::isWindows() ? str_replace('/', '\\', $bin) : $bin;
         $gOptions = trim($this->config->get('manager-options', ''));
         $options = trim($this->config->get('manager-'.$action.'-options', ''));
+        $flags = implode(' ', $additionalOptions);
 
         return $bin.' '.$command
             .(empty($gOptions) ? '' : ' '.$gOptions)
-            .(empty($options) ? '' : ' '.$options);
+            .(empty($options) ? '' : ' '.$options)
+            .(empty($flags) ? '' : ' '.$flags);
     }
 
     /**

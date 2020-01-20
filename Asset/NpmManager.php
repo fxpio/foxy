@@ -47,7 +47,11 @@ class NpmManager extends AbstractAssetManager
      */
     protected function getInstallCommand()
     {
-        return $this->buildCommand('npm', 'install', 'install');
+        $additionalOptions = array();
+        if($this->isDevMode !== true){
+            $additionalOptions = array('--prod');
+        }
+        return $this->buildCommand('npm', 'install', 'install', $additionalOptions);
     }
 
     /**
@@ -55,7 +59,11 @@ class NpmManager extends AbstractAssetManager
      */
     protected function getUpdateCommand()
     {
-        return $this->buildCommand('npm', 'update', 'update');
+        $additionalOptions = array();
+        if($this->isDevMode === true){
+            $additionalOptions = array('--dev');
+        }
+        return $this->buildCommand('npm', 'update', 'update', $additionalOptions);
     }
 
     /**
