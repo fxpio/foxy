@@ -22,12 +22,42 @@ use Foxy\Asset\NpmManager;
  */
 final class NpmAssetManagerTest extends AbstractAssetManagerTest
 {
+    public function getRunData()
+    {
+        return array(
+            'install' => array(0, 'install', true),
+            'install prod' => array(0, 'install --prod', null),
+            'update dev' => array(0, 'update --dev', true),
+            'update' => array(0, 'update', null),
+            'install fallback' => array(1, 'install', true),
+            'update fallback' => array(1, 'update', null),
+        );
+    }
+
+    public function testIsValidForUpdate()
+    {
+        $manager = $this->getManager();
+        static::assertTrue($manager->isValidForUpdate());
+    }
+
     /**
      * {@inheritdoc}
      */
     protected function getManager()
     {
         return new NpmManager($this->io, $this->config, $this->executor, $this->fs, $this->fallback);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getMockedManager($mockedMethods)
+    {
+        return $this->getMockBuilder('Foxy\Asset\NpmManager')
+            ->setConstructorArgs(array($this->io, $this->config, $this->executor, $this->fs, $this->fallback))
+            ->setMethods($mockedMethods)
+            ->getMock()
+        ;
     }
 
     /**
@@ -57,16 +87,26 @@ final class NpmAssetManagerTest extends AbstractAssetManagerTest
     /**
      * {@inheritdoc}
      */
-    protected function getValidInstallCommand()
+    protected function getValidInstallCommand($isDevMode)
     {
-        return 'npm install';
+        $additionalOptions = '';
+        if (true !== $isDevMode) {
+            $additionalOptions = ' --prod';
+        }
+
+        return 'npm install'.$additionalOptions;
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function getValidUpdateCommand()
+    protected function getValidUpdateCommand($isDevMode)
     {
-        return 'npm update';
+        $additionalOptions = '';
+        if (true === $isDevMode) {
+            $additionalOptions = ' --dev';
+        }
+
+        return 'npm update'.$additionalOptions;
     }
 }

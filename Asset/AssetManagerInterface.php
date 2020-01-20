@@ -107,17 +107,18 @@ interface AssetManagerInterface
     /**
      * Add the asset dependencies in asset package file.
      *
-     * @param RootPackageInterface $rootPackage  The composer root package
-     * @param array                $dependencies The asset local dependencies
+     * @param RootPackageInterface $rootPackage     The composer root package
+     * @param array                $dependencies    The asset local dependencies
+     * @param array                $devDependencies The asset local devDependencies
      *
      * @return AssetPackageInterface
      */
-    public function addDependencies(RootPackageInterface $rootPackage, array $dependencies);
+    public function addDependencies(RootPackageInterface $rootPackage, array $dependencies, array $devDependencies = array());
 
     /**
      * Run the asset manager to install/update the asset dependencies.
      *
-     * @return int
+     * @return AssetManagerResult
      */
     public function run();
 }

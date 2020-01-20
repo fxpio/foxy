@@ -24,6 +24,7 @@ use Foxy\Event\PreSolveEvent;
 use Foxy\Fallback\FallbackInterface;
 use Foxy\FoxyEvents;
 use Foxy\Util\AssetUtil;
+use RuntimeException;
 
 /**
  * Solver of asset dependencies.
@@ -98,15 +99,20 @@ class Solver implements SolverInterface
         $dispatcher->dispatch(FoxyEvents::PRE_SOLVE, new PreSolveEvent($assetDir, $packages));
         $this->fs->remove($assetDir);
 
-        $assets = $this->getAssets($composer, $assetDir, $packages);
-        $this->assetManager->addDependencies($composer->getPackage(), $assets);
+        list($assets, $devAssets) = $this->getAssets($composer, $assetDir, $packages);
+        $this->assetManager->addDependencies($composer->getPackage(), $assets, $devAssets);
         $res = $this->assetManager->run();
-        $dispatcher->dispatch(FoxyEvents::POST_SOLVE, new PostSolveEvent($assetDir, $packages, $res));
+        $dispatcher->dispatch(FoxyEvents::POST_SOLVE, new PostSolveEvent($assetDir, $packages, $res->getExitCode()));
 
-        if ($res > 0 && $this->composerFallback) {
+        if ($res->getExitCode() > 0 && $this->composerFallback) {
             $this->composerFallback->restore();
 
-            throw new \RuntimeException('The asset manager ended with an error');
+            throw new RuntimeException(
+                'The asset manager ended with an error' . PHP_EOL
+                . 'Command: ' . $res->getCommand() . PHP_EOL
+                . 'Result: ' . PHP_EOL
+                . $res->getErrorReason()
+            );
         }
     }
 
@@ -124,12 +130,16 @@ class Solver implements SolverInterface
         $installationManager = $composer->getInstallationManager();
         $configPackages = $this->config->getArray('enable-packages');
         $assets = array();
+        $devAssets = array();
 
         foreach ($packages as $package) {
             $filename = AssetUtil::getPath($installationManager, $this->assetManager, $package, $configPackages);
 
             if (null !== $filename) {
                 list($packageName, $packagePath) = $this->getMockPackagePath($package, $assetDir, $filename);
+                if (\array_key_exists($package->getName(), $composer->getPackage()->getDevRequires())) {
+                    $devAssets[$packageName] = $packagePath;
+                }
                 $assets[$packageName] = $packagePath;
             }
         }
@@ -137,7 +147,7 @@ class Solver implements SolverInterface
         $assetsEvent = new GetAssetsEvent($assetDir, $packages, $assets);
         $composer->getEventDispatcher()->dispatch(FoxyEvents::GET_ASSETS, $assetsEvent);
 
-        return $assetsEvent->getAssets();
+        return array($assetsEvent->getAssets(), $devAssets);
     }
 
     /**

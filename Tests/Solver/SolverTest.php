@@ -23,6 +23,7 @@ use Composer\Repository\WritableRepositoryInterface;
 use Composer\Util\Filesystem;
 use Composer\Util\HttpDownloader;
 use Foxy\Asset\AssetManagerInterface;
+use Foxy\Asset\AssetManagerResult;
 use Foxy\Config\Config;
 use Foxy\Fallback\FallbackInterface;
 use Foxy\Solver\Solver;
@@ -124,7 +125,7 @@ final class SolverTest extends \PHPUnit\Framework\TestCase
         $this->im = $this->getMockBuilder('Composer\Installer\InstallationManager')->disableOriginalConstructor()
             ->setMethods(array('getInstallPath'))->getMock();
         $this->sfs = new \Symfony\Component\Filesystem\Filesystem();
-        $this->package = $this->getMockBuilder('Composer\Package\RootPackageInterface')->getMock();
+        $this->package = $this->getMockBuilder('Composer\Package\RootPackageInterface')->setMockClassName('setupMock')->getMock();
         $this->manager = $this->getMockBuilder('Foxy\Asset\AssetManagerInterface')->getMock();
         $this->composerFallback = $this->getMockBuilder('Foxy\Fallback\FallbackInterface')->getMock();
         $this->sfs->mkdir($this->cwd);
@@ -228,37 +229,47 @@ final class SolverTest extends \PHPUnit\Framework\TestCase
     public function getSolveData()
     {
         return array(
-            array(0),
-            array(1),
+            array(new AssetManagerResult('not important', 0), array(
+                'foo/bar' => new Link('somepackage/package', 'foxy/foxy'),
+            )),
+            array(new AssetManagerResult('not important', 0), array()),
+            array(new AssetManagerResult('not important', 1, 'Some Error'), array()),
+            array(
+                new AssetManagerResult('not important', 1, 'Some Error'),
+                array(
+                    'foo/bar' => new Link('somepackage/package', 'foxy/foxy'),
+                )
+            ),
         );
     }
 
     /**
      * @dataProvider getSolveData
      *
-     * @param int $resRunManager The result value of the run command of asset manager
+     * @param AssetManagerResult $resRunManager The result value of the run command of asset manager
+     * @param int $devRequires The development requirements
      */
-    public function testSolve($resRunManager)
+    public function testSolve(AssetManagerResult $resRunManager, $devRequires)
     {
-        /** @var PackageInterface|\PHPUnit_Framework_MockObject_MockObject $requirePackage */
-        $requirePackage = $this->getMockBuilder('Composer\Package\PackageInterface')->getMock();
-        $requirePackage->expects(static::any())
+        /* @var PackageInterface|\PHPUnit_Framework_MockObject_MockObject $requirePackage */
+
+        $this->package->expects(static::any())
             ->method('getName')
             ->willReturn('foo/bar')
         ;
-        $requirePackage->expects(static::any())
+        $defaultRequiredPackages = array('somepackage/odd' => new Link('somepackage/odd', 'foxy/foxy'));
+        $allRequiredPackages = array_merge($defaultRequiredPackages, $devRequires);
+        $this->package->expects(static::any())
             ->method('getRequires')
-            ->willReturn(array(
-                new Link('root/package', 'foxy/foxy'),
-            ))
+            ->willReturn($allRequiredPackages)
         ;
-        $requirePackage->expects(static::any())
+        $this->package->expects(static::any())
             ->method('getDevRequires')
-            ->willReturn(array())
+            ->willReturn($devRequires)
         ;
 
         $this->addInstalledPackages(array(
-            $requirePackage,
+            $this->package,
         ));
 
         $requirePackagePath = $this->cwd.'/vendor/foo/bar';
@@ -282,7 +293,7 @@ final class SolverTest extends \PHPUnit\Framework\TestCase
             ->willReturn($resRunManager)
         ;
 
-        if (0 === $resRunManager) {
+        if (0 === $resRunManager->getExitCode()) {
             $this->composerFallback->expects(static::never())
                 ->method('restore')
             ;

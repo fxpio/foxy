@@ -1,0 +1,36 @@
+{
+    "name": "janpupeter/foxy-main",
+    "description": "Composer Test",
+    "minimum-stability": "dev",
+    "authors": [
+        {
+            "name": "Jan Pupeter",
+            "email": "jan.pupeter@rewe-digital.com"
+        }
+    ],
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../foxyDependency"
+        },
+        {
+            "type": "path",
+            "url": "../foxyDevDependency"
+        },
+        {
+            "type": "path",
+            "url": "/tmp/foxyroot"
+        }
+    ],
+    "require": {
+        "foxy/foxydependency": "*"
+    },
+    "require-dev": {
+        "foxy/foxydevdependency": "*"
+    },
+    "config": {
+        "foxy": {
+            "manager": "npm"
+        }
+    }
+}

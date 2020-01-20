@@ -65,7 +65,10 @@ class YarnManager extends AbstractAssetManager
      */
     protected function getInstallCommand()
     {
-        return $this->buildCommand('yarn', 'install', 'install --non-interactive');
+        $action = 'install';
+        $command = 'install --non-interactive';
+
+        return $this->prepareBuildCommand($action, $command);
     }
 
     /**
@@ -73,6 +76,25 @@ class YarnManager extends AbstractAssetManager
      */
     protected function getUpdateCommand()
     {
-        return $this->buildCommand('yarn', 'update', 'upgrade --non-interactive');
+        $action = 'update';
+        $command = 'upgrade --non-interactive';
+
+        return $this->prepareBuildCommand($action, $command);
+    }
+
+    /**
+     * @param $action
+     * @param $command
+     *
+     * @return string
+     */
+    protected function prepareBuildCommand($action, $command)
+    {
+        $additionalOptions = array();
+        if (true !== $this->isDevMode) {
+            $additionalOptions = array('--prod');
+        }
+
+        return $this->buildCommand('yarn', $action, $command, $additionalOptions);
     }
 }

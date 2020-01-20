@@ -20,6 +20,7 @@ use Foxy\Asset\AssetManagerInterface;
 use Foxy\Config\Config;
 use Foxy\Fallback\FallbackInterface;
 use Foxy\Tests\Fixtures\Util\ProcessExecutorMock;
+use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * Abstract class for asset manager tests.
@@ -211,7 +212,7 @@ abstract class AbstractAssetManagerTest extends \PHPUnit\Framework\TestCase
         static::assertFalse($this->manager->isInstalled());
         static::assertFalse($this->manager->isUpdatable());
 
-        $assetPackage = $this->manager->addDependencies($rootPackage, $allDependencies);
+        $assetPackage = $this->manager->addDependencies($rootPackage, $allDependencies, array());
         static::assertInstanceOf('Foxy\Asset\AssetPackageInterface', $assetPackage);
 
         static::assertEquals($expectedPackage, $assetPackage->getPackage());
@@ -256,7 +257,52 @@ abstract class AbstractAssetManagerTest extends \PHPUnit\Framework\TestCase
         static::assertTrue($this->manager->isInstalled());
         static::assertTrue($this->manager->isUpdatable());
 
-        $assetPackage = $this->manager->addDependencies($rootPackage, $allDependencies);
+        $assetPackage = $this->manager->addDependencies($rootPackage, $allDependencies, array());
+        static::assertInstanceOf('Foxy\Asset\AssetPackageInterface', $assetPackage);
+
+        static::assertEquals($expectedPackage, $assetPackage->getPackage());
+    }
+
+    public function testAddDependenciesForUpdateCommandWithDevelopmentDependencies()
+    {
+        $this->actionForTestAddDependenciesForUpdateCommand();
+
+        $expectedPackage = array(
+            'dependencies' => array(
+                '@composer-asset/foo--bar' => 'file:./path/foo/bar',
+                '@composer-asset/new--dependency' => 'file:./path/new/dependency',
+            ),
+        );
+        $package = array(
+            'dependencies' => array(
+                '@composer-asset/foo--bar' => 'file:./path/foo/bar',
+                '@composer-asset/baz--bar' => 'file:./path/baz/bar',
+            ),
+        );
+        $allDependencies = array(
+            '@composer-asset/foo--bar' => 'path/foo/bar/package.json',
+            '@composer-asset/new--dependency' => 'path/new/dependency/package.json',
+        );
+        $jsonFile = new JsonFile($this->cwd.'/package.json');
+        /** @var \PHPUnit_Framework_MockObject_MockObject|RootPackageInterface $rootPackage */
+        $rootPackage = $this->getMockBuilder('Composer\Package\RootPackageInterface')->getMock();
+        $rootPackage->expects(static::any())
+            ->method('getLicense')
+            ->willReturn(array())
+        ;
+        $nodeModulePath = $this->cwd.ltrim(AbstractAssetManager::NODE_MODULES_PATH, '.');
+
+        $jsonFile->write($package);
+        static::assertFileExists($jsonFile->getPath());
+        $this->sfs->mkdir($nodeModulePath);
+        static::assertFileExists($nodeModulePath);
+        $lockFilePath = $this->cwd.\DIRECTORY_SEPARATOR.$this->manager->getLockPackageName();
+        file_put_contents($lockFilePath, '{}');
+        static::assertFileExists($lockFilePath);
+        static::assertTrue($this->manager->isInstalled());
+        static::assertTrue($this->manager->isUpdatable());
+
+        $assetPackage = $this->manager->addDependencies($rootPackage, $allDependencies, array());
         static::assertInstanceOf('Foxy\Asset\AssetPackageInterface', $assetPackage);
 
         static::assertEquals($expectedPackage, $assetPackage->getPackage());
@@ -271,36 +317,37 @@ abstract class AbstractAssetManagerTest extends \PHPUnit\Framework\TestCase
         static::assertSame(0, $this->getManager()->run());
     }
 
-    public function getRunData()
-    {
-        return array(
-            array(0, 'install'),
-            array(0, 'update'),
-            array(1, 'install'),
-            array(1, 'update'),
-        );
-    }
+    abstract public function getRunData();
 
     /**
      * @dataProvider getRunData
      *
      * @param int    $expectedRes
      * @param string $action
+     * @param mixed  $devMode
      */
-    public function testRunForInstallCommand($expectedRes, $action)
+    public function testRunForInstallCommand($expectedRes, $action, $devMode)
     {
-        $this->actionForTestRunForInstallCommand($action);
-
         $this->config = new Config(array(), array(
             'run-asset-manager' => true,
             'fallback-asset' => true,
         ));
-        $this->manager = $this->getManager();
 
-        if ('install' === $action) {
-            $expectedCommand = $this->getValidInstallCommand();
+        $this->manager = $this->getMockedManager(array('isValidForUpdate'));
+
+        $this->manager->expects(static::any())
+            ->method('isValidForUpdate')
+            ->willReturn(true)
+        ;
+
+        $this->actionForTestRunForInstallCommand($action);
+
+        $this->manager->setDevMode($devMode);
+
+        if (false !== strpos($action, 'install')) {
+            $expectedCommand = $this->getValidInstallCommand($devMode);
         } else {
-            $expectedCommand = $this->getValidUpdateCommand();
+            $expectedCommand = $this->getValidUpdateCommand($devMode);
             file_put_contents($this->cwd.\DIRECTORY_SEPARATOR.$this->manager->getPackageName(), '{}');
             $nodeModulePath = $this->cwd.ltrim(AbstractAssetManager::NODE_MODULES_PATH, '.');
             $this->sfs->mkdir($nodeModulePath);
@@ -324,7 +371,10 @@ abstract class AbstractAssetManagerTest extends \PHPUnit\Framework\TestCase
 
         $this->executor->addExpectedValues($expectedRes, 'ASSET MANAGER OUTPUT');
 
-        static::assertSame($expectedRes, $this->getManager()->run());
+        $result = $this->manager->run();
+
+        static::assertSame($expectedRes, $result->getExitCode());
+        static::assertStringEndsWith($action, $result->getCommand());
         static::assertSame($expectedCommand, $this->executor->getLastCommand());
         static::assertSame('ASSET MANAGER OUTPUT', $this->executor->getLastOutput());
     }
@@ -333,6 +383,13 @@ abstract class AbstractAssetManagerTest extends \PHPUnit\Framework\TestCase
      * @return AssetManagerInterface
      */
     abstract protected function getManager();
+
+    /**
+     * @param mixed $mockedMethods
+     *
+     * @return AssetManagerInterface | PHPUnit_Framework_MockObject_MockObject
+     */
+    abstract protected function getMockedManager($mockedMethods);
 
     /**
      * @return string
@@ -350,14 +407,18 @@ abstract class AbstractAssetManagerTest extends \PHPUnit\Framework\TestCase
     abstract protected function getValidVersionCommand();
 
     /**
+     * @param mixed $isDevMode
+     *
      * @return string
      */
-    abstract protected function getValidInstallCommand();
+    abstract protected function getValidInstallCommand($isDevMode);
 
     /**
+     * @param mixed $isDevMode
+     *
      * @return string
      */
-    abstract protected function getValidUpdateCommand();
+    abstract protected function getValidUpdateCommand($isDevMode);
 
     protected function actionForTestAddDependenciesForUpdateCommand()
     {

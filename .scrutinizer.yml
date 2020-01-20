@@ -1,3 +1,4 @@
+
 tools:
     external_code_coverage: false
     php_code_sniffer: true
@@ -11,3 +12,7 @@ tools:
 filter:
     excluded_paths:
         - Tests/*
+checks:
+    php:
+        excluded_dependencies:
+            - phpunit/phpunit

@@ -1,0 +1,14 @@
+{
+    "name": "foxydependency",
+    "version": "0.0.1",
+    "description": "Foxy Dependency",
+    "dependencies": {
+        "commander": "^6.0"
+    },
+    "devDependencies": {
+        "debug": "^4.0"
+    },
+    "engines": {
+        "node": "8.17"
+    }
+}

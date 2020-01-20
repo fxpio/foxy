@@ -101,7 +101,7 @@ class AssetPackage implements AssetPackageInterface
     /**
      * {@inheritdoc}
      */
-    public function addNewDependencies(array $dependencies)
+    public function addNewDependencies(array $dependencies, array $devDependencies = array())
     {
         $installedAssets = $this->getInstalledDependencies();
         $existingPackages = array();
@@ -109,11 +109,13 @@ class AssetPackage implements AssetPackageInterface
         foreach ($dependencies as $name => $path) {
             if (isset($installedAssets[$name])) {
                 $existingPackages[] = $name;
+            }
+            if (\array_key_exists($name, $devDependencies)) {
+                $this->package[self::SECTION_DEV_DEPENDENCIES][$name] = 'file:./'.\dirname($path);
             } else {
                 $this->package[self::SECTION_DEPENDENCIES][$name] = 'file:./'.\dirname($path);
             }
         }
-
         $this->orderPackages(self::SECTION_DEPENDENCIES);
         $this->orderPackages(self::SECTION_DEV_DEPENDENCIES);
 

@@ -1,0 +1,14 @@
+{
+    "name": "foxydevdependency",
+    "version": "0.0.1",
+    "description": "Foxy Dev Dependency",
+    "dependencies": {
+        "lodash": "^4.0"
+    },
+    "devDependencies": {
+        "chalk": "^4.0"
+    },
+    "engines": {
+        "node": "8.17"
+    }
+}

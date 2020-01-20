@@ -51,11 +51,12 @@ interface AssetPackageInterface
     /**
      * Add the new asset dependencies and return the names of already installed asset dependencies.
      *
-     * @param array $dependencies The asset dependencies
+     * @param array $dependencies    The asset dependencies
+     * @param array $devDependencies The asset devDependencies
      *
      * @return array The asset package name of the already asset dependencies
      */
-    public function addNewDependencies(array $dependencies);
+    public function addNewDependencies(array $dependencies, array $devDependencies = array());
 
     /**
      * Remove the unused asset dependencies.

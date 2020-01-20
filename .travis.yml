@@ -17,6 +17,8 @@ matrix:
         - php: 7.1
           env: COMPOSER_VERSION="1.9.*"
         - php: 7.1
+          env: COMPOSER_VERSION="1.10.*"
+        - php: 7.1
           env: COMPOSER_VERSION="2.0.*@dev"
         - php: 7.2
           env: COMPOSER_VERSION="1.6.*"
@@ -27,6 +29,8 @@ matrix:
         - php: 7.2
           env: COMPOSER_VERSION="1.9.*"
         - php: 7.2
+          env: COMPOSER_VERSION="1.10.*"
+        - php: 7.2
           env: COMPOSER_VERSION="2.0.*@dev"
         - php: 7.3
           env: COMPOSER_VERSION="1.6.*"
@@ -37,6 +41,8 @@ matrix:
         - php: 7.3
           env: COMPOSER_VERSION="1.9.*"
         - php: 7.3
+          env: COMPOSER_VERSION="1.10.*"
+        - php: 7.3
           env: COMPOSER_VERSION="2.0.*@dev"
         - php: 7.4
           env: COMPOSER_VERSION="1.6.*"
@@ -47,6 +53,8 @@ matrix:
         - php: 7.4
           env: COMPOSER_VERSION="1.9.*"
         - php: 7.4
+          env: COMPOSER_VERSION="1.10.*"
+        - php: 7.4
           env: COMPOSER_VERSION="2.0.*@dev"
         - php: nightly
           env: COMPOSER_VERSION="1.6.*"
@@ -56,6 +64,8 @@ matrix:
           env: COMPOSER_VERSION="1.8.*"
         - php: nightly
           env: COMPOSER_VERSION="1.9.*"
+        - php: nightly
+          env: COMPOSER_VERSION="1.10.*"
         - php: nightly
           env: COMPOSER_VERSION="2.0.*@dev"
 
@@ -65,16 +75,17 @@ matrix:
     fast_finish: true
 
 before_script:
+    - nvm install 8.17
+    - nvm use 8.17
     - |
-      composer global require --prefer-source phpunit/phpunit:"^7.5.0" php-coveralls/php-coveralls:^2.1.0
-      if [ "$COMPOSER_VERSION" == "" ]; then composer install --prefer-source; fi;
+      composer global require  php-coveralls/php-coveralls:^2.1.0
+      if [ "$COMPOSER_VERSION" == "" ]; then composer install ; fi;
       if [ "$COMPOSER_VERSION" != "" ]; then composer require "composer/composer:${COMPOSER_VERSION}" --no-update; fi;
-      if [ "$COMPOSER_VERSION" != "" ]; then composer update --prefer-source; fi;
+      if [ "$COMPOSER_VERSION" != "" ]; then composer update ; fi;
       mkdir -p ./build/logs
 
 script:
-    - |
-      ~/.composer/vendor/bin/phpunit -v --coverage-clover ./build/logs/clover.xml
+    - vendor/bin/phpunit -v --coverage-clover ./build/logs/clover.xml
 
 after_success:
     - |

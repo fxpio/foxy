@@ -46,6 +46,8 @@ class ProcessExecutorMock extends ProcessExecutor
 
         list($returnedCode, $output) = $expected;
         $this->executedCommands[] = array($command, $returnedCode, $output);
+
+        $this->errorOutput = $command === 0 ? null : $output;
         ++$this->position;
 
         return $returnedCode;

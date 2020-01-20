@@ -88,8 +88,9 @@ final class FoxyTest extends \PHPUnit\Framework\TestCase
     public function testActivate()
     {
         $foxy = new Foxy();
+        $event = $this->getMockBuilder('Composer\Installer\PackageEvent')->disableOriginalConstructor()->getMock();
         $foxy->activate($this->composer, $this->io);
-        $foxy->init();
+        $foxy->init($event);
         static::assertTrue(true);
     }
 
