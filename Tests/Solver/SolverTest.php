@@ -211,12 +211,12 @@ final class SolverTest extends \PHPUnit\Framework\TestCase
     {
         return array(
             array(0, array(
-                new Link('root/package', 'foxy/foxy'),
+                'foo/bar' => new Link('somepackage/package', 'foxy/foxy'),
             )),
             array(0, array()),
             array(1, array()),
             array(1, array(
-                new Link('root/package', 'foxy/foxy'),
+                'foo/bar' => new Link('somepackage/package', 'foxy/foxy'),
             )),
         );
     }
@@ -234,11 +234,11 @@ final class SolverTest extends \PHPUnit\Framework\TestCase
         $this->package->expects($this->any())
             ->method('getName')
             ->willReturn('foo/bar');
+        $defaultRequiredPackages = array('somepackage/odd' => new Link('somepackage/odd', 'foxy/foxy'));
+        $allRequiredPackages = array_merge($defaultRequiredPackages, $devRequires);
         $this->package->expects($this->any())
             ->method('getRequires')
-            ->willReturn(array(
-                new Link('root/package', 'foxy/foxy'),
-            ));
+            ->willReturn($allRequiredPackages);
         $this->package->expects($this->any())
             ->method('getDevRequires')
             ->willReturn($devRequires);
