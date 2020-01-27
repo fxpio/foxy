@@ -154,14 +154,14 @@ class Foxy implements PluginInterface, EventSubscriberInterface
         $operation = $event->getOperation();
 
         if ($operation instanceof InstallOperation && 'foxy/foxy' === $operation->getPackage()->getName()) {
-            $this->init();
+            $this->init($event);
         }
     }
 
     /**
      * Init the plugin.
      */
-    public function init()
+    public function init($event)
     {
         if (!$this->initialized) {
             $this->initialized = true;
@@ -169,6 +169,7 @@ class Foxy implements PluginInterface, EventSubscriberInterface
             $this->composerFallback->save();
 
             if ($this->config->get('enabled')) {
+                $this->assetManager->setDevMode($event->isDevMode());
                 $this->assetManager->validate();
             }
         }

@@ -94,12 +94,12 @@ class Solver implements SolverInterface
         $dispatcher = $composer->getEventDispatcher();
         $packages = $composer->getRepositoryManager()->getLocalRepository()->getCanonicalPackages();
         $vendorDir = $composer->getConfig()->get('vendor-dir');
-        $assetDir = $this->config->get('composer-asset-dir', $vendorDir.'/foxy/composer-asset/');
+        $assetDir = $this->config->get('composer-asset-dir', $vendorDir . '/foxy/composer-asset/');
         $dispatcher->dispatch(FoxyEvents::PRE_SOLVE, new PreSolveEvent($assetDir, $packages));
         $this->fs->remove($assetDir);
 
-        $assets = $this->getAssets($composer, $assetDir, $packages);
-        $this->assetManager->addDependencies($composer->getPackage(), $assets);
+        list($assets, $devAssets) = $this->getAssets($composer, $assetDir, $packages);
+        $this->assetManager->addDependencies($composer->getPackage(), $assets, $devAssets);
         $res = $this->assetManager->run();
         $dispatcher->dispatch(FoxyEvents::POST_SOLVE, new PostSolveEvent($assetDir, $packages, $res));
 
@@ -124,12 +124,16 @@ class Solver implements SolverInterface
         $installationManager = $composer->getInstallationManager();
         $configPackages = $this->config->getArray('enable-packages');
         $assets = array();
+        $devAssets = array();
 
         foreach ($packages as $package) {
             $filename = AssetUtil::getPath($installationManager, $this->assetManager, $package, $configPackages);
 
             if (null !== $filename) {
                 list($packageName, $packagePath) = $this->getMockPackagePath($package, $assetDir, $filename);
+                if (array_key_exists($package->getName(), $composer->getPackage()->getDevRequires())) {
+                    $devAssets[$packageName] = $packagePath;
+                }
                 $assets[$packageName] = $packagePath;
             }
         }
@@ -137,7 +141,7 @@ class Solver implements SolverInterface
         $assetsEvent = new GetAssetsEvent($assetDir, $packages, $assets);
         $composer->getEventDispatcher()->dispatch(FoxyEvents::GET_ASSETS, $assetsEvent);
 
-        return $assetsEvent->getAssets();
+        return array($assetsEvent->getAssets(), $devAssets);
     }
 
     /**
@@ -152,8 +156,8 @@ class Solver implements SolverInterface
     protected function getMockPackagePath(PackageInterface $package, $assetDir, $filename)
     {
         $packageName = AssetUtil::getName($package);
-        $packagePath = rtrim($assetDir, '/').'/'.$package->getName();
-        $newFilename = $packagePath.'/'.basename($filename);
+        $packagePath = rtrim($assetDir, '/') . '/' . $package->getName();
+        $newFilename = $packagePath . '/' . basename($filename);
         mkdir($packagePath, 0777, true);
         copy($filename, $newFilename);
 

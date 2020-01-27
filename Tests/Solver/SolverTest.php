@@ -123,7 +123,7 @@ final class SolverTest extends \PHPUnit\Framework\TestCase
         $this->im = $this->getMockBuilder('Composer\Installer\InstallationManager')->disableOriginalConstructor()
             ->setMethods(array('getInstallPath'))->getMock();
         $this->sfs = new \Symfony\Component\Filesystem\Filesystem();
-        $this->package = $this->getMockBuilder('Composer\Package\RootPackageInterface')->getMock();
+        $this->package = $this->getMockBuilder('Composer\Package\RootPackageInterface')->setMockClassName('setupMock')->getMock();
         $this->manager = $this->getMockBuilder('Foxy\Asset\AssetManagerInterface')->getMock();
         $this->composerFallback = $this->getMockBuilder('Foxy\Fallback\FallbackInterface')->getMock();
         $this->sfs->mkdir($this->cwd);
@@ -135,36 +135,30 @@ final class SolverTest extends \PHPUnit\Framework\TestCase
 
         $this->composer->expects($this->any())
             ->method('getRepositoryManager')
-            ->willReturn($rm)
-        ;
+            ->willReturn($rm);
 
         $this->composer->expects($this->any())
             ->method('getInstallationManager')
-            ->willReturn($this->im)
-        ;
+            ->willReturn($this->im);
 
         $this->composer->expects($this->any())
             ->method('getPackage')
-            ->willReturn($this->package)
-        ;
+            ->willReturn($this->package);
 
         $this->composer->expects($this->any())
             ->method('getConfig')
-            ->willReturn($this->composerConfig)
-        ;
+            ->willReturn($this->composerConfig);
 
         $this->composer->expects($this->any())
             ->method('getEventDispatcher')
-            ->willReturn(new EventDispatcher($this->composer, $this->io))
-        ;
+            ->willReturn($this->getMockBuilder('Composer\EventDispatcher\EventDispatcher')->setConstructorArgs(array($this->composer, $this->io))->getMock());
 
         $sfs = $this->sfs;
         $this->fs->expects($this->any())
             ->method('findShortestPath')
             ->willReturnCallback(function ($from, $to) use ($sfs) {
                 return rtrim($sfs->makePathRelative($to, $from), '/');
-            })
-        ;
+            });
 
         $this->solver = new Solver($this->manager, $this->config, $this->fs, $this->composerFallback);
     }
@@ -195,8 +189,7 @@ final class SolverTest extends \PHPUnit\Framework\TestCase
     {
         $this->manager->expects($this->once())
             ->method('setUpdatable')
-            ->with(false)
-        ;
+            ->with(false);
 
         $this->solver->setUpdatable(false);
     }
@@ -209,8 +202,7 @@ final class SolverTest extends \PHPUnit\Framework\TestCase
         $solver = new Solver($this->manager, $config, $this->fs);
 
         $this->manager->expects($this->never())
-            ->method('run')
-        ;
+            ->method('run');
 
         $solver->solve($this->composer, $this->io);
     }
@@ -218,8 +210,14 @@ final class SolverTest extends \PHPUnit\Framework\TestCase
     public function getSolveData()
     {
         return array(
-            array(0),
-            array(1),
+            array(0, array(
+                new Link('root/package', 'foxy/foxy'),
+            )),
+            array(0, array()),
+            array(1, array()),
+            array(1, array(
+                new Link('root/package', 'foxy/foxy'),
+            )),
         );
     }
 
@@ -227,65 +225,58 @@ final class SolverTest extends \PHPUnit\Framework\TestCase
      * @dataProvider getSolveData
      *
      * @param int $resRunManager The result value of the run command of asset manager
+     * @param int $devRequires The development requirements
      */
-    public function testSolve($resRunManager)
+    public function testSolve($resRunManager, $devRequires)
     {
         /** @var PackageInterface|\PHPUnit_Framework_MockObject_MockObject $requirePackage */
-        $requirePackage = $this->getMockBuilder('Composer\Package\PackageInterface')->getMock();
-        $requirePackage->expects($this->any())
+
+        $this->package->expects($this->any())
             ->method('getName')
-            ->willReturn('foo/bar')
-        ;
-        $requirePackage->expects($this->any())
+            ->willReturn('foo/bar');
+        $this->package->expects($this->any())
             ->method('getRequires')
             ->willReturn(array(
                 new Link('root/package', 'foxy/foxy'),
-            ))
-        ;
-        $requirePackage->expects($this->any())
+            ));
+        $this->package->expects($this->any())
             ->method('getDevRequires')
-            ->willReturn(array())
-        ;
+            ->willReturn($devRequires);
 
         $this->addInstalledPackages(array(
-            $requirePackage,
+            $this->package,
         ));
 
-        $requirePackagePath = $this->cwd.'/vendor/foo/bar';
+        $requirePackagePath = $this->cwd . '/vendor/foo/bar';
 
         $this->im->expects($this->once())
             ->method('getInstallPath')
-            ->willReturn($requirePackagePath)
-        ;
+            ->willReturn($requirePackagePath);
 
         $this->manager->expects($this->exactly(2))
             ->method('getPackageName')
-            ->willReturn('package.json')
-        ;
+            ->willReturn('package.json');
 
         $this->manager->expects($this->once())
-            ->method('addDependencies')
-        ;
+            ->method('addDependencies');
 
         $this->manager->expects($this->once())
             ->method('run')
-            ->willReturn($resRunManager)
-        ;
+            ->willReturn($resRunManager);
+
 
         if (0 === $resRunManager) {
             $this->composerFallback->expects($this->never())
-                ->method('restore')
-            ;
+                ->method('restore');
         } else {
             $this->composerFallback->expects($this->once())
-                ->method('restore')
-            ;
+                ->method('restore');
 
             $this->expectException('RuntimeException');
             $this->expectExceptionMessage('The asset manager ended with an error');
         }
 
-        $requirePackageFilename = $requirePackagePath.\DIRECTORY_SEPARATOR.$this->manager->getPackageName();
+        $requirePackageFilename = $requirePackagePath . \DIRECTORY_SEPARATOR . $this->manager->getPackageName();
         $this->sfs->mkdir(\dirname($requirePackageFilename));
         file_put_contents($requirePackageFilename, '{}');
 
@@ -301,7 +292,6 @@ final class SolverTest extends \PHPUnit\Framework\TestCase
     {
         $this->localRepo->expects($this->any())
             ->method('getCanonicalPackages')
-            ->willReturn($packages)
-        ;
+            ->willReturn($packages);
     }
 }

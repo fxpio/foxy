@@ -1,0 +1,11 @@
+{
+    "name": "foxydependency",
+    "version": "0.0.1",
+    "description": "Foxy Dependency",
+    "dependencies": {
+        "grunt": "*"
+    },
+    "devDependencies": {
+        "eslint": "*"
+    }
+}

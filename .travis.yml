@@ -47,6 +47,8 @@ matrix:
     fast_finish: true
 
 before_script:
+    - nvm install 8.17
+    - nvm use 8.17
     - |
       composer global require --prefer-source phpunit/phpunit:"^7.5.0" php-coveralls/php-coveralls:^2.1.0
       if [ "$COMPOSER_VERSION" == "" ]; then composer install --prefer-source; fi;

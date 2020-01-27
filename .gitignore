@@ -1,3 +1,9 @@
 vendor/
 phpunit.xml
 .php_cs.cache
+Tests/FunctionalTests/foxyMain/node_modules
+Tests/FunctionalTests/foxyMain/package.json
+Tests/FunctionalTests/foxyMain/package-lock.json
+Tests/FunctionalTests/foxyMain/vendor
+Tests/FunctionalTests/foxyMain/composer.lock
+Tests/FunctionalTests/foxyMain/yarn.lock
