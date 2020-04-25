@@ -11,6 +11,7 @@
 
 namespace Foxy\Util;
 
+use Composer\Semver\Semver;
 use Foxy\Exception\RuntimeException;
 
 /**
@@ -28,7 +29,7 @@ class ComposerUtil
      */
     public static function validateVersion($requiredVersion, $composerVersion)
     {
-        if (false === strpos($composerVersion, '@') && !version_compare($composerVersion, $requiredVersion, '>=')) {
+        if (false === strpos($composerVersion, '@') && !Semver::satisfies($composerVersion, $requiredVersion)) {
             $msg = 'Foxy requires the Composer\'s minimum version "%s", current version is "%s"';
 
             throw new RuntimeException(sprintf($msg, $requiredVersion, $composerVersion));

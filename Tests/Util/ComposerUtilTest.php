@@ -25,12 +25,14 @@ final class ComposerUtilTest extends \PHPUnit\Framework\TestCase
     public function getValidateVersionData()
     {
         return array(
-            array('@package_version@', '1.5.0', true),
-            array('1.6.0', '1.5.0', true),
-            array('1.5.1', '1.5.0', true),
-            array('1.5.0', '1.5.0', true),
-            array('1.5.0', '1.5.1', false),
-            array('1.0.0', '1.5.0', false),
+            array('@package_version@', '^1.5.0', true),
+            array('@package_version@', '^1.5.0|^2.0.0', true),
+            array('1.6.0', '^1.5.0', true),
+            array('1.5.1', '^1.5.0', true),
+            array('1.5.0', '^1.5.0', true),
+            array('1.5.0', '^1.5.0|^2.0.0', true),
+            array('1.5.0', '^1.5.1', false),
+            array('1.0.0', '^1.5.0', false),
         );
     }
 
@@ -47,7 +49,7 @@ final class ComposerUtilTest extends \PHPUnit\Framework\TestCase
             $this->assertTrue(true, 'Composer\'s version is valid');
         } else {
             $this->expectException('Foxy\Exception\RuntimeException');
-            $this->expectExceptionMessageRegExp('/Foxy requires the Composer\'s minimum version "([\d\.]+)", current version is "([\d\.]+)"/');
+            $this->expectExceptionMessageRegExp('/Foxy requires the Composer\'s minimum version "([\d\.^|, ]+)", current version is "([\d\.]+)"/');
         }
 
         ComposerUtil::validateVersion($requiredVersion, $composerVersion);

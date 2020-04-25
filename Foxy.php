@@ -41,7 +41,7 @@ use Foxy\Util\ConsoleUtil;
  */
 class Foxy implements PluginInterface, EventSubscriberInterface
 {
-    const REQUIRED_COMPOSER_VERSION = '1.5.0';
+    const REQUIRED_COMPOSER_VERSION = '^1.5.0';
 
     /**
      * @var Config
