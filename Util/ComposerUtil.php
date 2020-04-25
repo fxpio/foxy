@@ -41,7 +41,10 @@ class ComposerUtil
      */
     public static function validateVersion($requiredVersion, $composerVersion)
     {
-        if (false === strpos($composerVersion, '@') && !Semver::satisfies($composerVersion, $requiredVersion)) {
+        $isBranch = false !== strpos($composerVersion, '@');
+        $isSnapshot = (bool) preg_match('/^[0-9a-f]{40}$/i', $composerVersion);
+
+        if (!$isBranch && !$isSnapshot && !Semver::satisfies($composerVersion, $requiredVersion)) {
             $msg = 'Foxy requires the Composer\'s minimum version "%s", current version is "%s"';
 
             throw new RuntimeException(sprintf($msg, $requiredVersion, $composerVersion));

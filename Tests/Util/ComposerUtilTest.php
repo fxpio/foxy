@@ -27,6 +27,7 @@ final class ComposerUtilTest extends \PHPUnit\Framework\TestCase
         return array(
             array('@package_version@', '^1.5.0', true),
             array('@package_version@', '^1.5.0|^2.0.0', true),
+            array('d173af2d7ac1408655df2cf6670ea0262e06d137', '^1.5.0|^2.0.0', true),
             array('1.6.0', '^1.5.0', true),
             array('1.5.1', '^1.5.0', true),
             array('1.5.0', '^1.5.0', true),
