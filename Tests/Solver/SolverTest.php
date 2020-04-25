@@ -21,6 +21,7 @@ use Composer\Package\RootPackageInterface;
 use Composer\Repository\RepositoryManager;
 use Composer\Repository\WritableRepositoryInterface;
 use Composer\Util\Filesystem;
+use Composer\Util\HttpDownloader;
 use Foxy\Asset\AssetManagerInterface;
 use Foxy\Config\Config;
 use Foxy\Fallback\FallbackInterface;
@@ -129,9 +130,17 @@ final class SolverTest extends \PHPUnit\Framework\TestCase
         $this->sfs->mkdir($this->cwd);
         chdir($this->cwd);
 
-        $this->localRepo = $this->getMockBuilder('Composer\Repository\WritableRepositoryInterface')->getMock();
-        $rm = new RepositoryManager($this->io, $this->composerConfig);
-        $rm->setLocalRepository($this->localRepo);
+        $this->localRepo = $this->getMockBuilder('Composer\Repository\InstalledArrayRepository')
+            ->setMethods(array('getCanonicalPackages'))
+            ->getMock();
+
+        if (class_exists('Composer\Util\HttpDownloader')) {
+            $rm = new RepositoryManager($this->io, $this->composerConfig, new HttpDownloader($this->io, $this->composerConfig));
+            $rm->setLocalRepository($this->localRepo);
+        } else {
+            $rm = new RepositoryManager($this->io, $this->composerConfig);
+            $rm->setLocalRepository($this->localRepo);
+        }
 
         $this->composer->expects($this->any())
             ->method('getRepositoryManager')

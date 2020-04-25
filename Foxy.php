@@ -14,7 +14,6 @@ namespace Foxy;
 use Composer\Composer;
 use Composer\DependencyResolver\Operation\InstallOperation;
 use Composer\EventDispatcher\EventSubscriberInterface;
-use Composer\Installer\InstallerEvents;
 use Composer\Installer\PackageEvent;
 use Composer\Installer\PackageEvents;
 use Composer\IO\IOInterface;
@@ -41,7 +40,7 @@ use Foxy\Util\ConsoleUtil;
  */
 class Foxy implements PluginInterface, EventSubscriberInterface
 {
-    const REQUIRED_COMPOSER_VERSION = '^1.5.0';
+    const REQUIRED_COMPOSER_VERSION = '^1.5.0|^2.0.0';
 
     /**
      * @var Config
@@ -109,7 +108,7 @@ class Foxy implements PluginInterface, EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return array(
-            InstallerEvents::PRE_DEPENDENCIES_SOLVING => array(
+            ComposerUtil::getInitEventName() => array(
                 array('init', 100),
             ),
             PackageEvents::POST_PACKAGE_INSTALL => array(
@@ -142,6 +141,16 @@ class Foxy implements PluginInterface, EventSubscriberInterface
         $this->solver = new Solver($this->assetManager, $this->config, $fs, $this->composerFallback);
 
         $this->assetManager->setFallback($this->assetFallback);
+    }
+
+    public function deactivate(Composer $composer, IOInterface $io)
+    {
+        // Do nothing
+    }
+
+    public function uninstall(Composer $composer, IOInterface $io)
+    {
+        // Do nothing
     }
 
     /**

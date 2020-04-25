@@ -11,6 +11,7 @@
 
 namespace Foxy\Util;
 
+use Composer\Installer\InstallerEvents;
 use Composer\Semver\Semver;
 use Foxy\Exception\RuntimeException;
 
@@ -21,6 +22,17 @@ use Foxy\Exception\RuntimeException;
  */
 class ComposerUtil
 {
+    /**
+     * Get the event name to init the plugin.
+     *
+     * @return string
+     */
+    public static function getInitEventName()
+    {
+        return defined('Composer\Installer\InstallerEvents::PRE_DEPENDENCIES_SOLVING')
+            ? InstallerEvents::PRE_DEPENDENCIES_SOLVING : InstallerEvents::PRE_OPERATIONS_EXEC;
+    }
+
     /**
      * Validate the composer version.
      *

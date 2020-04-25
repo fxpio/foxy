@@ -13,10 +13,10 @@
     ],
     "require": {
         "php": ">=5.3.3",
-        "composer-plugin-api": "^1.1"
+        "composer-plugin-api": "^1.1|^2.0"
     },
     "require-dev": {
-        "composer/composer": "^1.5.0"
+        "composer/composer": "^1.5.0|^2.0.0@dev"
     },
     "config": {
         "preferred-install": {
@@ -24,7 +24,6 @@
         },
         "sort-packages": true
     },
-    "prefer-stable": true,
     "autoload": {
         "psr-4": {
             "Foxy\\": ""

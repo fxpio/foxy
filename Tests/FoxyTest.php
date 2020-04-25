@@ -93,6 +93,20 @@ final class FoxyTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue(true);
     }
 
+    public function testDeactivate()
+    {
+        $foxy = new Foxy();
+        $foxy->deactivate($this->composer, $this->io);
+        $this->assertTrue(true);
+    }
+
+    public function testUninstall()
+    {
+        $foxy = new Foxy();
+        $foxy->uninstall($this->composer, $this->io);
+        $this->assertTrue(true);
+    }
+
     public function testActivateOnInstall()
     {
         $package = $this->getMockBuilder('Composer\Package\Package')

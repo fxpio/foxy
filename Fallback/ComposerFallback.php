@@ -15,11 +15,10 @@ use Composer\Composer;
 use Composer\Factory;
 use Composer\Installer;
 use Composer\IO\IOInterface;
-use Composer\Json\JsonFile;
-use Composer\Package\Locker;
 use Composer\Util\Filesystem;
 use Foxy\Config\Config;
 use Foxy\Util\ConsoleUtil;
+use Foxy\Util\LockerUtil;
 use Foxy\Util\PackageUtil;
 use Symfony\Component\Console\Input\InputInterface;
 
@@ -99,8 +98,7 @@ class ComposerFallback implements FallbackInterface
         $rm = $this->composer->getRepositoryManager();
         $im = $this->composer->getInstallationManager();
         $composerFile = Factory::getComposerFile();
-        $lockFile = str_replace('.json', '.lock', $composerFile);
-        $locker = new Locker($this->io, new JsonFile($lockFile, null, $this->io), $rm, $im, file_get_contents($composerFile));
+        $locker = LockerUtil::getLocker($this->io, $rm, $im, $composerFile);
 
         try {
             $lock = $locker->getLockData();
@@ -151,7 +149,11 @@ class ComposerFallback implements FallbackInterface
             $this->getLockValue('platform-overrides', array())
         );
 
-        return $this->composer->getLocker()->isLocked();
+        $isLocked = $this->composer->getLocker()->isLocked();
+        $lockData = $isLocked ? $this->composer->getLocker()->getLockData() : null;
+        $hasPackage = \is_array($lockData) && isset($lockData['packages']) && !empty($lockData['packages']);
+
+        return $isLocked && $hasPackage;
     }
 
     /**
@@ -165,20 +167,26 @@ class ComposerFallback implements FallbackInterface
         $authoritative = $this->input->getOption('classmap-authoritative') || $config->get('classmap-authoritative');
         $apcu = $this->input->getOption('apcu-autoloader') || $config->get('apcu-autoloader');
 
-        $this->getInstaller()
+        $installer = $this->getInstaller()
             ->setVerbose($this->input->getOption('verbose'))
             ->setPreferSource($preferSource)
             ->setPreferDist($preferDist)
             ->setDevMode(!$this->input->getOption('no-dev'))
             ->setDumpAutoloader(!$this->input->getOption('no-autoloader'))
             ->setRunScripts(false)
-            ->setSkipSuggest(true)
             ->setOptimizeAutoloader($optimize)
             ->setClassMapAuthoritative($authoritative)
             ->setApcuAutoloader($apcu)
             ->setIgnorePlatformRequirements($this->input->getOption('ignore-platform-reqs'))
-            ->run()
         ;
+
+        // @codeCoverageIgnoreStart
+        if (method_exists($installer, 'setSkipSuggest')) {
+            $installer->setSkipSuggest(true);
+        }
+        // @codeCoverageIgnoreEnd
+
+        $installer->run();
     }
 
     /**

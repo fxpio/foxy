@@ -19,6 +19,7 @@ use Composer\Package\Locker;
 use Composer\Util\Filesystem;
 use Foxy\Config\Config;
 use Foxy\Fallback\ComposerFallback;
+use Foxy\Util\LockerUtil;
 use Symfony\Component\Console\Input\InputInterface;
 
 /**
@@ -218,7 +219,8 @@ final class ComposerFallbackTest extends \PHPUnit\Framework\TestCase
             ->method('write')
         ;
 
-        $locker = new Locker($this->io, new JsonFile($lockFile, null, $this->io), $rm, $im, file_get_contents($composerFile));
+        $locker = LockerUtil::getLocker($this->io, $rm, $im, $composerFile);
+
         $this->composer->expects($this->atLeastOnce())
             ->method('getLocker')
             ->willReturn($locker)
