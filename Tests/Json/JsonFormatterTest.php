@@ -35,7 +35,7 @@ JSON;
             'contributors',
         );
 
-        $this->assertSame($expected, JsonFormatter::getArrayKeys($content));
+        static::assertSame($expected, JsonFormatter::getArrayKeys($content));
     }
 
     public function testGetIndent()
@@ -47,7 +47,7 @@ JSON;
 }
 JSON;
 
-        $this->assertSame(2, JsonFormatter::getIndent($content));
+        static::assertSame(2, JsonFormatter::getIndent($content));
     }
 
     public function testFormat()
@@ -72,6 +72,6 @@ JSON;
         );
         $content = json_encode($data);
 
-        $this->assertSame($expected, JsonFormatter::format($content, array('contributors'), 2));
+        static::assertSame($expected, JsonFormatter::format($content, array('contributors'), 2));
     }
 }

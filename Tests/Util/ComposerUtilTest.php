@@ -46,7 +46,7 @@ final class ComposerUtilTest extends \PHPUnit\Framework\TestCase
     public function testValidateVersion($composerVersion, $requiredVersion, $valid)
     {
         if ($valid) {
-            $this->assertTrue(true, 'Composer\'s version is valid');
+            static::assertTrue(true, 'Composer\'s version is valid');
         } else {
             $this->expectException('Foxy\Exception\RuntimeException');
             $this->expectExceptionMessageRegExp('/Foxy requires the Composer\'s minimum version "([\d\.^|, ]+)", current version is "([\d\.]+)"/');

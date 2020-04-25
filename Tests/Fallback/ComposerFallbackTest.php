@@ -14,8 +14,6 @@ namespace Foxy\Tests\Fallback;
 use Composer\Composer;
 use Composer\Installer;
 use Composer\IO\IOInterface;
-use Composer\Json\JsonFile;
-use Composer\Package\Locker;
 use Composer\Util\Filesystem;
 use Foxy\Config\Config;
 use Foxy\Fallback\ComposerFallback;
@@ -136,13 +134,13 @@ final class ComposerFallbackTest extends \PHPUnit\Framework\TestCase
     public function testSave($withLockFile)
     {
         $rm = $this->getMockBuilder('Composer\Repository\RepositoryManager')->disableOriginalConstructor()->getMock();
-        $this->composer->expects($this->any())
+        $this->composer->expects(static::any())
             ->method('getRepositoryManager')
             ->willReturn($rm)
         ;
 
         $im = $this->getMockBuilder('Composer\Installer\InstallationManager')->disableOriginalConstructor()->getMock();
-        $this->composer->expects($this->any())
+        $this->composer->expects(static::any())
             ->method('getInstallationManager')
             ->willReturn($im)
         ;
@@ -153,7 +151,7 @@ final class ComposerFallbackTest extends \PHPUnit\Framework\TestCase
             file_put_contents($this->cwd.'/composer.lock', json_encode(array('content-hash' => 'HASH_VALUE')));
         }
 
-        $this->assertInstanceOf('Foxy\Fallback\ComposerFallback', $this->composerFallback->save());
+        static::assertInstanceOf('Foxy\Fallback\ComposerFallback', $this->composerFallback->save());
     }
 
     public function testRestoreWithDisableOption()
@@ -163,7 +161,7 @@ final class ComposerFallbackTest extends \PHPUnit\Framework\TestCase
         ));
         $composerFallback = new ComposerFallback($this->composer, $this->io, $config, $this->input);
 
-        $this->io->expects($this->never())
+        $this->io->expects(static::never())
             ->method('write')
         ;
 
@@ -185,8 +183,6 @@ final class ComposerFallbackTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @dataProvider getRestoreData
-     *
-     * @param array $packages
      */
     public function testRestore(array $packages)
     {
@@ -204,35 +200,35 @@ final class ComposerFallbackTest extends \PHPUnit\Framework\TestCase
         )));
 
         $rm = $this->getMockBuilder('Composer\Repository\RepositoryManager')->disableOriginalConstructor()->getMock();
-        $this->composer->expects($this->any())
+        $this->composer->expects(static::any())
             ->method('getRepositoryManager')
             ->willReturn($rm)
         ;
 
         $im = $this->getMockBuilder('Composer\Installer\InstallationManager')->disableOriginalConstructor()->getMock();
-        $this->composer->expects($this->any())
+        $this->composer->expects(static::any())
             ->method('getInstallationManager')
             ->willReturn($im)
         ;
 
-        $this->io->expects($this->once())
+        $this->io->expects(static::once())
             ->method('write')
         ;
 
         $locker = LockerUtil::getLocker($this->io, $rm, $im, $composerFile);
 
-        $this->composer->expects($this->atLeastOnce())
+        $this->composer->expects(static::atLeastOnce())
             ->method('getLocker')
             ->willReturn($locker)
         ;
 
         $config = $this->getMockBuilder('Composer\Config')->disableOriginalConstructor()->setMethods(array('get'))->getMock();
-        $this->composer->expects($this->atLeastOnce())
+        $this->composer->expects(static::atLeastOnce())
             ->method('getConfig')
             ->willReturn($config)
         ;
 
-        $config->expects($this->atLeastOnce())
+        $config->expects(static::atLeastOnce())
             ->method('get')
             ->willReturnCallback(function ($key, $default = null) use ($vendorDir) {
                 return 'vendor-dir' === $key ? $vendorDir : $default;
@@ -240,16 +236,16 @@ final class ComposerFallbackTest extends \PHPUnit\Framework\TestCase
         ;
 
         if (0 === \count($packages)) {
-            $this->fs->expects($this->once())
+            $this->fs->expects(static::once())
                 ->method('remove')
                 ->with($vendorDir)
             ;
         } else {
-            $this->fs->expects($this->never())
+            $this->fs->expects(static::never())
                 ->method('remove')
             ;
 
-            $this->installer->expects($this->once())
+            $this->installer->expects(static::once())
                 ->method('run')
             ;
         }

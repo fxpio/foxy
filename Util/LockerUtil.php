@@ -28,10 +28,7 @@ class LockerUtil
     /**
      * Get the locker.
      *
-     * @param IOInterface         $io
-     * @param RepositoryManager   $rm
-     * @param InstallationManager $im
-     * @param string              $composerFile
+     * @param string $composerFile
      *
      * @return Locker
      */
@@ -39,7 +36,7 @@ class LockerUtil
     {
         $lockFile = str_replace('.json', '.lock', $composerFile);
         // @codeCoverageIgnoreStart
-        return defined('Composer\Composer::RUNTIME_API_VERSION') && '2.0.0' === Composer::RUNTIME_API_VERSION
+        return \defined('Composer\Composer::RUNTIME_API_VERSION') && '2.0.0' === Composer::RUNTIME_API_VERSION
             ? new Locker($io, new JsonFile($lockFile, null, $io), $im, file_get_contents($composerFile))
             : new Locker($io, new JsonFile($lockFile, null, $io), $rm, $im, file_get_contents($composerFile));
     }

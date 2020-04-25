@@ -29,7 +29,7 @@ class ComposerUtil
      */
     public static function getInitEventName()
     {
-        return defined('Composer\Installer\InstallerEvents::PRE_DEPENDENCIES_SOLVING')
+        return \defined('Composer\Installer\InstallerEvents::PRE_DEPENDENCIES_SOLVING')
             ? InstallerEvents::PRE_DEPENDENCIES_SOLVING : InstallerEvents::PRE_OPERATIONS_EXEC;
     }
 

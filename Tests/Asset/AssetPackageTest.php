@@ -57,7 +57,7 @@ final class AssetPackageTest extends \PHPUnit\Framework\TestCase
             ->getMock()
         ;
 
-        $this->rootPackage->expects($this->any())
+        $this->rootPackage->expects(static::any())
             ->method('getLicense')
             ->willReturn(array())
         ;
@@ -86,7 +86,7 @@ final class AssetPackageTest extends \PHPUnit\Framework\TestCase
 
         $assetPackage = new AssetPackage($this->rootPackage, $this->jsonFile);
 
-        $this->assertSame($package, $assetPackage->getPackage());
+        static::assertSame($package, $assetPackage->getPackage());
     }
 
     public function testWrite()
@@ -95,12 +95,12 @@ final class AssetPackageTest extends \PHPUnit\Framework\TestCase
             'name' => '@foo/bar',
         );
 
-        $this->jsonFile->expects($this->once())
+        $this->jsonFile->expects(static::once())
             ->method('exists')
             ->willReturn(false)
         ;
 
-        $this->jsonFile->expects($this->once())
+        $this->jsonFile->expects(static::once())
             ->method('write')
             ->with($package)
         ;
@@ -150,8 +150,6 @@ final class AssetPackageTest extends \PHPUnit\Framework\TestCase
     /**
      * @dataProvider getDataRequiredKeys
      *
-     * @param array  $expected
-     * @param array  $package
      * @param string $license
      */
     public function testInjectionOfRequiredKeys(array $expected, array $package, $license)
@@ -159,14 +157,14 @@ final class AssetPackageTest extends \PHPUnit\Framework\TestCase
         $this->addPackageFile($package);
 
         $this->rootPackage = $this->getMockBuilder('Composer\Package\RootPackageInterface')->getMock();
-        $this->rootPackage->expects($this->any())
+        $this->rootPackage->expects(static::any())
             ->method('getLicense')
             ->willReturn(array($license))
         ;
 
         $assetPackage = new AssetPackage($this->rootPackage, $this->jsonFile);
 
-        $this->assertEquals($expected, $assetPackage->getPackage());
+        static::assertEquals($expected, $assetPackage->getPackage());
     }
 
     public function testGetInstalledDependencies()
@@ -186,7 +184,7 @@ final class AssetPackageTest extends \PHPUnit\Framework\TestCase
 
         $assetPackage = new AssetPackage($this->rootPackage, $this->jsonFile);
 
-        $this->assertEquals($expected, $assetPackage->getInstalledDependencies());
+        static::assertEquals($expected, $assetPackage->getInstalledDependencies());
     }
 
     public function testAddNewDependencies()
@@ -221,8 +219,8 @@ final class AssetPackageTest extends \PHPUnit\Framework\TestCase
         $assetPackage = new AssetPackage($this->rootPackage, $this->jsonFile);
         $existing = $assetPackage->addNewDependencies($dependencies);
 
-        $this->assertSame($expected, $assetPackage->getPackage());
-        $this->assertSame($expectedExisting, $existing);
+        static::assertSame($expected, $assetPackage->getPackage());
+        static::assertSame($expectedExisting, $existing);
     }
 
     public function testRemoveUnusedDependencies()
@@ -249,7 +247,7 @@ final class AssetPackageTest extends \PHPUnit\Framework\TestCase
         $assetPackage = new AssetPackage($this->rootPackage, $this->jsonFile);
         $assetPackage->removeUnusedDependencies($dependencies);
 
-        $this->assertEquals($expected, $assetPackage->getPackage());
+        static::assertEquals($expected, $assetPackage->getPackage());
     }
 
     /**
@@ -263,17 +261,17 @@ final class AssetPackageTest extends \PHPUnit\Framework\TestCase
         $filename = $this->cwd.'/package.json';
         $contentString = null !== $contentString ? $contentString : json_encode($package);
 
-        $this->jsonFile->expects($this->any())
+        $this->jsonFile->expects(static::any())
             ->method('exists')
             ->willReturn(true)
         ;
 
-        $this->jsonFile->expects($this->any())
+        $this->jsonFile->expects(static::any())
             ->method('getPath')
             ->willReturn($filename)
         ;
 
-        $this->jsonFile->expects($this->any())
+        $this->jsonFile->expects(static::any())
             ->method('read')
             ->willReturn($package)
         ;
