@@ -22,6 +22,7 @@ use Composer\Script\Event;
 use Composer\Script\ScriptEvents;
 use Composer\Util\Filesystem;
 use Composer\Util\ProcessExecutor;
+use Foxy\Asset\AssetManagerFinder;
 use Foxy\Asset\AssetManagerInterface;
 use Foxy\Config\Config;
 use Foxy\Config\ConfigBuilder;
@@ -76,8 +77,8 @@ class Foxy implements PluginInterface, EventSubscriberInterface
      * The list of the classes of asset managers.
      */
     private static $assetManagers = array(
-        'Foxy\Asset\NpmManager',
         'Foxy\Asset\YarnManager',
+        'Foxy\Asset\NpmManager',
     );
 
     /**
@@ -85,7 +86,7 @@ class Foxy implements PluginInterface, EventSubscriberInterface
      */
     private static $defaultConfig = array(
         'enabled' => true,
-        'manager' => 'npm',
+        'manager' => null,
         'manager-version' => array(
             'npm' => '>=5.0.0',
             'yarn' => '>=1.0.0',
@@ -218,16 +219,12 @@ class Foxy implements PluginInterface, EventSubscriberInterface
      */
     protected function getAssetManager(IOInterface $io, Config $config, ProcessExecutor $executor, Filesystem $fs)
     {
-        $manager = $config->get('manager');
+        $amf = new AssetManagerFinder();
 
         foreach (self::$assetManagers as $class) {
-            $am = new $class($io, $config, $executor, $fs);
-
-            if ($am instanceof AssetManagerInterface && $manager === $am->getName()) {
-                return $am;
-            }
+            $amf->addManager(new $class($io, $config, $executor, $fs));
         }
 
-        throw new RuntimeException(sprintf('The asset manager "%s" doesn\'t exist', $manager));
+        return $amf->findManager($config->get('manager'));
     }
 }

@@ -30,6 +30,13 @@ interface AssetManagerInterface
     public function getName();
 
     /**
+     * Check if the asset manager is available.
+     *
+     * @return bool
+     */
+    public function isAvailable();
+
+    /**
      * Get the filename of the asset package.
      *
      * @return string

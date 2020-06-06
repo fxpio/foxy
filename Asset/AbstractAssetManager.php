@@ -88,6 +88,16 @@ abstract class AbstractAssetManager implements AssetManagerInterface
     /**
      * {@inheritdoc}
      */
+    public function isAvailable()
+    {
+        $this->executor->execute($this->getVersionCommand(), $version);
+
+        return '' !== trim($version);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getPackageName()
     {
         return 'package.json';
