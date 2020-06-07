@@ -7,6 +7,7 @@
 [![Coverage Status](https://img.shields.io/coveralls/fxpio/foxy/master.svg)](https://coveralls.io/r/fxpio/foxy?branch=master)
 [![Scrutinizer Code Quality](https://img.shields.io/scrutinizer/g/fxpio/foxy.svg)](https://scrutinizer-ci.com/g/fxpio/foxy?branch=master)
 [![SensioLabsInsight](https://img.shields.io/sensiolabs/i/01030987-5dc5-4753-92c8-70a9de80323a.svg)](https://insight.sensiolabs.com/projects/01030987-5dc5-4753-92c8-70a9de80323a)
+[![Packagist Downloads](https://img.shields.io/packagist/dt/foxy/foxy.svg)](https://packagist.org/packages/foxy/foxy/stats)
 
 Foxy is a Composer plugin to automate the validation, installation, updating and removing of PHP libraries
 asset dependencies (javaScript, stylesheets, etc.) defined in the NPM `package.json` file of the project and
