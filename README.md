@@ -1,5 +1,6 @@
-Foxy
-====
+<p align="center"><a href="https://foxypkg.com" target="_blank">
+    <img src="https://foxypkg.com/assets/img/logo.svg" width="260" alt="Foxy">
+</a></p>
 
 [![Latest Version](https://img.shields.io/packagist/v/foxy/foxy.svg)](https://packagist.org/packages/foxy/foxy)
 [![Build Status](https://img.shields.io/travis/fxpio/foxy/master.svg)](https://travis-ci.org/fxpio/foxy)
