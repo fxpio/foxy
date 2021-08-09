@@ -65,10 +65,12 @@ class ConsoleUtil
                 $preferSource = true;
 
                 break;
+
             case 'dist':
                 $preferDist = true;
 
                 break;
+
             case 'auto':
             default:
                 break;
