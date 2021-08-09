@@ -14,6 +14,7 @@ namespace Foxy\Tests\Util;
 use Composer\Installer\InstallationManager;
 use Composer\Package\Link;
 use Composer\Package\PackageInterface;
+use Composer\Semver\Constraint\Constraint;
 use Foxy\Asset\AbstractAssetManager;
 use Foxy\Util\AssetUtil;
 use Symfony\Component\Filesystem\Filesystem;
@@ -104,10 +105,10 @@ final class AssetUtilTest extends \PHPUnit\Framework\TestCase
     public function getRequiresData()
     {
         return array(
-            array(array(new Link('root/package', 'foxy/foxy')), array(), false),
-            array(array(), array(new Link('root/package', 'foxy/foxy')), false),
-            array(array(new Link('root/package', 'foxy/foxy')), array(), true),
-            array(array(), array(new Link('root/package', 'foxy/foxy')), true),
+            array(array(new Link('root/package', 'foxy/foxy', new Constraint('=', '1.0.0'))), array(), false),
+            array(array(), array(new Link('root/package', 'foxy/foxy', new Constraint('=', '1.0.0'))), false),
+            array(array(new Link('root/package', 'foxy/foxy', new Constraint('=', '1.0.0'))), array(), true),
+            array(array(), array(new Link('root/package', 'foxy/foxy', new Constraint('=', '1.0.0'))), true),
         );
     }
 
@@ -241,16 +242,16 @@ final class AssetUtilTest extends \PHPUnit\Framework\TestCase
     public function testHasNoPluginDependency()
     {
         static::assertFalse(AssetUtil::hasPluginDependency(array(
-            new Link('root/package', 'foo/bar'),
+            new Link('root/package', 'foo/bar', new Constraint('=', '1.0.0')),
         )));
     }
 
     public function testHasPluginDependency()
     {
         static::assertTrue(AssetUtil::hasPluginDependency(array(
-            new Link('root/package', 'foo/bar'),
-            new Link('root/package', 'foxy/foxy'),
-            new Link('root/package', 'bar/foo'),
+            new Link('root/package', 'foo/bar', new Constraint('=', '1.0.0')),
+            new Link('root/package', 'foxy/foxy', new Constraint('=', '1.0.0')),
+            new Link('root/package', 'bar/foo', new Constraint('=', '1.0.0')),
         )));
     }
 

@@ -20,6 +20,7 @@ use Composer\Package\PackageInterface;
 use Composer\Package\RootPackageInterface;
 use Composer\Repository\RepositoryManager;
 use Composer\Repository\WritableRepositoryInterface;
+use Composer\Semver\Constraint\Constraint;
 use Composer\Util\Filesystem;
 use Composer\Util\HttpDownloader;
 use Foxy\Asset\AssetManagerInterface;
@@ -249,7 +250,7 @@ final class SolverTest extends \PHPUnit\Framework\TestCase
         $requirePackage->expects(static::any())
             ->method('getRequires')
             ->willReturn(array(
-                new Link('root/package', 'foxy/foxy'),
+                new Link('root/package', 'foxy/foxy', new Constraint('=', '1.0.0')),
             ))
         ;
         $requirePackage->expects(static::any())
