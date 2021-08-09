@@ -3,10 +3,10 @@
 </a></p>
 
 [![Latest Version](https://img.shields.io/packagist/v/foxy/foxy.svg)](https://packagist.org/packages/foxy/foxy)
-[![Build Status](https://img.shields.io/travis/fxpio/foxy/master.svg)](https://travis-ci.org/fxpio/foxy)
-[![Coverage Status](https://img.shields.io/coveralls/fxpio/foxy/master.svg)](https://coveralls.io/r/fxpio/foxy?branch=master)
-[![Scrutinizer Code Quality](https://img.shields.io/scrutinizer/g/fxpio/foxy.svg)](https://scrutinizer-ci.com/g/fxpio/foxy?branch=master)
-[![SensioLabsInsight](https://img.shields.io/sensiolabs/i/01030987-5dc5-4753-92c8-70a9de80323a.svg)](https://insight.sensiolabs.com/projects/01030987-5dc5-4753-92c8-70a9de80323a)
+[![Build Status](https://img.shields.io/travis/fxpio/foxy/master.svg)](https://travis-ci.com/github/fxpio/foxy)
+[![Coverage Status](https://img.shields.io/coveralls/fxpio/foxy/master.svg)](https://coveralls.io/r/fxpio/foxy?branch=1.1)
+[![Scrutinizer Code Quality](https://img.shields.io/scrutinizer/g/fxpio/foxy.svg)](https://scrutinizer-ci.com/g/fxpio/foxy?branch=1.1)
+[![SymfonyInsight](https://img.shields.io/sensiolabs/i/01030987-5dc5-4753-92c8-70a9de80323a.svg)](https://insight.symfony.com/projects/01030987-5dc5-4753-92c8-70a9de80323a)
 [![Packagist Downloads](https://img.shields.io/packagist/dt/foxy/foxy.svg)](https://packagist.org/packages/foxy/foxy/stats)
 
 Foxy is a Composer plugin to automate the validation, installation, updating and removing of PHP libraries
