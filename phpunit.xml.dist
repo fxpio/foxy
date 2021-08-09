@@ -15,6 +15,7 @@
         </include>
 
         <exclude>
+            <file>.php-cs-fixer.dist.php</file>
             <directory>./Tests</directory>
             <directory>./Resources</directory>
             <directory>./vendor</directory>
