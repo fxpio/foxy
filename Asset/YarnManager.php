@@ -11,6 +11,8 @@
 
 namespace Foxy\Asset;
 
+use Composer\Semver\VersionParser;
+
 /**
  * Yarn Manager.
  *
@@ -47,7 +49,11 @@ class YarnManager extends AbstractAssetManager
      */
     public function isValidForUpdate()
     {
-        $cmd = $this->buildCommand('yarn', 'check', 'check --non-interactive');
+        if ($this->isYarnNext()) {
+            return true;
+        }
+
+        $cmd = $this->buildCommand('yarn', 'check', $this->mergeInteractiveCommand(array('check')));
 
         return 0 === $this->executor->execute($cmd);
     }
@@ -65,7 +71,7 @@ class YarnManager extends AbstractAssetManager
      */
     protected function getInstallCommand()
     {
-        return $this->buildCommand('yarn', 'install', 'install --non-interactive');
+        return $this->buildCommand('yarn', 'install', $this->mergeInteractiveCommand(array('install')));
     }
 
     /**
@@ -73,6 +79,29 @@ class YarnManager extends AbstractAssetManager
      */
     protected function getUpdateCommand()
     {
-        return $this->buildCommand('yarn', 'update', 'upgrade --non-interactive');
+        $commandName = $this->isYarnNext() ? 'up' : 'upgrade';
+
+        return $this->buildCommand('yarn', 'update', $this->mergeInteractiveCommand(array($commandName)));
+    }
+
+    /**
+     * @return bool
+     */
+    private function isYarnNext()
+    {
+        $version = $this->getVersion();
+        $parser = new VersionParser();
+        $constraint = $parser->parseConstraints('>=2.0.0');
+
+        return $constraint->matches($parser->parseConstraints($version));
+    }
+
+    private function mergeInteractiveCommand(array $command)
+    {
+        if (!$this->isYarnNext()) {
+            $command[] = '--non-interactive';
+        }
+
+        return $command;
     }
 }

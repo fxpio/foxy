@@ -13,7 +13,6 @@ namespace Foxy\Asset;
 
 use Composer\IO\IOInterface;
 use Composer\Package\RootPackageInterface;
-use Composer\Semver\Constraint\Constraint;
 use Composer\Semver\VersionParser;
 use Composer\Util\Filesystem;
 use Composer\Util\Platform;
@@ -63,6 +62,11 @@ abstract class AbstractAssetManager implements AssetManagerInterface
     protected $updatable = true;
 
     /**
+     * @var null|string
+     */
+    private $version = '';
+
+    /**
      * Constructor.
      *
      * @param IOInterface       $io       The IO
@@ -90,9 +94,7 @@ abstract class AbstractAssetManager implements AssetManagerInterface
      */
     public function isAvailable()
     {
-        $this->executor->execute($this->getVersionCommand(), $version);
-
-        return '' !== trim($version);
+        return null !== $this->getVersion();
     }
 
     /**
@@ -160,11 +162,10 @@ abstract class AbstractAssetManager implements AssetManagerInterface
      */
     public function validate()
     {
-        $this->executor->execute($this->getVersionCommand(), $version);
-        $version = trim($version);
+        $version = $this->getVersion();
         $constraintVersion = $this->config->get('manager-version');
 
-        if ('' === $version) {
+        if (null === $version) {
             throw new RuntimeException(sprintf('The binary of "%s" must be installed', $this->getName()));
         }
 
@@ -172,7 +173,7 @@ abstract class AbstractAssetManager implements AssetManagerInterface
             $parser = new VersionParser();
             $constraint = $parser->parseConstraints($constraintVersion);
 
-            if (!$constraint->matches(new Constraint('=', $version))) {
+            if (!$constraint->matches($parser->parseConstraints($version))) {
                 throw new RuntimeException(sprintf('The installed %s version "%s" doesn\'t match with the constraint version "%s"', $this->getName(), $version, $constraintVersion));
             }
         }
@@ -232,9 +233,9 @@ abstract class AbstractAssetManager implements AssetManagerInterface
     /**
      * Build the command with binary and command options.
      *
-     * @param string $defaultBin The default binary of command if option isn't defined
-     * @param string $action     The command action to retrieve the options in config
-     * @param string $command    The command
+     * @param string          $defaultBin The default binary of command if option isn't defined
+     * @param string          $action     The command action to retrieve the options in config
+     * @param string|string[] $command    The command
      *
      * @return string
      */
@@ -245,9 +246,22 @@ abstract class AbstractAssetManager implements AssetManagerInterface
         $gOptions = trim($this->config->get('manager-options', ''));
         $options = trim($this->config->get('manager-'.$action.'-options', ''));
 
-        return $bin.' '.$command
+        return $bin.' '.implode(' ', (array) $command)
             .(empty($gOptions) ? '' : ' '.$gOptions)
             .(empty($options) ? '' : ' '.$options);
+    }
+
+    /**
+     * @return null|string
+     */
+    protected function getVersion()
+    {
+        if ('' === $this->version) {
+            $this->executor->execute($this->getVersionCommand(), $version);
+            $this->version = '' !== trim($version) ? trim($version) : null;
+        }
+
+        return $this->version;
     }
 
     /**

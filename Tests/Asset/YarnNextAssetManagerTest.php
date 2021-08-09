@@ -14,25 +14,23 @@ namespace Foxy\Tests\Asset;
 use Foxy\Asset\YarnManager;
 
 /**
- * Yarn asset manager tests.
+ * Yarn Next asset manager tests.
  *
  * @author François Pluchino <francois.pluchino@gmail.com>
  *
  * @internal
  */
-final class YarnAssetManagerTest extends AbstractAssetManagerTest
+final class YarnNextAssetManagerTest extends AbstractAssetManagerTest
 {
     /**
      * {@inheritdoc}
      */
     public function actionForTestRunForInstallCommand($action)
     {
-        $this->executor->addExpectedValues(0, '1.0.0');
+        $this->executor->addExpectedValues(0, '2.0.0');
 
         if ('update' === $action) {
-            $this->executor->addExpectedValues(0, '1.0.0');
-            $this->executor->addExpectedValues(0, '1.0.0');
-            $this->executor->addExpectedValues(0, 'CHECK OUTPUT');
+            $this->executor->addExpectedValues(0, '2.0.0');
         }
     }
 
@@ -73,7 +71,7 @@ final class YarnAssetManagerTest extends AbstractAssetManagerTest
      */
     protected function getValidInstallCommand()
     {
-        return 'yarn install --non-interactive';
+        return 'yarn install';
     }
 
     /**
@@ -81,7 +79,7 @@ final class YarnAssetManagerTest extends AbstractAssetManagerTest
      */
     protected function getValidUpdateCommand()
     {
-        return 'yarn upgrade --non-interactive';
+        return 'yarn up';
     }
 
     /**
@@ -89,7 +87,7 @@ final class YarnAssetManagerTest extends AbstractAssetManagerTest
      */
     protected function actionForTestAddDependenciesForUpdateCommand()
     {
-        $this->executor->addExpectedValues(0, '1.0.0');
+        $this->executor->addExpectedValues(0, '2.0.0');
         $this->executor->addExpectedValues(0, 'CHECK OUTPUT');
     }
 }
