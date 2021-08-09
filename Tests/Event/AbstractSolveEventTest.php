@@ -31,7 +31,7 @@ abstract class AbstractSolveEventTest extends \PHPUnit\Framework\TestCase
      */
     protected $packages;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->assetDir = sys_get_temp_dir().\DIRECTORY_SEPARATOR.uniqid('foxy_event_test_', true);
         $this->packages = array(
@@ -39,7 +39,7 @@ abstract class AbstractSolveEventTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->assetDir = null;
         $this->packages = null;

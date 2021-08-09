@@ -38,7 +38,7 @@ final class AssetUtilTest extends \PHPUnit\Framework\TestCase
      */
     protected $cwd;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -47,7 +47,7 @@ final class AssetUtilTest extends \PHPUnit\Framework\TestCase
         $this->sfs->mkdir($this->cwd);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
 

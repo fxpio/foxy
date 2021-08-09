@@ -46,7 +46,7 @@ final class ConfigTest extends \PHPUnit\Framework\TestCase
      */
     protected $package;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->composer = $this->getMockBuilder('Composer\Composer')->disableOriginalConstructor()->getMock();
         $this->composerConfig = $this->getMockBuilder('Composer\Config')->disableOriginalConstructor()->getMock();
@@ -103,6 +103,9 @@ final class ConfigTest extends \PHPUnit\Framework\TestCase
             putenv($env);
         }
 
+        $globalLogComposer = true;
+        $globalLogConfig = true;
+
         $globalPath = realpath(__DIR__.'/../Fixtures/package/global');
         $this->composerConfig->expects(static::any())
             ->method('has')
@@ -141,13 +144,20 @@ final class ConfigTest extends \PHPUnit\Framework\TestCase
                 ->willReturn(true)
             ;
 
-            $this->io->expects(static::at(1))
+            $globalLogComposer = false;
+            $globalLogConfig = false;
+
+            $this->io->expects(static::atLeastOnce())
                 ->method('writeError')
-                ->with(sprintf('Loading Foxy config in file %s/composer.json', $globalPath))
-            ;
-            $this->io->expects(static::at(3))
-                ->method('writeError')
-                ->with(sprintf('Loading Foxy config in file %s/config.json', $globalPath))
+                ->willReturnCallback(static function ($message) use ($globalPath, &$globalLogComposer, &$globalLogConfig) {
+                    if (sprintf('Loading Foxy config in file %s/composer.json', $globalPath)) {
+                        $globalLogComposer = true;
+                    }
+
+                    if (sprintf('Loading Foxy config in file %s/config.json', $globalPath)) {
+                        $globalLogConfig = true;
+                    }
+                })
             ;
         }
 
@@ -160,6 +170,9 @@ final class ConfigTest extends \PHPUnit\Framework\TestCase
             putenv($envKey);
             static::assertFalse(getenv($envKey));
         }
+
+        static::assertTrue($globalLogComposer);
+        static::assertTrue($globalLogConfig);
 
         static::assertSame($expected, $value);
         // test cache
@@ -190,12 +203,11 @@ final class ConfigTest extends \PHPUnit\Framework\TestCase
         static::assertSame($expected, $config->getArray($key, $default));
     }
 
-    /**
-     * @expectedException \Foxy\Exception\RuntimeException
-     * @expectedExceptionMessage The "FOXY__ENV_JSON" environment variable isn't a valid JSON
-     */
     public function testGetEnvConfigWithInvalidJson()
     {
+        static::expectException('Foxy\Exception\RuntimeException');
+        static::expectExceptionMessage('The "FOXY__ENV_JSON" environment variable isn\'t a valid JSON');
+
         putenv('FOXY__ENV_JSON="{"foo"}"');
         $config = ConfigBuilder::build($this->composer, array(), $this->io);
         $ex = null;

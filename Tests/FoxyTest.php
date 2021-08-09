@@ -50,7 +50,7 @@ final class FoxyTest extends \PHPUnit\Framework\TestCase
      */
     protected $package;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->composer = $this->getMockBuilder('Composer\Composer')->disableOriginalConstructor()->getMock();
         $this->composerConfig = $this->getMockBuilder('Composer\Config')->disableOriginalConstructor()->getMock();
@@ -137,12 +137,11 @@ final class FoxyTest extends \PHPUnit\Framework\TestCase
         $foxy->initOnInstall($event);
     }
 
-    /**
-     * @expectedException \Foxy\Exception\RuntimeException
-     * @expectedExceptionMessage The asset manager "invalid_manager" doesn't exist
-     */
     public function testActivateWithInvalidManager()
     {
+        static::expectException('Foxy\Exception\RuntimeException');
+        static::expectExceptionMessage('The asset manager "invalid_manager" doesn\'t exist');
+
         $this->package->expects(static::any())
             ->method('getConfig')
             ->willReturn(array(

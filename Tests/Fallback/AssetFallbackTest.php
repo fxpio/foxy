@@ -60,7 +60,7 @@ final class AssetFallbackTest extends \PHPUnit\Framework\TestCase
      */
     protected $assetFallback;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -78,7 +78,7 @@ final class AssetFallbackTest extends \PHPUnit\Framework\TestCase
         $this->assetFallback = new AssetFallback($this->io, $this->config, 'package.json', $this->fs);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
 
@@ -171,7 +171,7 @@ final class AssetFallbackTest extends \PHPUnit\Framework\TestCase
             static::assertFileExists($path);
             static::assertSame($content, file_get_contents($path));
         } else {
-            static::assertFileNotExists($path);
+            static::assertFileDoesNotExist($path);
         }
     }
 }

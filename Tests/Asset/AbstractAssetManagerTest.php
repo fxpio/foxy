@@ -73,7 +73,7 @@ abstract class AbstractAssetManagerTest extends \PHPUnit\Framework\TestCase
      */
     protected $cwd;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -90,7 +90,7 @@ abstract class AbstractAssetManagerTest extends \PHPUnit\Framework\TestCase
         chdir($this->cwd);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
 
@@ -143,21 +143,19 @@ abstract class AbstractAssetManagerTest extends \PHPUnit\Framework\TestCase
         static::assertInstanceOf('Foxy\Asset\AssetManagerInterface', $res);
     }
 
-    /**
-     * @expectedException \Foxy\Exception\RuntimeException
-     * @expectedExceptionMessageRegExp /The binary of "(\w+)" must be installed/
-     */
     public function testValidateWithoutInstalledManager()
     {
+        static::expectException('Foxy\Exception\RuntimeException');
+        static::expectExceptionMessageMatches('/The binary of "(\w+)" must be installed/');
+
         $this->manager->validate();
     }
 
-    /**
-     * @expectedException \Foxy\Exception\RuntimeException
-     * @expectedExceptionMessageRegExp /The installed (\w+) version "42.0.0" doesn't match with the constraint version ">=50.0"/
-     */
     public function testValidateWithInstalledManagerAndWithoutValidVersion()
     {
+        static::expectException('Foxy\Exception\RuntimeException');
+        static::expectExceptionMessageMatches('/The installed (\w+) version "42.0.0" doesn\'t match with the constraint version ">=50.0"/');
+
         $this->config = new Config(array(), array(
             'manager-version' => '>=50.0',
         ));

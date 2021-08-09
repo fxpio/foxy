@@ -38,7 +38,7 @@ final class JsonFileTest extends \PHPUnit\Framework\TestCase
      */
     protected $cwd;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -49,7 +49,7 @@ final class JsonFileTest extends \PHPUnit\Framework\TestCase
         chdir($this->cwd);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
 

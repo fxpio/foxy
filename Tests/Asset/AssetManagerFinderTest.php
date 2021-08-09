@@ -38,12 +38,11 @@ final class AssetManagerFinderTest extends TestCase
         static::assertSame($am, $res);
     }
 
-    /**
-     * @expectedException \Foxy\Exception\RuntimeException
-     * @expectedExceptionMessage The asset manager "bar" doesn't exist
-     */
     public function testFindManagerWithInvalidManager()
     {
+        static::expectException('Foxy\Exception\RuntimeException');
+        static::expectExceptionMessage('The asset manager "bar" doesn\'t exist');
+
         $am = $this->getMockBuilder('Foxy\Asset\AssetManagerInterface')->getMock();
 
         $am->expects(static::once())
@@ -104,12 +103,11 @@ final class AssetManagerFinderTest extends TestCase
         static::assertSame($am, $res);
     }
 
-    /**
-     * @expectedException \Foxy\Exception\RuntimeException
-     * @expectedExceptionMessage No asset manager is found
-     */
     public function testFindManagerWithAutoManagerAndNoAvailableManager()
     {
+        static::expectException('Foxy\Exception\RuntimeException');
+        static::expectExceptionMessage('No asset manager is found');
+
         $am = $this->getMockBuilder('Foxy\Asset\AssetManagerInterface')->getMock();
 
         $am->expects(static::atLeastOnce())

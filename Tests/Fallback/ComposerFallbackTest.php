@@ -79,7 +79,7 @@ final class ComposerFallbackTest extends \PHPUnit\Framework\TestCase
      */
     protected $composerFallback;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -100,7 +100,7 @@ final class ComposerFallbackTest extends \PHPUnit\Framework\TestCase
         $this->composerFallback = new ComposerFallback($this->composer, $this->io, $this->config, $this->input, $this->fs, $this->installer);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
 

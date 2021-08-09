@@ -45,7 +45,7 @@ final class AssetPackageTest extends \PHPUnit\Framework\TestCase
      */
     protected $jsonFile;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -65,7 +65,7 @@ final class AssetPackageTest extends \PHPUnit\Framework\TestCase
         $this->sfs->mkdir($this->cwd);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
 

@@ -108,7 +108,7 @@ final class SolverTest extends \PHPUnit\Framework\TestCase
      */
     protected $solver;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -180,7 +180,7 @@ final class SolverTest extends \PHPUnit\Framework\TestCase
         $this->solver = new Solver($this->manager, $this->config, $this->fs, $this->composerFallback);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
 

@@ -80,28 +80,11 @@ final class ConsoleUtilTest extends \PHPUnit\Framework\TestCase
         ;
 
         if ($inputPrefer) {
-            $input->expects(static::at(0))
+            $input->expects(static::atLeastOnce())
                 ->method('getOption')
-                ->with('prefer-source')
-                ->willReturn(false)
-            ;
-
-            $input->expects(static::at(1))
-                ->method('getOption')
-                ->with('prefer-dist')
-                ->willReturn(true)
-            ;
-
-            $input->expects(static::at(2))
-                ->method('getOption')
-                ->with('prefer-source')
-                ->willReturn(false)
-            ;
-
-            $input->expects(static::at(3))
-                ->method('getOption')
-                ->with('prefer-dist')
-                ->willReturn(true)
+                ->willReturnCallback(static function ($option) {
+                    return !('prefer-source' === $option);
+                })
             ;
         }
 
