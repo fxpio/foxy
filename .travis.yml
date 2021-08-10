@@ -44,10 +44,11 @@ before_script:
       if [ "$COMPOSER_VERSION" == "" ]; then composer install; fi;
       if [ "$COMPOSER_VERSION" != "" ]; then composer require --dev --with-all-dependencies "composer/composer:${COMPOSER_VERSION}"; fi;
       composer require --dev --with-all-dependencies phpunit/phpunit:"^9.5.0" php-coveralls/php-coveralls:"^2.4.0"
+      mkdir -p ./build/logs
 
 script:
     - |
-      vendor/bin/phpunit -v --coverage-clover coveralls.xml
+      vendor/bin/phpunit -v --coverage-clover ./build/logs/clover.xml
 
 after_success:
     - |
