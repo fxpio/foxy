@@ -18,6 +18,8 @@ use Composer\Util\Filesystem;
 use Composer\Util\Platform;
 use Composer\Util\ProcessExecutor;
 use Foxy\Config\Config;
+use Foxy\Converter\SemverConverter;
+use Foxy\Converter\VersionConverterInterface;
 use Foxy\Exception\RuntimeException;
 use Foxy\Fallback\FallbackInterface;
 use Foxy\Json\JsonFile;
@@ -52,6 +54,11 @@ abstract class AbstractAssetManager implements AssetManagerInterface
     protected $fs;
 
     /**
+     * @var VersionConverterInterface
+     */
+    protected $versionConverter;
+
+    /**
      * @var null|FallbackInterface
      */
     protected $fallback;
@@ -69,24 +76,27 @@ abstract class AbstractAssetManager implements AssetManagerInterface
     /**
      * Constructor.
      *
-     * @param IOInterface       $io       The IO
-     * @param Config            $config   The config
-     * @param ProcessExecutor   $executor The process
-     * @param Filesystem        $fs       The filesystem
-     * @param FallbackInterface $fallback The asset fallback
+     * @param IOInterface                    $io               The IO
+     * @param Config                         $config           The config
+     * @param ProcessExecutor                $executor         The process
+     * @param Filesystem                     $fs               The filesystem
+     * @param null|FallbackInterface         $fallback         The asset fallback
+     * @param null|VersionConverterInterface $versionConverter The version converter
      */
     public function __construct(
         IOInterface $io,
         Config $config,
         ProcessExecutor $executor,
         Filesystem $fs,
-        FallbackInterface $fallback = null
+        FallbackInterface $fallback = null,
+        ?VersionConverterInterface $versionConverter = null
     ) {
         $this->io = $io;
         $this->config = $config;
         $this->executor = $executor;
         $this->fs = $fs;
         $this->fallback = $fallback;
+        $this->versionConverter = null !== $versionConverter ? $versionConverter : new SemverConverter();
     }
 
     /**
@@ -258,7 +268,7 @@ abstract class AbstractAssetManager implements AssetManagerInterface
     {
         if ('' === $this->version) {
             $this->executor->execute($this->getVersionCommand(), $version);
-            $this->version = '' !== trim($version) ? trim($version) : null;
+            $this->version = '' !== trim($version) ? $this->versionConverter->convertVersion(trim($version)) : null;
         }
 
         return $this->version;
