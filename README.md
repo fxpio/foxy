@@ -5,7 +5,6 @@
 [![Latest Version](https://img.shields.io/packagist/v/foxy/foxy.svg)](https://packagist.org/packages/foxy/foxy)
 [![Build Status](https://img.shields.io/travis/com/fxpio/foxy.svg)](https://travis-ci.com/github/fxpio/foxy)
 [![Coverage Status](https://img.shields.io/coveralls/github/fxpio/foxy.svg)](https://coveralls.io/r/fxpio/foxy)
-[![Scrutinizer Code Quality](https://img.shields.io/scrutinizer/g/fxpio/foxy.svg)](https://scrutinizer-ci.com/g/fxpio/foxy)
 [![SymfonyInsight](https://img.shields.io/symfony/i/grade/01030987-5dc5-4753-92c8-70a9de80323a.svg)](https://insight.symfony.com/projects/01030987-5dc5-4753-92c8-70a9de80323a)
 [![Packagist Downloads](https://img.shields.io/packagist/dt/foxy/foxy.svg)](https://packagist.org/packages/foxy/foxy/stats)
 
