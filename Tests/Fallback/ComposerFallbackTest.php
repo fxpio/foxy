@@ -199,6 +199,12 @@ final class ComposerFallbackTest extends \PHPUnit\Framework\TestCase
             'prefer-stable' => true,
         )));
 
+        $ed = $this->getMockBuilder('Composer\EventDispatcher\EventDispatcher')->disableOriginalConstructor()->getMock();
+        $this->composer->expects(static::any())
+            ->method('getEventDispatcher')
+            ->willReturn($ed)
+        ;
+
         $rm = $this->getMockBuilder('Composer\Repository\RepositoryManager')->disableOriginalConstructor()->getMock();
         $this->composer->expects(static::any())
             ->method('getRepositoryManager')
