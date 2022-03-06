@@ -21,8 +21,8 @@ use Composer\Json\JsonFormatter as ComposerJsonFormatter;
 class JsonFormatter
 {
     const DEFAULT_INDENT = 4;
-    const ARRAY_KEYS_REGEX = '/["\']([\w\d\_\-\.]+)["\']:\s\[\]/';
-    const INDENT_REGEX = '/^[\{\[][\r\n]([ ]+)["\']/';
+    const ARRAY_KEYS_REGEX = '/["\']([\w\d_\-.]+)["\']:\s\[]/';
+    const INDENT_REGEX = '/^[{\[][\r\n]([ ]+)["\']/';
 
     /**
      * Get the list of keys to be retained with an array representation if they are empty.
