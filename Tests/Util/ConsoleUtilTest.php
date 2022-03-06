@@ -70,6 +70,7 @@ final class ConsoleUtilTest extends \PHPUnit\Framework\TestCase
         /** @var Config|\PHPUnit_Framework_MockObject_MockObject $config */
         $config = $this->getMockBuilder(Config::class)->disableOriginalConstructor()
             ->setMethods(array('get'))->getMock();
+
         /** @var InputInterface|\PHPUnit_Framework_MockObject_MockObject $input */
         $input = $this->getMockBuilder('Symfony\Component\Console\Input\InputInterface')->getMock();
 

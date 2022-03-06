@@ -199,6 +199,7 @@ abstract class AbstractAssetManagerTest extends \PHPUnit\Framework\TestCase
             '@composer-asset/foo--bar' => 'path/foo/bar/package.json',
             '@composer-asset/new--dependency' => 'path/new/dependency/package.json',
         );
+
         /** @var \PHPUnit_Framework_MockObject_MockObject|RootPackageInterface $rootPackage */
         $rootPackage = $this->getMockBuilder('Composer\Package\RootPackageInterface')->getMock();
         $rootPackage->expects(static::any())
@@ -236,6 +237,7 @@ abstract class AbstractAssetManagerTest extends \PHPUnit\Framework\TestCase
             '@composer-asset/new--dependency' => 'path/new/dependency/package.json',
         );
         $jsonFile = new JsonFile($this->cwd.'/package.json');
+
         /** @var \PHPUnit_Framework_MockObject_MockObject|RootPackageInterface $rootPackage */
         $rootPackage = $this->getMockBuilder('Composer\Package\RootPackageInterface')->getMock();
         $rootPackage->expects(static::any())

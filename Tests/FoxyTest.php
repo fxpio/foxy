@@ -172,6 +172,7 @@ final class FoxyTest extends \PHPUnit\Framework\TestCase
     public function testSolveAssets($eventName, $expectedUpdatable)
     {
         $event = new Event($eventName, $this->composer, $this->io);
+
         /** @var \PHPUnit_Framework_MockObject_MockObject|SolverInterface $solver */
         $solver = $this->getMockBuilder('Foxy\Solver\SolverInterface')->getMock();
         $solver->expects(static::once())

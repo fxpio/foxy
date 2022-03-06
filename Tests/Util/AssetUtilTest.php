@@ -365,6 +365,7 @@ final class AssetUtilTest extends \PHPUnit\Framework\TestCase
     public function testFormatPackage($packageVersion, $assetVersion, $expectedAssetVersion, $branchAlias = null)
     {
         $packageName = '@composer-asset/foo--bar';
+
         /** @var PackageInterface|\PHPUnit_Framework_MockObject_MockObject $package */
         $package = $this->getMockBuilder('Composer\Package\PackageInterface')->getMock();
 
