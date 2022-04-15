@@ -241,7 +241,7 @@ option `config.foxy.manager-update-options` [`string`, default: `null`].
 ### Define the execution timeout of the asset manager
 
 You can define the execution timeout of the asset manager with the
-option `config.foxy.manager-timeout` [`int`, default: `null`].
+option `config.foxy.manager-timeout` [`int`, default: `PHP_INT_MAX`].
 
 **Example:**
 ```json

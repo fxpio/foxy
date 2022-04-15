@@ -218,7 +218,7 @@ abstract class AbstractAssetManager implements AssetManagerInterface
         $this->io->write($info);
 
         $timeout = ProcessExecutor::getTimeout();
-        ProcessExecutor::setTimeout($this->config->get('manager-timeout'));
+        ProcessExecutor::setTimeout($this->config->get('manager-timeout', PHP_INT_MAX));
         $cmd = $updatable ? $this->getUpdateCommand() : $this->getInstallCommand();
         $res = (int) $this->executor->execute($cmd);
         ProcessExecutor::setTimeout($timeout);
