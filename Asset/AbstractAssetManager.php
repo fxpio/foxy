@@ -89,7 +89,7 @@ abstract class AbstractAssetManager implements AssetManagerInterface
         ProcessExecutor $executor,
         Filesystem $fs,
         FallbackInterface $fallback = null,
-        ?VersionConverterInterface $versionConverter = null
+        VersionConverterInterface $versionConverter = null
     ) {
         $this->io = $io;
         $this->config = $config;
