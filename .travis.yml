@@ -27,6 +27,8 @@ jobs:
           env: COMPOSER_VERSION="2.2.*"
         - php: 7.4
           env: COMPOSER_VERSION="2.3.*"
+        - php: 7.4
+          env: COMPOSER_VERSION="2.4.*"
         - php: 8.0
           env: COMPOSER_VERSION="1.10.*"
         - php: 8.0
@@ -37,6 +39,8 @@ jobs:
           env: COMPOSER_VERSION="2.2.*"
         - php: 8.0
           env: COMPOSER_VERSION="2.3.*"
+        - php: 8.0
+          env: COMPOSER_VERSION="2.4.*"
         - php: nightly
           env: COMPOSER_VERSION="1.10.*"
         - php: nightly
@@ -47,6 +51,8 @@ jobs:
           env: COMPOSER_VERSION="2.2.*"
         - php: nightly
           env: COMPOSER_VERSION="2.3.*"
+        - php: nightly
+          env: COMPOSER_VERSION="2.4.*"
 
     allow_failures:
         - php: nightly
