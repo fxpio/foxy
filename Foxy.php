@@ -215,9 +215,9 @@ class Foxy implements PluginInterface, EventSubscriberInterface
      * @param ProcessExecutor $executor The process executor
      * @param Filesystem      $fs       The composer filesystem
      *
-     * @throws RuntimeException When the asset manager is not found
-     *
      * @return AssetManagerInterface
+     *
+     * @throws RuntimeException When the asset manager is not found
      */
     protected function getAssetManager(IOInterface $io, Config $config, ProcessExecutor $executor, Filesystem $fs)
     {

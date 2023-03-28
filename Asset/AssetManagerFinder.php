@@ -49,10 +49,10 @@ class AssetManagerFinder
      *
      * @param null|string $manager The name of the asset manager
      *
+     * @return AssetManagerInterface
+     *
      * @throws RuntimeException When the asset manager does not exist
      * @throws RuntimeException When the asset manager is not found
-     *
-     * @return AssetManagerInterface
      */
     public function findManager($manager = null)
     {
@@ -70,9 +70,9 @@ class AssetManagerFinder
     /**
      * Find the available asset manager.
      *
-     * @throws RuntimeException When no asset manager is found
-     *
      * @return AssetManagerInterface
+     *
+     * @throws RuntimeException When no asset manager is found
      */
     private function findAvailableManager()
     {

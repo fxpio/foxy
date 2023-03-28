@@ -80,7 +80,7 @@ abstract class SemverUtil
         $numVer2 = '('.$numVer.'\.'.$numVer.')';
         $numVer3 = '('.$numVer.'\.'.$numVer.'\.'.$numVer.')';
 
-        return '/^'.'('.$numVer.'|'.$numVer2.'|'.$numVer3.')'.$pattern.'/';
+        return '/^('.$numVer.'|'.$numVer2.'|'.$numVer3.')'.$pattern.'/';
     }
 
     /**

@@ -50,10 +50,10 @@ final class ConsoleUtilTest extends \PHPUnit\Framework\TestCase
     public function getPreferredInstallOptionsData()
     {
         return array(
-            array(false, false, 'auto',   false),
-            array(false, true,  'auto',   true),
-            array(true,  false, 'source', false),
-            array(false, true,  'dist',   false),
+            array(false, false, 'auto', false),
+            array(false, true, 'auto', true),
+            array(true, false, 'source', false),
+            array(false, true, 'dist', false),
         );
     }
 

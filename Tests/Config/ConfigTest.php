@@ -67,23 +67,23 @@ final class ConfigTest extends \PHPUnit\Framework\TestCase
     public function getDataForGetConfig()
     {
         return array(
-            array('foo',                 42,                           42),
-            array('bar',                 'foo',                        'empty'),
-            array('baz',                 false,                        true),
-            array('test',                0,                            0),
-            array('manager-bar',         23,                           0),
-            array('manager-baz',         0,                            0),
-            array('global-composer-foo', 90,                           0),
-            array('global-composer-bar', 70,                           0),
-            array('global-config-foo',   23,                           0),
-            array('env-boolean',         false,                        true,    'FOXY__ENV_BOOLEAN=false'),
-            array('env-integer',         -32,                          0,       'FOXY__ENV_INTEGER=-32'),
-            array('env-json',            array('foo' => 'bar'),        array(), 'FOXY__ENV_JSON="{"foo": "bar"}"'),
-            array('env-json-array',      array(array('foo' => 'bar')), array(), 'FOXY__ENV_JSON_ARRAY="[{"foo": "bar"}]"'),
-            array('env-string',          'baz',                        'foo',   'FOXY__ENV_STRING=baz'),
-            array('test-p1',             'def',                        'def',   null, array()),
-            array('test-p1',             'def',                        'def',   null, array('test-p1' => 'ok')),
-            array('test-p1',             'ok',                         null,    null, array('test-p1' => 'ok')),
+            array('foo', 42, 42),
+            array('bar', 'foo', 'empty'),
+            array('baz', false, true),
+            array('test', 0, 0),
+            array('manager-bar', 23, 0),
+            array('manager-baz', 0, 0),
+            array('global-composer-foo', 90, 0),
+            array('global-composer-bar', 70, 0),
+            array('global-config-foo', 23, 0),
+            array('env-boolean', false, true, 'FOXY__ENV_BOOLEAN=false'),
+            array('env-integer', -32, 0, 'FOXY__ENV_INTEGER=-32'),
+            array('env-json', array('foo' => 'bar'), array(), 'FOXY__ENV_JSON="{"foo": "bar"}"'),
+            array('env-json-array', array(array('foo' => 'bar')), array(), 'FOXY__ENV_JSON_ARRAY="[{"foo": "bar"}]"'),
+            array('env-string', 'baz', 'foo', 'FOXY__ENV_STRING=baz'),
+            array('test-p1', 'def', 'def', null, array()),
+            array('test-p1', 'def', 'def', null, array('test-p1' => 'ok')),
+            array('test-p1', 'ok', null, null, array('test-p1' => 'ok')),
         );
     }
 
@@ -182,7 +182,7 @@ final class ConfigTest extends \PHPUnit\Framework\TestCase
     public function getDataForGetArrayConfig()
     {
         return array(
-            array('foo', array(),   array()),
+            array('foo', array(), array()),
             array('foo', array(42), array(42)),
             array('foo', array(42), array(), array('foo' => array(42))),
         );

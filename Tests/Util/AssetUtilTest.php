@@ -173,9 +173,9 @@ final class AssetUtilTest extends \PHPUnit\Framework\TestCase
     {
         return array(
             array(false, false),
-            array(true,  false),
+            array(true, false),
             array(false, true),
-            array(true,  true),
+            array(true, true),
         );
     }
 
