@@ -268,7 +268,7 @@ abstract class AbstractAssetManager implements AssetManagerInterface
     {
         if ('' === $this->version) {
             $this->executor->execute($this->getVersionCommand(), $version);
-            $this->version = '' !== trim($version) ? $this->versionConverter->convertVersion(trim($version)) : null;
+            $this->version = '' !== trim((string) $version) ? $this->versionConverter->convertVersion(trim((string) $version)) : null;
         }
 
         return $this->version;

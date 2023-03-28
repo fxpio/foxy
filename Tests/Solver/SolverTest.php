@@ -244,6 +244,10 @@ final class SolverTest extends \PHPUnit\Framework\TestCase
         /** @var PackageInterface|\PHPUnit_Framework_MockObject_MockObject $requirePackage */
         $requirePackage = $this->getMockBuilder('Composer\Package\PackageInterface')->getMock();
         $requirePackage->expects(static::any())
+            ->method('getPrettyVersion')
+            ->willReturn('1.0.0')
+        ;
+        $requirePackage->expects(static::any())
             ->method('getName')
             ->willReturn('foo/bar')
         ;
