@@ -59,6 +59,20 @@ jobs:
           env: COMPOSER_VERSION="2.4.*"
         - php: 8.1
           env: COMPOSER_VERSION="2.5.*"
+        - php: 8.2
+          env: COMPOSER_VERSION="1.10.*"
+        - php: 8.2
+          env: COMPOSER_VERSION="2.0.*"
+        - php: 8.2
+          env: COMPOSER_VERSION="2.1.*"
+        - php: 8.2
+          env: COMPOSER_VERSION="2.2.*"
+        - php: 8.2
+          env: COMPOSER_VERSION="2.3.*"
+        - php: 8.2
+          env: COMPOSER_VERSION="2.4.*"
+        - php: 8.2
+          env: COMPOSER_VERSION="2.5.*"
         - php: nightly
           env: COMPOSER_VERSION="1.10.*"
         - php: nightly
