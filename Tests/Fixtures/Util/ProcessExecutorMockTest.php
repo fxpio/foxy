@@ -29,7 +29,7 @@ final class ProcessExecutorMockTest extends \PHPUnit\Framework\TestCase
         $executor->execute('run', $output);
 
         static::assertSame('run', $executor->getExecutedCommand(0));
-        static::assertNull($executor->getExecutedReturnedCode(0));
+        static::assertEquals(0, $executor->getExecutedReturnedCode(0));
         static::assertNull($executor->getExecutedOutput(0));
 
         static::assertNull($executor->getExecutedCommand(1));
@@ -37,7 +37,7 @@ final class ProcessExecutorMockTest extends \PHPUnit\Framework\TestCase
         static::assertNull($executor->getExecutedOutput(1));
 
         static::assertSame('run', $executor->getLastCommand());
-        static::assertNull($executor->getLastReturnedCode());
+        static::assertEquals(0, $executor->getLastReturnedCode());
         static::assertNull($executor->getLastOutput());
 
         static::assertNull($output);

@@ -143,7 +143,7 @@ class ComposerFallback implements FallbackInterface
             $this->getLockValue('platform', array()),
             $this->getLockValue('platform-dev', array()),
             $this->getLockValue('aliases', array()),
-            $this->getLockValue('minimum-stability'),
+            $this->getLockValue('minimum-stability', ''),
             $this->getLockValue('stability-flags', array()),
             $this->getLockValue('prefer-stable', false),
             $this->getLockValue('prefer-lowest', false),

@@ -199,6 +199,13 @@ final class ComposerFallbackTest extends \PHPUnit\Framework\TestCase
             'prefer-stable' => true,
         )));
 
+        $this->input->expects(static::any())
+            ->method('getOption')
+            ->willReturnCallback(function ($option) {
+                return 'verbose' === $option ? false : null;
+            })
+        ;
+
         $ed = $this->getMockBuilder('Composer\EventDispatcher\EventDispatcher')->disableOriginalConstructor()->getMock();
         $this->composer->expects(static::any())
             ->method('getEventDispatcher')
