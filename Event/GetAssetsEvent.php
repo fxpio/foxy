@@ -59,6 +59,8 @@ class GetAssetsEvent extends AbstractSolveEvent
      * @param string $path The asset package path (relative path form root project
      *                     and started with `file:`)
      *
+     * phpcs:disable PEAR.Commenting.FunctionComment.ParamCommentAlignment
+     *
      * Example:
      *
      * For the Composer package `foo/bar`.
