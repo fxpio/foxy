@@ -35,6 +35,8 @@ interface SolverInterface
      *
      * @param Composer    $composer The composer
      * @param IOInterface $io       The IO
+     *
+     * @return void
      */
     public function solve(Composer $composer, IOInterface $io);
 }
