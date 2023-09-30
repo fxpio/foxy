@@ -27,6 +27,8 @@ interface FallbackInterface
 
     /**
      * Restore the state.
+     *
+     * @return void
      */
     public function restore();
 }
