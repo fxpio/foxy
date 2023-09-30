@@ -40,5 +40,28 @@
         "branch-alias": {
             "dev-main": "1.2-dev"
         }
+    },
+    "scripts": {
+        "ci": [
+            "@check",
+            "@coverage-text"
+        ],
+        "check": [
+            "@test",
+            "@cs-check",
+            "@phpstan"
+        ],
+        "fix": [
+            "@cs-fix",
+            "@cs-check"
+        ],
+        "cs-check": "./vendor/bin/phpcs --colors -p",
+        "cs-fix": "./vendor/bin/phpcbf --colors -p",
+        "test": "./vendor/bin/phpunit --colors=always",
+        "cs-checkstyle": "@cs-check -- --report=checkstyle",
+        "phpstan": "./vendor/bin/phpstan --no-progress -vvv",
+        "phpstan-github": "./vendor/bin/phpstan --no-progress -vvv --error-format=github",
+        "coverage-clover": "-d xdebug.mode=coverage ./vendor/bin/phpunit --coverage-clover=coverage.xml",
+        "coverage": "-d xdebug.mode=coverage ./vendor/bin/phpunit --coverage-text --colors=never"
     }
 }

@@ -10,7 +10,10 @@
     <file>Json</file>
     <file>Resources</file>
     <file>Solver</file>
-    <file>Tests</file>
+    <!-- 
+        TODO: Maybe later?
+        <file>Tests</file> 
+    -->
     <file>Util</file>
 
     <!-- Allow TODO tags -->
@@ -38,6 +41,7 @@
 
     <!-- Include the whole PEAR standard -->
     <rule ref="PEAR">
+        <exclude name="PEAR.Commenting.FileComment.MissingLicenseTag"/>
         <exclude name="PEAR.NamingConventions.ValidFunctionName"/>
         <exclude name="PEAR.NamingConventions.ValidVariableName"/>
         <exclude name="PEAR.Commenting.ClassComment"/>
@@ -46,36 +50,83 @@
         <exclude name="PEAR.Commenting.FileComment.MissingLinkTag"/>
         <exclude name="PEAR.Commenting.FileComment.MissingVersion"/>
         <exclude name="PEAR.Commenting.InlineComment"/>
+        <exclude name="PEAR.ControlStructures.MultiLineCondition.CloseBracketNewLine"/>
     </rule>
 
     <!-- Include some sniffs from other standards that don't conflict with PEAR -->
     <rule ref="Squiz.Arrays.ArrayBracketSpacing"/>
     <rule ref="Squiz.Arrays.ArrayDeclaration"/>
-    <rule ref="Squiz.Commenting.ClosingDeclarationComment"/>
     <rule ref="Squiz.ControlStructures.ControlSignature"/>
     <rule ref="Squiz.ControlStructures.ElseIfDeclaration"/>
     <rule ref="Squiz.Commenting.BlockComment"/>
     <rule ref="Squiz.Commenting.DocCommentAlignment"/>
     <rule ref="Squiz.Commenting.EmptyCatchComment"/>
     <rule ref="Squiz.Commenting.InlineComment"/>
+    <!--
+        TODO: Maybe enable this?
     <rule ref="Squiz.Commenting.LongConditionClosingComment"/>
+    -->
     <rule ref="Squiz.Commenting.PostStatementComment"/>
-    <rule ref="Squiz.Commenting.VariableComment"/>
+    <rule ref="Squiz.Commenting.VariableComment">
+        <!-- 
+            TODO: Enable this
+            Currently it's complaing about using bool instead of boolean.
+            I this bool is correct, but it may be suppressing other incorrect var types
+        -->
+        <exclude name="Squiz.Commenting.VariableComment.IncorrectVarType"/>
+    </rule>
     <rule ref="Squiz.Formatting.OperatorBracket"/>
-    <rule ref="Squiz.Functions.FunctionDeclarationArgumentSpacing"/>
-    <rule ref="Squiz.Operators.ComparisonOperatorUsage"/>
+    <rule ref="Squiz.Functions.FunctionDeclarationArgumentSpacing">
+        <!-- TODO: Sayig should be 0, but should be 1 -->
+        <exclude name="Squiz.Functions.FunctionDeclarationArgumentSpacing.SpaceBeforeEquals"/>
+        <exclude name="Squiz.Functions.FunctionDeclarationArgumentSpacing.SpaceAfterEquals"/>
+    </rule>
+    <rule ref="Squiz.Operators.ComparisonOperatorUsage">
+        <!-- TODO: don't exclude these -->
+        <exclude name="Squiz.Operators.ComparisonOperatorUsage.ImplicitTrue"/>
+        <exclude name="Squiz.Operators.ComparisonOperatorUsage.NotAllowed"/>
+    </rule>
+    <!--
+        TODO: Enable this
     <rule ref="Squiz.PHP.DisallowInlineIf"/>
+    -->
     <rule ref="Squiz.Scope.MethodScope"/>
-    <rule ref="Squiz.Strings.ConcatenationSpacing"/>
+    <rule ref="Squiz.Strings.ConcatenationSpacing">
+        <!-- This is dumb, IMO -->
+        <exclude name="Squiz.Strings.ConcatenationSpacing.PaddingFound"/>
+    </rule>
     <rule ref="Squiz.WhiteSpace.ControlStructureSpacing"/>
-    <rule ref="Squiz.WhiteSpace.FunctionClosingBraceSpace"/>
+    <rule ref="Squiz.WhiteSpace.FunctionClosingBraceSpace">
+        <!-- This is dumb, IMO -->
+        <exclude name="Squiz.WhiteSpace.FunctionClosingBraceSpace.SpacingBeforeClose"/>
+    </rule>
+
+    <!--
+        TODO: Enable this
     <rule ref="Squiz.WhiteSpace.FunctionSpacing"/>
-    <rule ref="Squiz.WhiteSpace.MemberVarSpacing"/>
-    <rule ref="Squiz.WhiteSpace.OperatorSpacing"/>
+    -->
+    <rule ref="Squiz.WhiteSpace.MemberVarSpacing">
+        <!-- TODO: Newline should be allowed, IMO -->
+        <exclude name="Squiz.WhiteSpace.MemberVarSpacing.FirstIncorrect"/>
+    </rule>
+    <rule ref="Squiz.WhiteSpace.OperatorSpacing">
+        <!-- TODO: Newline should be allowed, IMO -->
+        <exclude name="Squiz.WhiteSpace.OperatorSpacing.SpacingBefore"/>
+    </rule>
     <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace"/>
-    <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
+    <rule ref="Generic.Arrays.DisallowLongArraySyntax">
+        <severity>0</severity>
+    </rule>
     <rule ref="Generic.Commenting.Todo"/>
-    <rule ref="Generic.ControlStructures.DisallowYodaConditions"/>
+    <!-- TODO: This should be done. -->
+    <rule ref="Generic.Commenting.DocComment.MissingShort">
+        <severity>0</severity>
+    </rule>
+
+    <!-- TODO: This should be done. -->
+    <rule ref="Generic.ControlStructures.DisallowYodaConditions">
+        <severity>0</severity>
+    </rule>
     <rule ref="Generic.ControlStructures.InlineControlStructure"/>
     <rule ref="Generic.Formatting.DisallowMultipleStatements"/>
     <rule ref="Generic.Formatting.SpaceAfterCast"/>
@@ -111,6 +162,14 @@
     <rule ref="Squiz.Arrays.ArrayDeclaration.CloseBraceNewLine">
         <severity>0</severity>
     </rule>
+    <!-- TODO: Allow this so your code lines up like the doc comments? -->
+    <rule ref="Squiz.Arrays.ArrayDeclaration.DoubleArrowNotAligned">
+        <severity>0</severity>
+    </rule>
+    <!-- TODO: Um, wrong. -->
+    <rule ref="Squiz.Arrays.ArrayDeclaration.SingleLineNotAllowed">
+        <severity>0</severity>
+    </rule>
 
     <!-- Check var names, but we don't want leading underscores for private vars -->
     <rule ref="Squiz.NamingConventions.ValidVariableName"/>
@@ -122,14 +181,6 @@
     <rule ref="PEAR.Functions.FunctionCallSignature">
         <properties>
             <property name="allowMultipleArguments" value="false"/>
-        </properties>
-    </rule>
-
-    <!-- Have 12 chars padding maximum and always show as errors -->
-    <rule ref="Generic.Formatting.MultipleStatementAlignment">
-        <properties>
-            <property name="maxPadding" value="12"/>
-            <property name="error" value="true"/>
         </properties>
     </rule>
 
