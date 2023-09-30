@@ -68,6 +68,9 @@ class JsonFile extends BaseJsonFile
         return $this->indent;
     }
 
+    // phpcs:disable PEAR.Commenting.FunctionComment.MissingReturn
+    // phpcs:disable PEAR.Commenting.FunctionComment.MissingParamTag
+
     /**
      * {@inheritdoc}
      */
@@ -102,8 +105,13 @@ class JsonFile extends BaseJsonFile
         return JsonFormatter::format($result, self::$encodeArrayKeys, self::$encodeIndent, false);
     }
 
+    // phpcs:enable PEAR.Commenting.FunctionComment.MissingReturn
+    // phpcs:enable PEAR.Commenting.FunctionComment.MissingParamTag
+
     /**
      * Parse the original content.
+     *
+     * @return void
      */
     private function parseOriginalContent()
     {
