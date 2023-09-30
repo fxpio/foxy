@@ -66,7 +66,9 @@ jobs:
       uses: ramsey/composer-install@v2
 
     - name: Run PHP CodeSniffer
-      run: vendor/bin/phpcs --report=checkstyle | cs2pr
+      # cs2pr is being weird
+      #run: vendor/bin/phpcs --report=checkstyle | cs2pr
+      run: vendor/bin/phpcs
 
     - name: Run phpstan
       if: always()

@@ -19,7 +19,8 @@
         "composer/composer": "^2.5.5",
         "phpstan/phpstan": "^1.10",
         "phpunit/phpunit": "^9.0",
-        "squizlabs/php_codesniffer": "3.*"
+        "squizlabs/php_codesniffer": "3.*",
+        "staabm/annotate-pull-request-from-checkstyle": "^1.8"
     },
     "config": {
         "preferred-install": {
