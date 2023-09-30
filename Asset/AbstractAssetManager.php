@@ -1,9 +1,9 @@
 <?php
 
-/*
+/**
  * This file is part of the Foxy package.
  *
- * (c) François Pluchino <francois.pluchino@gmail.com>
+ * @author (c) François Pluchino <francois.pluchino@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -98,6 +98,9 @@ abstract class AbstractAssetManager implements AssetManagerInterface
         $this->fallback = $fallback;
         $this->versionConverter = null !== $versionConverter ? $versionConverter : new SemverConverter();
     }
+
+    // phpcs:disable PEAR.Commenting.FunctionComment.MissingReturn
+    // phpcs:disable PEAR.Commenting.FunctionComment.MissingParamTag
 
     /**
      * {@inheritdoc}
@@ -237,8 +240,11 @@ abstract class AbstractAssetManager implements AssetManagerInterface
      */
     protected function actionWhenComposerDependenciesAreAlreadyInstalled($names)
     {
-        // do nothing by default
+        // Do nothing by default.
     }
+
+    // phpcs:enable PEAR.Commenting.FunctionComment.MissingReturn
+    // phpcs:enable PEAR.Commenting.FunctionComment.MissingParamTag
 
     /**
      * Build the command with binary and command options.
@@ -256,9 +262,9 @@ abstract class AbstractAssetManager implements AssetManagerInterface
         $gOptions = trim($this->config->get('manager-options', ''));
         $options = trim($this->config->get('manager-'.$action.'-options', ''));
 
-        return $bin.' '.implode(' ', (array) $command)
-            .(empty($gOptions) ? '' : ' '.$gOptions)
-            .(empty($options) ? '' : ' '.$options);
+        return $bin . ' ' . implode(' ', (array) $command)
+            . (empty($gOptions) ? '' : ' '.$gOptions)
+            . (empty($options) ? '' : ' '.$options);
     }
 
     /**

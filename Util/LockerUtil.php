@@ -1,9 +1,9 @@
 <?php
 
-/*
+/**
  * This file is part of the Foxy package.
  *
- * (c) François Pluchino <francois.pluchino@gmail.com>
+ * @author (c) François Pluchino <francois.pluchino@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -28,7 +28,10 @@ class LockerUtil
     /**
      * Get the locker.
      *
-     * @param string $composerFile
+     * @param \Composer\IO\IOInterface                $io           The Console IO?
+     * @param \Composer\Repository\RepositoryManager  $rm           Manages the repository
+     * @param \Composer\Installer\InstallationManager $im           Manages the Installation
+     * @param string                                  $composerFile The file to parse
      *
      * @return Locker
      */
@@ -38,6 +41,7 @@ class LockerUtil
         // @codeCoverageIgnoreStart
         return \defined('Composer\Composer::RUNTIME_API_VERSION') && version_compare(Composer::RUNTIME_API_VERSION, '2.0.0', '>=')
             ? new Locker($io, new JsonFile($lockFile, null, $io), $im, file_get_contents($composerFile))
+            // @phpstan-ignore-next-line
             : new Locker($io, new JsonFile($lockFile, null, $io), $rm, $im, file_get_contents($composerFile));
     }
 }

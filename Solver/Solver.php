@@ -1,9 +1,9 @@
 <?php
 
-/*
+/**
  * This file is part of the Foxy package.
  *
- * (c) François Pluchino <francois.pluchino@gmail.com>
+ * @author (c) François Pluchino <francois.pluchino@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -72,6 +72,9 @@ class Solver implements SolverInterface
         $this->composerFallback = $composerFallback;
     }
 
+    // phpcs:disable PEAR.Commenting.FunctionComment.MissingReturn
+    // phpcs:disable PEAR.Commenting.FunctionComment.MissingParamTag
+
     /**
      * {@inheritdoc}
      */
@@ -109,6 +112,9 @@ class Solver implements SolverInterface
             throw new \RuntimeException('The asset manager ended with an error');
         }
     }
+
+    // phpcs:enable PEAR.Commenting.FunctionComment.MissingReturn
+    // phpcs:enable PEAR.Commenting.FunctionComment.MissingParamTag
 
     /**
      * Get the package of asset dependencies.

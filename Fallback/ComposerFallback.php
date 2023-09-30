@@ -1,9 +1,9 @@
 <?php
 
-/*
+/**
  * This file is part of the Foxy package.
  *
- * (c) François Pluchino <francois.pluchino@gmail.com>
+ * @author (c) François Pluchino <francois.pluchino@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -91,6 +91,9 @@ class ComposerFallback implements FallbackInterface
         $this->installer = $installer;
     }
 
+    // phpcs:disable PEAR.Commenting.FunctionComment.MissingReturn
+    // phpcs:disable PEAR.Commenting.FunctionComment.MissingParamTag
+
     /**
      * {@inheritdoc}
      */
@@ -130,6 +133,9 @@ class ComposerFallback implements FallbackInterface
         }
     }
 
+    // phpcs:enable PEAR.Commenting.FunctionComment.MissingReturn
+    // phpcs:enable PEAR.Commenting.FunctionComment.MissingParamTag
+
     /**
      * Restore the data of lock file.
      *
@@ -159,6 +165,8 @@ class ComposerFallback implements FallbackInterface
 
     /**
      * Restore the PHP dependencies with the previous lock file.
+     *
+     * @return void
      */
     protected function restorePreviousLockFile()
     {
@@ -177,8 +185,7 @@ class ComposerFallback implements FallbackInterface
             ->setDumpAutoloader(!$this->input->getOption('no-autoloader'))
             ->setOptimizeAutoloader($optimize)
             ->setClassMapAuthoritative($authoritative)
-            ->setApcuAutoloader($apcu)
-        ;
+            ->setApcuAutoloader($apcu);
 
         // @codeCoverageIgnoreStart
         if (\defined('Composer\Composer::RUNTIME_API_VERSION') && version_compare(Composer::RUNTIME_API_VERSION, '2.2.0', '>=')) {
@@ -188,21 +195,21 @@ class ComposerFallback implements FallbackInterface
         } else {
             $installer
                 ->setRunScripts(false)
-                ->setIgnorePlatformRequirements($this->input->getOption('ignore-platform-reqs'))
-            ;
+                ->setIgnorePlatformRequirements($this->input->getOption('ignore-platform-reqs'));
         }
 
         if (method_exists($installer, 'setSkipSuggest')) {
             $installer->setSkipSuggest(true);
         }
-        // @codeCoverageIgnoreEnd
 
+        // @codeCoverageIgnoreEnd
         $installer->run();
 
         // @codeCoverageIgnoreStart
         if (\defined('Composer\Composer::RUNTIME_API_VERSION') && version_compare(Composer::RUNTIME_API_VERSION, '2.2.0', '>=')) {
             $dispatcher->setRunScripts(!$this->input->getOption('no-scripts'));
         }
+
         // @codeCoverageIgnoreEnd
     }
 

@@ -1,9 +1,9 @@
 <?php
 
-/*
+/**
  * This file is part of the Foxy package.
  *
- * (c) François Pluchino <francois.pluchino@gmail.com>
+ * @author (c) François Pluchino <francois.pluchino@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -47,13 +47,22 @@ class AssetFallback implements FallbackInterface
      */
     protected $originalContent;
 
-    public function __construct(IOInterface $io, Config $config, $path, Filesystem $fs = null)
+    /**
+     * @param \Composer\IO\IOInterface       $io     The console IO
+     * @param \Foxy\Config\Config            $config The Fox config
+     * @param string                         $path   Path to the asset
+     * @param null|\Composer\Util\Filesystem $fs     Filsesysem object.
+     */
+    public function __construct(IOInterface $io, Config $config, string $path, Filesystem $fs = null)
     {
         $this->io = $io;
         $this->config = $config;
         $this->path = $path;
         $this->fs = $fs ?: new Filesystem();
     }
+
+    // phpcs:disable PEAR.Commenting.FunctionComment.MissingReturn
+    // phpcs:disable PEAR.Commenting.FunctionComment.MissingParamTag
 
     /**
      * {@inheritdoc}
@@ -83,4 +92,7 @@ class AssetFallback implements FallbackInterface
             file_put_contents($this->path, $this->originalContent);
         }
     }
+
+    // phpcs:enable PEAR.Commenting.FunctionComment.MissingReturn
+    // phpcs:enable PEAR.Commenting.FunctionComment.MissingParamTag
 }

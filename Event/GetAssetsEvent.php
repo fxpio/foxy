@@ -1,9 +1,9 @@
 <?php
 
-/*
+/**
  * This file is part of the Foxy package.
  *
- * (c) François Pluchino <francois.pluchino@gmail.com>
+ * @author (c) François Pluchino <francois.pluchino@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -58,6 +58,8 @@ class GetAssetsEvent extends AbstractSolveEvent
      * @param string $name The asset package name
      * @param string $path The asset package path (relative path form root project
      *                     and started with `file:`)
+     *
+     * phpcs:disable PEAR.Commenting.FunctionComment.ParamCommentAlignment
      *
      * Example:
      *

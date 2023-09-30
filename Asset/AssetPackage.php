@@ -1,9 +1,9 @@
 <?php
 
-/*
+/**
  * This file is part of the Foxy package.
  *
- * (c) François Pluchino <francois.pluchino@gmail.com>
+ * @author (c) François Pluchino <francois.pluchino@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -51,6 +51,9 @@ class AssetPackage implements AssetPackageInterface
 
         $this->injectRequiredKeys($rootPackage);
     }
+
+    // phpcs:disable PEAR.Commenting.FunctionComment.MissingReturn
+    // phpcs:disable PEAR.Commenting.FunctionComment.MissingParamTag
 
     /**
      * {@inheritdoc}
@@ -135,10 +138,15 @@ class AssetPackage implements AssetPackageInterface
         return $this;
     }
 
+    // phpcs:enable PEAR.Commenting.FunctionComment.MissingReturn
+    // phpcs:enable PEAR.Commenting.FunctionComment.MissingParamTag
+
     /**
      * Inject the required keys for asset package defined in root composer package.
      *
      * @param RootPackageInterface $rootPackage The composer root package
+     *
+     * @return void
      */
     protected function injectRequiredKeys(RootPackageInterface $rootPackage)
     {
@@ -159,6 +167,8 @@ class AssetPackage implements AssetPackageInterface
      * Order the packages section.
      *
      * @param string $section The package section
+     *
+     * @return void
      */
     protected function orderPackages($section)
     {

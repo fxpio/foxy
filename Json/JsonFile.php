@@ -1,9 +1,9 @@
 <?php
 
-/*
+/**
  * This file is part of the Foxy package.
  *
- * (c) François Pluchino <francois.pluchino@gmail.com>
+ * @author (c) François Pluchino <francois.pluchino@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -68,6 +68,9 @@ class JsonFile extends BaseJsonFile
         return $this->indent;
     }
 
+    // phpcs:disable PEAR.Commenting.FunctionComment.MissingReturn
+    // phpcs:disable PEAR.Commenting.FunctionComment.MissingParamTag
+
     /**
      * {@inheritdoc}
      */
@@ -83,7 +86,7 @@ class JsonFile extends BaseJsonFile
     /**
      * {@inheritdoc}
      */
-    public function write(array $hash, $options = 448)
+    public function write(array $hash, int $options = 448)
     {
         self::$encodeArrayKeys = $this->getArrayKeys();
         self::$encodeIndent = $this->getIndent();
@@ -95,15 +98,20 @@ class JsonFile extends BaseJsonFile
     /**
      * {@inheritdoc}
      */
-    public static function encode($data, $options = 448)
+    public static function encode($data, int $options = 448, string $indent = self::INDENT_DEFAULT): string
     {
         $result = parent::encode($data, $options);
 
         return JsonFormatter::format($result, self::$encodeArrayKeys, self::$encodeIndent, false);
     }
 
+    // phpcs:enable PEAR.Commenting.FunctionComment.MissingReturn
+    // phpcs:enable PEAR.Commenting.FunctionComment.MissingParamTag
+
     /**
      * Parse the original content.
+     *
+     * @return void
      */
     private function parseOriginalContent()
     {

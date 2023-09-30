@@ -1,9 +1,9 @@
 <?php
 
-/*
+/**
  * This file is part of the Foxy package.
  *
- * (c) François Pluchino <francois.pluchino@gmail.com>
+ * @author (c) François Pluchino <francois.pluchino@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -20,6 +20,8 @@ use Composer\Semver\VersionParser;
  */
 class YarnManager extends AbstractAssetManager
 {
+    // phpcs:disable PEAR.Commenting.FunctionComment.MissingReturn
+
     /**
      * {@inheritdoc}
      */
@@ -84,6 +86,8 @@ class YarnManager extends AbstractAssetManager
         return $this->buildCommand('yarn', 'update', $this->mergeInteractiveCommand(array($commandName)));
     }
 
+    // phpcs:enable PEAR.Commenting.FunctionComment.MissingReturn
+
     /**
      * @return bool
      */
@@ -96,6 +100,13 @@ class YarnManager extends AbstractAssetManager
         return $constraint->matches($parser->parseConstraints($version));
     }
 
+    /**
+     * Merge Interactive Command
+     *
+     * @param array $command the command to append to
+     *
+     * @return array
+     */
     private function mergeInteractiveCommand(array $command)
     {
         if (!$this->isYarnNext()) {

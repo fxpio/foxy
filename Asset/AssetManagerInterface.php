@@ -1,9 +1,9 @@
 <?php
 
-/*
+/**
  * This file is part of the Foxy package.
  *
- * (c) François Pluchino <francois.pluchino@gmail.com>
+ * @author (c) François Pluchino <francois.pluchino@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -101,6 +101,8 @@ interface AssetManagerInterface
      *
      * @throws RuntimeException When the binary isn't installed
      * @throws RuntimeException When the version doesn't match
+     *
+     * @return void
      */
     public function validate();
 

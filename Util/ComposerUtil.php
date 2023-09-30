@@ -1,9 +1,9 @@
 <?php
 
-/*
+/**
  * This file is part of the Foxy package.
  *
- * (c) François Pluchino <francois.pluchino@gmail.com>
+ * @author (c) François Pluchino <francois.pluchino@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -38,6 +38,8 @@ class ComposerUtil
      *
      * @param string $requiredVersion The composer required version
      * @param string $composerVersion The composer version
+     *
+     * @return void
      */
     public static function validateVersion($requiredVersion, $composerVersion)
     {

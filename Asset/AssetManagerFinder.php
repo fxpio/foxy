@@ -1,9 +1,9 @@
 <?php
 
-/*
+/**
  * This file is part of the Foxy package.
  *
- * (c) François Pluchino <francois.pluchino@gmail.com>
+ * @author (c) François Pluchino <francois.pluchino@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -39,6 +39,13 @@ class AssetManagerFinder
         }
     }
 
+    /**
+     * Adds a manager
+     *
+     * @param \Foxy\Asset\AssetManagerInterface $manager the manager object
+     *
+     * @return void
+     */
     public function addManager(AssetManagerInterface $manager)
     {
         $this->managers[$manager->getName()] = $manager;
@@ -76,14 +83,14 @@ class AssetManagerFinder
      */
     private function findAvailableManager()
     {
-        // find asset manager by lockfile
+        // Find asset manager by lockfile.
         foreach ($this->managers as $manager) {
             if ($manager->hasLockFile()) {
                 return $manager;
             }
         }
 
-        // find asset manager by availability
+        // Find asset manager by availability.
         foreach ($this->managers as $manager) {
             if ($manager->isAvailable()) {
                 return $manager;

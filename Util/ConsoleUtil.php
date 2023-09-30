@@ -1,9 +1,9 @@
 <?php
 
-/*
+/**
  * This file is part of the Foxy package.
  *
- * (c) François Pluchino <francois.pluchino@gmail.com>
+ * @author (c) François Pluchino <francois.pluchino@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -60,6 +60,8 @@ class ConsoleUtil
         $preferSource = false;
         $preferDist = false;
 
+        // The spacing is fine here.
+        // phpcs:disable PEAR.WhiteSpace.ScopeIndent.IncorrectExact
         switch ($config->get('preferred-install')) {
             case 'source':
                 $preferSource = true;

@@ -1,9 +1,9 @@
 <?php
 
-/*
+/**
  * This file is part of the Foxy package.
  *
- * (c) François Pluchino <francois.pluchino@gmail.com>
+ * @author (c) François Pluchino <francois.pluchino@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -108,7 +108,7 @@ final class Config
      * @param string $value               The value of environment variable
      * @param string $environmentVariable The environment variable name
      *
-     * @return array|bool|int|string
+     * @return array|bool|string
      */
     private function convertEnvValue($value, $environmentVariable)
     {
@@ -116,9 +116,9 @@ final class Config
 
         if ($this->isBoolean($value)) {
             $value = $this->convertBoolean($value);
-        } elseif ($this->isInteger($value)) {
+        } else if ($this->isInteger($value)) {
             $value = $this->convertInteger($value);
-        } elseif ($this->isJson($value)) {
+        } else if ($this->isJson($value)) {
             $value = $this->convertJson($value, $environmentVariable);
         }
 
@@ -168,7 +168,7 @@ final class Config
      *
      * @param string $value The value of environment variable
      *
-     * @return bool
+     * @return int
      */
     private function convertInteger($value)
     {

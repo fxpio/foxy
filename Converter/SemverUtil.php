@@ -1,9 +1,9 @@
 <?php
 
-/*
+/**
  * This file is part of the Foxy package.
  *
- * (c) François Pluchino <francois.pluchino@gmail.com>
+ * @author (c) François Pluchino <francois.pluchino@gmail.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -31,7 +31,7 @@ abstract class SemverUtil
     {
         if (preg_match('/^\d{7,}\./', $version)) {
             $pos = strpos($version, '.');
-            $version = substr($version, 0, $pos).self::convertDateMinorVersion(substr($version, $pos + 1));
+            $version = substr($version, 0, $pos).self::convertDateMinorVersion(substr($version, ($pos + 1)));
         }
 
         return $version;
@@ -40,7 +40,7 @@ abstract class SemverUtil
     /**
      * Converts the version metadata.
      *
-     * @param string $version
+     * @param string $version The version string.
      *
      * @return string
      */
@@ -90,7 +90,7 @@ abstract class SemverUtil
      *
      * @return string The cleaned version
      */
-    private static function cleanWildcard($version)
+    protected static function cleanWildcard($version)
     {
         while (false !== strpos($version, '.x.x')) {
             $version = str_replace('.x.x', '.x', $version);
@@ -128,15 +128,16 @@ abstract class SemverUtil
     /**
      * Match the version.
      *
-     * @param string $version
-     * @param string $type
+     * @param string $version Version to check.
+     * @param string $type    Type to match.
      *
-     * @return array The list of $version and $patchVersion
+     * @return array          he list of $version and $patchVersion
      */
     private static function matchVersion($version, $type)
     {
         $patchVersion = true;
 
+        // phpcs:disable PEAR.WhiteSpace.ScopeIndent.IncorrectExact
         switch ($type) {
             case 'dev':
             case 'snapshot':
@@ -160,9 +161,10 @@ abstract class SemverUtil
                 if (!\in_array($type, array('alpha', 'beta', 'RC'), true)) {
                     $type = 'patch';
                 }
-
                 break;
         }
+
+        // phpcs:enable PEAR.WhiteSpace.ScopeIndent.IncorrectExact
 
         $version .= $type;
 
