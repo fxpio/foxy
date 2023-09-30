@@ -60,6 +60,8 @@ class ConsoleUtil
         $preferSource = false;
         $preferDist = false;
 
+        // The spacing is fine here.
+        // phpcs:disable PEAR.WhiteSpace.ScopeIndent.IncorrectExact
         switch ($config->get('preferred-install')) {
             case 'source':
                 $preferSource = true;

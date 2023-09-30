@@ -38,6 +38,8 @@ class ComposerUtil
      *
      * @param string $requiredVersion The composer required version
      * @param string $composerVersion The composer version
+     *
+     * @return void
      */
     public static function validateVersion($requiredVersion, $composerVersion)
     {

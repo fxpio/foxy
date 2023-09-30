@@ -28,7 +28,10 @@ class LockerUtil
     /**
      * Get the locker.
      *
-     * @param string $composerFile
+     * @param \Composer\IO\IOInterface                $io           The Console IO?
+     * @param \Composer\Repository\RepositoryManager  $rm           Manages the repository
+     * @param \Composer\Installer\InstallationManager $im           Manages the Installation
+     * @param string                                  $composerFile The file to parse
      *
      * @return Locker
      */
