@@ -1,0 +1,8 @@
+parameters:
+	level: 6
+	treatPhpDocTypesAsCertain: false
+	checkGenericClassInNonGenericObjectType: false
+	paths:
+		- .
+	excludePaths:
+		- vendor/*

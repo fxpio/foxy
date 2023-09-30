@@ -17,6 +17,7 @@
     },
     "require-dev": {
         "composer/composer": "^2.0.0",
+        "phpstan/phpstan": "^1.10",
         "phpunit/phpunit": "^9.0"
     },
     "config": {
