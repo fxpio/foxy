@@ -12,11 +12,12 @@
         }
     ],
     "require": {
-        "php": ">=5.3.3",
+        "php": ">=7.3",
         "composer-plugin-api": "^1.1|^2.0"
     },
     "require-dev": {
-        "composer/composer": "^1.5.0|^2.0.0"
+        "composer/composer": "^2.0.0",
+        "phpunit/phpunit": "^9.0"
     },
     "config": {
         "preferred-install": {
