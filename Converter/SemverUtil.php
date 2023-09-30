@@ -161,9 +161,9 @@ abstract class SemverUtil
                 if (!\in_array($type, array('alpha', 'beta', 'RC'), true)) {
                     $type = 'patch';
                 }
-
                 break;
         }
+
         // phpcs:enable PEAR.WhiteSpace.ScopeIndent.IncorrectExact
 
         $version .= $type;
