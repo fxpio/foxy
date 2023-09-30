@@ -18,6 +18,11 @@ namespace Foxy\Converter;
  */
 class SemverConverter implements VersionConverterInterface
 {
+    /**
+     * @param string $version The version to convert.
+     *
+     * @return string
+     */
     public function convertVersion($version)
     {
         if (\in_array($version, array(null, '', 'latest'), true)) {

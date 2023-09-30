@@ -18,6 +18,9 @@ namespace Foxy\Asset;
  */
 class NpmManager extends AbstractAssetManager
 {
+    // phpcs:disable PEAR.Commenting.FunctionComment.MissingReturn
+    // phpcs:disable PEAR.Commenting.FunctionComment.MissingParamTag
+
     /**
      * {@inheritdoc}
      */

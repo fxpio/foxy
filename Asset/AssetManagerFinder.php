@@ -39,6 +39,13 @@ class AssetManagerFinder
         }
     }
 
+    /**
+     * Adds a manager
+     *
+     * @param \Foxy\Asset\AssetManagerInterface $manager the manager object
+     *
+     * @return void
+     */
     public function addManager(AssetManagerInterface $manager)
     {
         $this->managers[$manager->getName()] = $manager;
@@ -76,14 +83,14 @@ class AssetManagerFinder
      */
     private function findAvailableManager()
     {
-        // find asset manager by lockfile
+        // Find asset manager by lockfile.
         foreach ($this->managers as $manager) {
             if ($manager->hasLockFile()) {
                 return $manager;
             }
         }
 
-        // find asset manager by availability
+        // Find asset manager by availability.
         foreach ($this->managers as $manager) {
             if ($manager->isAvailable()) {
                 return $manager;
