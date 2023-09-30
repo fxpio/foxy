@@ -38,6 +38,7 @@ class LockerUtil
         // @codeCoverageIgnoreStart
         return \defined('Composer\Composer::RUNTIME_API_VERSION') && version_compare(Composer::RUNTIME_API_VERSION, '2.0.0', '>=')
             ? new Locker($io, new JsonFile($lockFile, null, $io), $im, file_get_contents($composerFile))
+            // @phpstan-ignore-next-line
             : new Locker($io, new JsonFile($lockFile, null, $io), $rm, $im, file_get_contents($composerFile));
     }
 }

@@ -108,7 +108,7 @@ final class Config
      * @param string $value               The value of environment variable
      * @param string $environmentVariable The environment variable name
      *
-     * @return array|bool|int|string
+     * @return array|bool|string
      */
     private function convertEnvValue($value, $environmentVariable)
     {
@@ -168,7 +168,7 @@ final class Config
      *
      * @param string $value The value of environment variable
      *
-     * @return bool
+     * @return int
      */
     private function convertInteger($value)
     {

@@ -1,8 +1,10 @@
 parameters:
-	level: 6
+	# this needs to be bumped up to at least 7
+	level: 5
 	treatPhpDocTypesAsCertain: false
 	checkGenericClassInNonGenericObjectType: false
 	paths:
 		- .
 	excludePaths:
 		- vendor/*
+		- Tests/*

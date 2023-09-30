@@ -90,7 +90,7 @@ abstract class SemverUtil
      *
      * @return string The cleaned version
      */
-    private static function cleanWildcard($version)
+    protected static function cleanWildcard($version)
     {
         while (false !== strpos($version, '.x.x')) {
             $version = str_replace('.x.x', '.x', $version);
