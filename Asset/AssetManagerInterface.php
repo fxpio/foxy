@@ -101,6 +101,8 @@ interface AssetManagerInterface
      *
      * @throws RuntimeException When the binary isn't installed
      * @throws RuntimeException When the version doesn't match
+     *
+     * @return void
      */
     public function validate();
 

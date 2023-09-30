@@ -99,6 +99,9 @@ abstract class AbstractAssetManager implements AssetManagerInterface
         $this->versionConverter = null !== $versionConverter ? $versionConverter : new SemverConverter();
     }
 
+    // phpcs:disable PEAR.Commenting.FunctionComment.MissingReturn
+    // phpcs:disable PEAR.Commenting.FunctionComment.MissingParamTag
+
     /**
      * {@inheritdoc}
      */
@@ -237,8 +240,11 @@ abstract class AbstractAssetManager implements AssetManagerInterface
      */
     protected function actionWhenComposerDependenciesAreAlreadyInstalled($names)
     {
-        // do nothing by default
+        // Do nothing by default.
     }
+
+    // phpcs:enable PEAR.Commenting.FunctionComment.MissingReturn
+    // phpcs:enable PEAR.Commenting.FunctionComment.MissingParamTag
 
     /**
      * Build the command with binary and command options.
@@ -256,9 +262,9 @@ abstract class AbstractAssetManager implements AssetManagerInterface
         $gOptions = trim($this->config->get('manager-options', ''));
         $options = trim($this->config->get('manager-'.$action.'-options', ''));
 
-        return $bin.' '.implode(' ', (array) $command)
-            .(empty($gOptions) ? '' : ' '.$gOptions)
-            .(empty($options) ? '' : ' '.$options);
+        return $bin . ' ' . implode(' ', (array) $command)
+            . (empty($gOptions) ? '' : ' '.$gOptions)
+            . (empty($options) ? '' : ' '.$options);
     }
 
     /**
