@@ -116,9 +116,9 @@ final class Config
 
         if ($this->isBoolean($value)) {
             $value = $this->convertBoolean($value);
-        } elseif ($this->isInteger($value)) {
+        } else if ($this->isInteger($value)) {
             $value = $this->convertInteger($value);
-        } elseif ($this->isJson($value)) {
+        } else if ($this->isJson($value)) {
             $value = $this->convertJson($value, $environmentVariable);
         }
 
