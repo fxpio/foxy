@@ -1,6 +1,6 @@
 <?php
 
-/*
+/**
  * This file is part of the Foxy package.
  *
  * @author (c) François Pluchino <francois.pluchino@gmail.com>
