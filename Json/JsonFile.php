@@ -83,7 +83,7 @@ class JsonFile extends BaseJsonFile
     /**
      * {@inheritdoc}
      */
-    public function write(array $hash, $options = 448)
+    public function write(array $hash, int $options = 448)
     {
         self::$encodeArrayKeys = $this->getArrayKeys();
         self::$encodeIndent = $this->getIndent();
@@ -95,9 +95,9 @@ class JsonFile extends BaseJsonFile
     /**
      * {@inheritdoc}
      */
-    public static function encode($data, $options = 448)
+    public static function encode($data, int $options = 448, string $indent = self::INDENT_DEFAULT): string
     {
-        $result = parent::encode($data, $options);
+        $result = parent::encode($data, $options, $indent);
 
         return JsonFormatter::format($result, self::$encodeArrayKeys, self::$encodeIndent, false);
     }
