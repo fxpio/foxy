@@ -97,7 +97,7 @@ class JsonFile extends BaseJsonFile
      */
     public static function encode($data, int $options = 448, string $indent = self::INDENT_DEFAULT): string
     {
-        $result = parent::encode($data, $options);
+        $result = parent::encode($data, $options, $indent);
 
         return JsonFormatter::format($result, self::$encodeArrayKeys, self::$encodeIndent, false);
     }
