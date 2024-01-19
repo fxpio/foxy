@@ -60,6 +60,8 @@ class NpmManager extends AbstractAssetManager
 
     /**
      * {@inheritdoc}
+     *
+     * @return void
      */
     protected function actionWhenComposerDependenciesAreAlreadyInstalled($names)
     {

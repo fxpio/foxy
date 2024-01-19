@@ -161,7 +161,7 @@ class Foxy implements PluginInterface, EventSubscriberInterface
      *
      * @param PackageEvent $event The package event
      */
-    public function initOnInstall(PackageEvent $event)
+    public function initOnInstall(PackageEvent $event): void
     {
         $operation = $event->getOperation();
 
@@ -173,7 +173,7 @@ class Foxy implements PluginInterface, EventSubscriberInterface
     /**
      * Init the plugin.
      */
-    public function init()
+    public function init(): void
     {
         if (!$this->initialized) {
             $this->initialized = true;
@@ -191,7 +191,7 @@ class Foxy implements PluginInterface, EventSubscriberInterface
      *
      * @param SolverInterface $solver The solver
      */
-    public function setSolver(SolverInterface $solver)
+    public function setSolver(SolverInterface $solver): void
     {
         $this->solver = $solver;
     }
@@ -201,7 +201,7 @@ class Foxy implements PluginInterface, EventSubscriberInterface
      *
      * @param Event $event The composer script event
      */
-    public function solveAssets(Event $event)
+    public function solveAssets(Event $event): void
     {
         $this->solver->setUpdatable(false !== strpos($event->getName(), 'update'));
         $this->solver->solve($event->getComposer(), $event->getIO());

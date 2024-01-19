@@ -69,6 +69,8 @@ class AssetFallback implements FallbackInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @return void
      */
     public function restore()
     {

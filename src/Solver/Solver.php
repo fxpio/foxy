@@ -84,6 +84,8 @@ class Solver implements SolverInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @return void
      */
     public function solve(Composer $composer, IOInterface $io)
     {

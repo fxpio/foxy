@@ -39,7 +39,7 @@ class AssetManagerFinder
         }
     }
 
-    public function addManager(AssetManagerInterface $manager)
+    public function addManager(AssetManagerInterface $manager): void
     {
         $this->managers[$manager->getName()] = $manager;
     }

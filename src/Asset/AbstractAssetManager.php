@@ -169,6 +169,8 @@ abstract class AbstractAssetManager implements AssetManagerInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @return void
      */
     public function validate()
     {
@@ -234,6 +236,8 @@ abstract class AbstractAssetManager implements AssetManagerInterface
      * Action when the composer dependencies are already installed.
      *
      * @param string[] $names the asset package name of composer dependencies
+     *
+     * @return void
      */
     protected function actionWhenComposerDependenciesAreAlreadyInstalled($names)
     {

@@ -113,6 +113,8 @@ class ComposerFallback implements FallbackInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @return void
      */
     public function restore()
     {
@@ -160,7 +162,7 @@ class ComposerFallback implements FallbackInterface
     /**
      * Restore the PHP dependencies with the previous lock file.
      */
-    protected function restorePreviousLockFile()
+    protected function restorePreviousLockFile(): void
     {
         $config = $this->composer->getConfig();
         list($preferSource, $preferDist) = ConsoleUtil::getPreferredInstallOptions($config, $this->input);

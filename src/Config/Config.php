@@ -167,10 +167,8 @@ final class Config
      * Convert the value of environment variable into a integer.
      *
      * @param string $value The value of environment variable
-     *
-     * @return bool
      */
-    private function convertInteger($value)
+    private function convertInteger($value): int
     {
         return (int) $value;
     }

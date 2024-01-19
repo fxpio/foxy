@@ -140,7 +140,7 @@ class AssetPackage implements AssetPackageInterface
      *
      * @param RootPackageInterface $rootPackage The composer root package
      */
-    protected function injectRequiredKeys(RootPackageInterface $rootPackage)
+    protected function injectRequiredKeys(RootPackageInterface $rootPackage): void
     {
         if (!isset($this->package['license']) && \count($rootPackage->getLicense()) > 0) {
             $license = current($rootPackage->getLicense());
@@ -160,7 +160,7 @@ class AssetPackage implements AssetPackageInterface
      *
      * @param string $section The package section
      */
-    protected function orderPackages($section)
+    protected function orderPackages($section): void
     {
         if (isset($this->package[$section]) && \is_array($this->package[$section])) {
             ksort($this->package[$section], SORT_STRING);

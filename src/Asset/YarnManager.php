@@ -96,7 +96,7 @@ class YarnManager extends AbstractAssetManager
         return $constraint->matches($parser->parseConstraints($version));
     }
 
-    private function mergeInteractiveCommand(array $command)
+    private function mergeInteractiveCommand(array $command): array
     {
         if (!$this->isYarnNext()) {
             $command[] = '--non-interactive';

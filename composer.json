@@ -1,5 +1,5 @@
 {
-    "name": "foxy/foxy",
+    "name": "php-forge/foxy",
     "description": "Fast, reliable, and secure NPM/Yarn/pnpm bridge for Composer",
     "keywords": ["npm", "yarn", "composer", "bridge", "dependency manager", "package", "asset", "nodejs"],
     "homepage": "https://github.com/fxpio/foxy",
@@ -12,11 +12,14 @@
         }
     ],
     "require": {
-        "php": ">=5.3.3",
-        "composer-plugin-api": "^1.1|^2.0"
+        "php": "^8.1",
+        "composer-plugin-api": "^2.0"
     },
     "require-dev": {
-        "composer/composer": "^1.5.0|^2.0.0"
+        "composer/composer": "^2.0.0",
+        "phpunit/phpunit": "^9.5.10",
+        "vimeo/psalm": "^5.20"
+        
     },
     "config": {
         "preferred-install": {
@@ -26,12 +29,14 @@
     },
     "autoload": {
         "psr-4": {
-            "Foxy\\": ""
-        },
-        "exclude-from-classmap": [
-            "/Tests/"
-        ]
+            "Foxy\\": "src"
+        }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Foxy\\Tests\\": "tests"
+        }
+    },    
     "extra": {
         "class": "Foxy\\Foxy",
         "branch-alias": {
