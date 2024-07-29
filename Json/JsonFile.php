@@ -95,11 +95,11 @@ class JsonFile extends BaseJsonFile
     /**
      * {@inheritdoc}
      */
-    public static function encode($data, $options = 448)
+    public static function encode($data, int $options = 448, string $indent = parent::INDENT_DEFAULT): string
     {
         $result = parent::encode($data, $options);
 
-        return JsonFormatter::format($result, self::$encodeArrayKeys, self::$encodeIndent, false);
+        return JsonFormatter::format($result, self::$encodeArrayKeys, $indent, false);
     }
 
     /**
